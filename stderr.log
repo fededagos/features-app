@@ -1,0 +1,353 @@
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'app/index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "app/index.py", line 9, in <module>
+    from apps import waveform_features, temporal_features
+ModuleNotFoundError: No module named 'apps'
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'app/index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "app/index.py", line 9, in <module>
+    from apps import waveform_features, temporal_features
+ModuleNotFoundError: No module named 'apps'
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 9, in <module>
+    application = wsgi.application
+AttributeError: module 'wsgi' has no attribute 'application'
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 9, in <module>
+    application = wsgi.application
+AttributeError: module 'wsgi' has no attribute 'application'
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 6, in <module>
+    os.execl(INTERP, INTERP, *sys.argv)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/os.py", line 536, in execl
+    execv(file, args)
+FileNotFoundError: [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 9, in <module>
+    application = wsgi.application
+AttributeError: module 'wsgi' has no attribute 'application'
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 9, in <module>
+    application = wsgi.application
+AttributeError: module 'wsgi' has no attribute 'application'
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 9, in <module>
+    application = wsgi.application
+AttributeError: module 'wsgi' has no attribute 'application'
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 5, in <module>
+    from app import app
+  File "/home/fedeblgw/testapp/app.py", line 9
+    server=server,
+    ^
+SyntaxError: invalid syntax
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 5, in <module>
+    from app import app
+  File "/home/fedeblgw/testapp/app.py", line 9
+    server=server,
+    ^
+SyntaxError: invalid syntax
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 11, in <module>
+    sys.path.insert(0, os.path.dirname(__file__))
+NameError: name 'os' is not defined
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 11, in <module>
+    sys.path.insert(0, os.path.dirname(__file__))
+NameError: name 'os' is not defined
+2022-07-25 12:39:30.131078 [ERROR] [UID:23684][0] wsgiHandler getApp [application] failed, pApp=0x2b4cd2adafa0.
+[ERROR] [UID:23684][3602681] wsgiHandler getApp [application] failed, pApp=0x2b4cd2adafa0.
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 839, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 976, in get_code
+  File "<frozen importlib._bootstrap_external>", line 906, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 1
+    from dash import Dash, dcc, html, Input, Output, no_update
+    ^
+IndentationError: unexpected indent
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 839, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 976, in get_code
+  File "<frozen importlib._bootstrap_external>", line 906, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 1
+    from dash import Dash, dcc, html, Input, Output, no_update
+    ^
+IndentationError: unexpected indent
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 839, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 976, in get_code
+  File "<frozen importlib._bootstrap_external>", line 906, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 1
+    from dash import Dash, dcc, html, Input, Output, no_update
+    ^
+IndentationError: unexpected indent
+Traceback (most recent call last):
+  File "/home/fedeblgw/testapp/passenger_wsgi.py", line 8, in <module>
+    wsgi = imp.load_source('wsgi', 'index.py')
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib64/python3.8/imp.py", line 171, in load_source
+    module = _load(spec)
+  File "<frozen importlib._bootstrap>", line 702, in _load
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 839, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 976, in get_code
+  File "<frozen importlib._bootstrap_external>", line 906, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "index.py", line 1
+    from dash import Dash, dcc, html, Input, Output, no_update
+    ^
+IndentationError: unexpected indent
+2022-07-25 13:16:05.569664 [ERROR] [UID:23684][0] wsgiHandler getApp [application] failed, pApp=0x2b335048ffa0.
+[ERROR] [UID:23684][4022505] wsgiHandler getApp [application] failed, pApp=0x2b335048ffa0.
+Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1519, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1517, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1503, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/dash.py", line 1260, in dispatch
+    ctx.run(
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/_callback.py", line 439, in add_context
+    output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+  File "/home/fedeblgw/testapp/apps/temporal_features.py", line 92, in update_output_div
+    dp = input_value["points"][0]["customdata"][0].split("/")
+TypeError: 'NoneType' object is not subscriptable
+Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1519, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1517, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1503, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/dash.py", line 1260, in dispatch
+    ctx.run(
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/_callback.py", line 439, in add_context
+    output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+  File "/home/fedeblgw/testapp/apps/temporal_features.py", line 92, in update_output_div
+    dp = input_value["points"][0]["customdata"][0].split("/")
+TypeError: 'NoneType' object is not subscriptable
+Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1519, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1517, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1503, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/dash.py", line 1260, in dispatch
+    ctx.run(
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/_callback.py", line 439, in add_context
+    output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+  File "/home/fedeblgw/testapp/apps/waveform_features.py", line 88, in update_output_div
+    dp = input_value["points"][0]["customdata"][0].split("/")
+TypeError: 'NoneType' object is not subscriptable
+Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1519, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1517, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1503, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/dash.py", line 1260, in dispatch
+    ctx.run(
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/_callback.py", line 439, in add_context
+    output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+  File "/home/fedeblgw/testapp/apps/temporal_features.py", line 92, in update_output_div
+    dp = input_value["points"][0]["customdata"][0].split("/")
+TypeError: 'NoneType' object is not subscriptable
+Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1519, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1517, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1503, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/dash.py", line 1260, in dispatch
+    ctx.run(
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/_callback.py", line 439, in add_context
+    output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+  File "/home/fedeblgw/testapp/apps/temporal_features.py", line 92, in update_output_div
+    dp = input_value["points"][0]["customdata"][0].split("/")
+TypeError: 'NoneType' object is not subscriptable
+Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1519, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1517, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1503, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/dash.py", line 1260, in dispatch
+    ctx.run(
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/_callback.py", line 439, in add_context
+    output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+  File "/home/fedeblgw/testapp/apps/waveform_features.py", line 88, in update_output_div
+    dp = input_value["points"][0]["customdata"][0].split("/")
+TypeError: 'NoneType' object is not subscriptable
+Exception on /_dash-update-component [POST]
+Traceback (most recent call last):
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1519, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1517, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/flask/app.py", line 1503, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/dash.py", line 1260, in dispatch
+    ctx.run(
+  File "/home/fedeblgw/virtualenv/testapp/3.8/lib/python3.8/site-packages/dash/_callback.py", line 439, in add_context
+    output_value = func(*func_args, **func_kwargs)  # %% callback invoked %%
+  File "/home/fedeblgw/testapp/apps/temporal_features.py", line 92, in update_output_div
+    dp = input_value["points"][0]["customdata"][0].split("/")
+TypeError: 'NoneType' object is not subscriptable
