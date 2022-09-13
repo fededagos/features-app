@@ -19,6 +19,7 @@ layout = html.Div(
     [
         html.Div(
             [
+                html.Button("Reset graph", id="reset-wvf-graph", n_clicks=0),
                 dcc.Graph(
                     id="wf-graph",
                     figure=fig,
@@ -31,7 +32,9 @@ layout = html.Div(
                     background_color="white",
                     border_color="white",
                 ),
-            ]
+            ],
+            id="wvf-graph-container",
+            className="wrapperbig",
         ),
         html.Div(
             [
@@ -90,11 +93,19 @@ def update_output_div(hoverData):
                 html.P(f"Unit: {unit}"),
                 html.P(f"Raw feature Value: {feature_value:.2f}"),
             ],
-            style={"color": "black" if title == "PkC_cs" else "white"},
+            style={
+                "text-align": "left",
+                "color": "black" if title == "PkC_cs" else "white",
+            },
         ),
     ]
 
     return True, bbox, children, color, direction
+
+
+@app.callback(Output("wf-graph", "clickData"), [Input("reset-wvf-graph", "n_clicks")])
+def reset_clickData(n_clicks):
+    return None
 
 
 @app.callback(
@@ -105,7 +116,11 @@ def update_output_div(hoverData):
 )
 def update_output_div(input_value, figure):
     if input_value is None:
-        return no_update, no_update
+        return [
+            html.Div(
+                [html.P("")],
+            )
+        ], fig
     dp = input_value["points"][0]["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
     unit = input_value["points"][0]["customdata"][1]

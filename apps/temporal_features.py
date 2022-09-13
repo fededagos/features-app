@@ -18,12 +18,13 @@ layout = html.Div(
     [
         html.Div(
             [
+                html.Button("Reset graph", id="reset-graph", n_clicks=0),
                 dcc.Graph(
                     id="graph",
                     figure=fig,
                     clear_on_unhover=True,
                     style={"height": "75vh"},
-                    className = 'card'
+                    className="card",
                 ),
                 dcc.Tooltip(
                     id="graph-tip",
@@ -31,7 +32,9 @@ layout = html.Div(
                     border_color="white",
                     direction="bottom",
                 ),
-            ]
+            ],
+            id="graph-container",
+            className="wrapperbig",
         ),
         html.Div(
             [
@@ -45,6 +48,11 @@ layout = html.Div(
         ),
     ]
 )
+
+
+@app.callback(Output("graph", "clickData"), [Input("reset-graph", "n_clicks")])
+def reset_clickData(n_clicks):
+    return None
 
 
 @app.callback(
@@ -90,7 +98,10 @@ def update_output_div(hoverData):
                 html.P(f"Unit: {unit}"),
                 html.P(f"Raw feature Value: {feature_value:.2f}"),
             ],
-            style={"color": "black" if title == "PkC_cs" else "white"},
+            style={
+                "text-align": "left",
+                "color": "black" if title == "PkC_cs" else "white",
+            },
         ),
     ]
 
@@ -106,7 +117,11 @@ def update_output_div(hoverData):
 def update_output_div(input_value, figure):
 
     if input_value is None:
-        return no_update, no_update
+        return [
+            html.Div(
+                [html.P("")],
+            )
+        ], fig
 
     dp = input_value["points"][0]["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
