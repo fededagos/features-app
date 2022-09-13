@@ -27,7 +27,7 @@ layout = html.Div(
                     id="yaxis-type",
                     inline=True,
                 ),
-            ], 
+            ],
         ),
         html.Div(
             [
@@ -93,7 +93,7 @@ def update_output_div(hoverData):
     image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(properties_dict["customdata"][1])
-        + "-wvf.jpg"
+        + "-wvf.svg"
     )
     dp = properties_dict["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
@@ -138,22 +138,22 @@ def update_output_div(hoverData):
 #     acg_image_url = (
 #         "https://files.fededagos.me/individual-plots/"
 #         + str(input_value["points"][0]["customdata"][1])
-#         + "-acg.jpg"
+#         + "-acg.svg"
 #     )
 #     wvf_image_url = (
 #         "https://files.fededagos.me/individual-plots/"
 #         + str(input_value["points"][0]["customdata"][1])
-#         + "-wvf.jpg"
+#         + "-wvf.svg"
 #     )
 #     feat_image_url = (
 #         "https://files.fededagos.me/individual-plots/"
 #         + str(input_value["points"][0]["customdata"][1])
-#         + "-feat.jpg"
+#         + "-feat.svg"
 #     )
 #     opto_plots_url = (
 #         "https://files.fededagos.me/individual-plots/"
 #         + str(input_value["points"][0]["customdata"][1])
-#         + "_opto_plots_combined.jpg"
+#         + "_opto_plots_combined.svg"
 #     )
 
 #     return [
@@ -243,18 +243,18 @@ def update_output_div(click_input, value, normalised, figure):
         acg_image_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "-acg.jpg"
+            + "-acg.svg"
         )
         wvf_image_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "-wvf.jpg"
+            + "-wvf.svg"
         )
 
         opto_plots_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "_opto_plots_combined.jpg"
+            + "_opto_plots_combined.svg"
         )
 
         use_normalised = True if normalised == "Normalised" else False
@@ -275,7 +275,8 @@ def update_output_div(click_input, value, normalised, figure):
                                     className="column2",
                                     children=[
                                         html.Img(
-                                            src=acg_image_url, className="responsive",
+                                            src=acg_image_url,
+                                            className="responsive",
                                         )
                                     ],
                                 ),
@@ -283,7 +284,8 @@ def update_output_div(click_input, value, normalised, figure):
                                     className="column2",
                                     children=[
                                         html.Img(
-                                            src=wvf_image_url, className="responsive",
+                                            src=wvf_image_url,
+                                            className="responsive",
                                         ),
                                     ],
                                 ),
@@ -317,18 +319,18 @@ def update_output_div(click_input, value, normalised, figure):
         acg_image_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "-acg.jpg"
+            + "-acg.svg"
         )
         wvf_image_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "-wvf.jpg"
+            + "-wvf.svg"
         )
 
         opto_plots_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "_opto_plots_combined.jpg"
+            + "_opto_plots_combined.svg"
         )
 
         use_normalised = True if normalised == "Normalised" else False
@@ -349,7 +351,8 @@ def update_output_div(click_input, value, normalised, figure):
                                     className="column2",
                                     children=[
                                         html.Img(
-                                            src=acg_image_url, className="responsive",
+                                            src=acg_image_url,
+                                            className="responsive",
                                         )
                                     ],
                                 ),
@@ -357,7 +360,8 @@ def update_output_div(click_input, value, normalised, figure):
                                     className="column2",
                                     children=[
                                         html.Img(
-                                            src=wvf_image_url, className="responsive",
+                                            src=wvf_image_url,
+                                            className="responsive",
                                         ),
                                     ],
                                 ),
@@ -384,4 +388,3 @@ def update_output_div(click_input, value, normalised, figure):
                 actual_figure, df, which=features, normalised=True, subselect=unit
             ),
         )
-

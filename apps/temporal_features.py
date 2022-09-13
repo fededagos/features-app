@@ -73,7 +73,7 @@ def update_output_div(hoverData):
     image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(properties_dict["customdata"][1])
-        + "-acg.jpg"
+        + "-acg.svg"
     )
     dp = properties_dict["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
@@ -92,7 +92,7 @@ def update_output_div(hoverData):
     children = [
         html.Div(
             [
-                html.Img(src=image_url, style={"width": "60%"}),
+                html.Img(src=image_url, style={"width": "70%", "background": "white"}),
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
@@ -129,18 +129,18 @@ def update_output_div(input_value, figure):
     acg_image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "-acg.jpg"
+        + "-acg.svg"
     )
     wvf_image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "-wvf.jpg"
+        + "-wvf.svg"
     )
 
     opto_plots_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "_opto_plots_combined.jpg"
+        + "_opto_plots_combined.svg"
     )
 
     actual_figure = go.Figure(figure)
