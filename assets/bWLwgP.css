@@ -630,6 +630,12 @@ there.
   height: auto;
 }
 
+.responsivesvg {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+}
+
 .responsive2 {
   max-width: 150%;
   height: auto;
@@ -653,9 +659,14 @@ there.
 }
 
 .tab:focus {
-  background-color: rgb(237, 237, 237);
+  background-color: rgb(218, 218, 218);
   color: blue;
 
+}
+
+.tab:hover {
+  background-color: rgb(218, 218, 218);
+  color: blue;
 }
 
 .header {
@@ -690,7 +701,7 @@ there.
   max-width: 1024px;
   padding-right: 10px;
   padding-left: 10px;
-  margin-top: 32px;
+  margin-top: 5px;
   text-align: center;
 }
 
@@ -700,11 +711,11 @@ there.
   max-width: 1500px;
   padding-right: 10px;
   padding-left: 10px;
-  margin-top: 32px;
+  margin-top: 5px;
   text-align: center;
 }
 
 .card {
   margin-bottom: 24px;
-  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, 0.18);
 }

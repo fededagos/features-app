@@ -19,6 +19,7 @@ layout = html.Div(
         html.Div(
             [
                 html.Button("Reset graph", id="reset-graph", n_clicks=0),
+                html.P(),
                 dcc.Graph(
                     id="graph",
                     figure=fig,
@@ -142,13 +143,18 @@ def update_output_div(input_value, figure):
         + str(input_value["points"][0]["customdata"][1])
         + "_opto_plots_combined.svg"
     )
+    amplitude_img_url = (
+        "https://files.fededagos.me/individual-plots/"
+        + str(input_value["points"][0]["customdata"][1])
+        + "-amplitudes.png"
+    )
 
     actual_figure = go.Figure(figure)
     return [
         html.Div(
             [
                 html.Hr(),
-                html.H4(f"Cell type: {input_value['points'][0]['text']}"),
+                html.H5(f"Cell type: {input_value['points'][0]['text']}"),
                 html.P(f"Unit {unit} in {dp}"),
                 html.Div(
                     className="row",
@@ -158,7 +164,7 @@ def update_output_div(input_value, figure):
                             children=[
                                 html.Img(
                                     src=acg_image_url,
-                                    className="responsive",
+                                    className="responsivesvg",
                                 )
                             ],
                         ),
@@ -167,11 +173,23 @@ def update_output_div(input_value, figure):
                             children=[
                                 html.Img(
                                     src=wvf_image_url,
-                                    className="responsive",
+                                    className="responsivesvg",
                                 ),
                             ],
                         ),
                     ],
+                ),
+                html.Br(),
+                html.P("Amplitude distribution:"),
+                html.Img(
+                    src=amplitude_img_url,
+                    style={
+                        "max-width": "75%",
+                        "display": "block",
+                        "margin-left": "auto",
+                        "margin-right": "auto",
+                    },
+                    className="responsive",
                 ),
                 html.Hr(),
                 html.Details(
@@ -180,7 +198,10 @@ def update_output_div(input_value, figure):
                         html.Br(),
                         html.Div(
                             [
-                                html.Img(src=opto_plots_url, className="responsive"),
+                                html.Img(
+                                    src=opto_plots_url,
+                                    className="responsive",
+                                ),
                             ]
                         ),
                     ]

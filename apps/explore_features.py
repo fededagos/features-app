@@ -112,7 +112,9 @@ def update_output_div(hoverData):
     children = [
         html.Div(
             [
-                html.Img(src=image_url, style={"height": "40%"}),
+                html.Img(
+                    src=image_url, style={"height": "400px", "background": "white"}
+                ),
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
@@ -352,7 +354,7 @@ def update_output_div(click_input, value, normalised, figure):
                                     children=[
                                         html.Img(
                                             src=acg_image_url,
-                                            className="responsive",
+                                            className="responsivesvg",
                                         )
                                     ],
                                 ),
@@ -361,7 +363,7 @@ def update_output_div(click_input, value, normalised, figure):
                                     children=[
                                         html.Img(
                                             src=wvf_image_url,
-                                            className="responsive",
+                                            className="responsivesvg",
                                         ),
                                     ],
                                 ),
