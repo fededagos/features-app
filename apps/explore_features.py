@@ -1,4 +1,4 @@
-from dash import Dash, dcc, html, Input, Output, no_update
+from dash import Dash, dcc, html, Input, Output, State, no_update
 import pandas as pd
 import pathlib
 from app import app
@@ -13,6 +13,7 @@ df = pd.read_csv(DATA_PATH.joinpath("all_features.csv"))
 
 layout = html.Div(
     [
+        dcc.Store(id="store", data={"input_changed": False}),
         html.Div(
             [
                 dcc.Dropdown(
@@ -58,21 +59,6 @@ layout = html.Div(
         ),
     ]
 )
-
-
-# @app.callback(
-#     Output("feature-graph", "figure"),
-#     Input("feature-dropdown", "value"),
-#     Input("yaxis-type", "value"),
-# )
-# def update_output(value, normalised):
-#     if value is None:
-#         return no_update
-#     use_normalised = True if normalised == "Normalised" else False
-#     features = list(value)
-#     fig = make_figure(df, which=features, normalised=use_normalised)
-#     fig.layout.clickmode = "event+select"
-#     return fig
 
 
 @app.callback(
@@ -127,118 +113,30 @@ def update_output_div(hoverData):
     return True, bbox, children, color, direction
 
 
-# @app.callback(
-#     Output(component_id="click-data-features", component_property="children"),
-#     Input(component_id="feature-graph", component_property="clickData"),
-# )
-# def update_output_div(input_value):
-#     if input_value is None:
-#         return no_update
-#     dp = input_value["points"][0]["customdata"][0].split("/")
-#     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
-#     unit = input_value["points"][0]["customdata"][1]
-#     acg_image_url = (
-#         "https://files.fededagos.me/individual-plots/"
-#         + str(input_value["points"][0]["customdata"][1])
-#         + "-acg.svg"
-#     )
-#     wvf_image_url = (
-#         "https://files.fededagos.me/individual-plots/"
-#         + str(input_value["points"][0]["customdata"][1])
-#         + "-wvf.svg"
-#     )
-#     feat_image_url = (
-#         "https://files.fededagos.me/individual-plots/"
-#         + str(input_value["points"][0]["customdata"][1])
-#         + "-feat.svg"
-#     )
-#     opto_plots_url = (
-#         "https://files.fededagos.me/individual-plots/"
-#         + str(input_value["points"][0]["customdata"][1])
-#         + "_opto_plots_combined.svg"
-#     )
-
-#     return [
-#         html.Div(
-#             [
-#                 html.Hr(),
-#                 html.H4(f"Cell type: {input_value['points'][0]['text']}"),
-#                 html.P(f"Unit {unit} in {dp}"),
-#                 html.Div(
-#                     className="row",
-#                     children=[
-#                         html.Div(
-#                             className="column",
-#                             children=[
-#                                 html.Img(
-#                                     src=acg_image_url,
-#                                     className="responsive",
-#                                 )
-#                             ],
-#                         ),
-#                         html.Div(
-#                             className="column",
-#                             children=[
-#                                 html.Img(
-#                                     src=wvf_image_url,
-#                                     className="responsive",
-#                                 ),
-#                             ],
-#                         ),
-#                         html.Div(
-#                             className="column",
-#                             children=[
-#                                 html.Img(
-#                                     src=feat_image_url,
-#                                     className="responsive2",
-#                                 ),
-#                             ],
-#                         ),
-#                     ],
-#                 ),
-#                 html.Hr(),
-#                 html.Details(
-#                     [
-#                         html.Summary("Click to show/hide opto plots"),
-#                         html.Br(),
-#                         html.Div(
-#                             [
-#                                 html.Img(src=opto_plots_url, className="responsive"),
-#                             ]
-#                         ),
-#                     ]
-#                 ),
-#             ]
-#         )
-#     ]
-
-
-features_input_changed = False
-
-
 @app.callback(
     Output(component_id="click-data-features", component_property="children"),
     Output(component_id="feature-graph", component_property="figure"),
+    Output(component_id="store", component_property="data"),
     Input(component_id="feature-graph", component_property="clickData"),
     Input("feature-dropdown", "value"),
     Input("yaxis-type", "value"),
-    Input(component_id="feature-graph", component_property="figure"),
+    Input("feature-graph", "figure"),
+    State("store", "data"),
 )
-def update_output_div(click_input, value, normalised, figure):
+def update_output_div(click_input, value, normalised, figure, store):
 
-    global features_input_changed
-
-    if value is not None:
-        features_input_changed = True
-    elif value is None:
-        return no_update, no_update
+    if value is not None and len(value) != 0:
+        store["input_changed"] = True
+    elif value is None or len(value) == 0:
+        store["input_changed"] = False
+        return html.P("Hellooo"), go.Figure(), store
 
     if click_input is None:
         use_normalised = True if normalised == "Normalised" else False
         features = list(value)
         actual_figure = make_figure(df, which=features, normalised=use_normalised)
-        return no_update, actual_figure
-    elif click_input is not None and not features_input_changed:
+        return no_update, actual_figure, store
+    elif click_input is not None and not store["input_changed"]:
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
@@ -313,8 +211,9 @@ def update_output_div(click_input, value, normalised, figure):
             update_on_click(
                 actual_figure, df, which=features, normalised=True, subselect=unit
             ),
+            store,
         )
-    elif click_input is not None and features_input_changed:
+    elif click_input is not None and store["input_changed"]:
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
@@ -389,4 +288,5 @@ def update_output_div(click_input, value, normalised, figure):
             update_on_click(
                 actual_figure, df, which=features, normalised=True, subselect=unit
             ),
+            store,
         )
