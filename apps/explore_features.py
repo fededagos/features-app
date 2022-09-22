@@ -129,7 +129,7 @@ def update_output_div(click_input, value, normalised, figure, store):
         store["input_changed"] = True
     elif value is None or len(value) == 0:
         store["input_changed"] = False
-        return html.P("Hellooo"), go.Figure(), store
+        return html.P(""), go.Figure(), store
 
     if click_input is None:
         use_normalised = True if normalised == "Normalised" else False
