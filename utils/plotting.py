@@ -28,7 +28,7 @@ def make_figure(
     good_neurons = new_df[new_df["color"] != "gray"]
     grey_neurons = new_df[new_df["color"] == "gray"]
     for i, label in enumerate(["PkC_cs", "PkC_ss", "GoC", "GrC", "MLI", "MFB"]):
-        
+
         custom_data_good = list(
             zip(
                 good_neurons[good_neurons["label"] == label]["dp"].to_numpy(),
@@ -37,7 +37,7 @@ def make_figure(
                 good_neurons[good_neurons["label"] == label]["color"].to_numpy(),
             )
         )
-        
+
         custom_data_grey = list(
             zip(
                 grey_neurons[grey_neurons["label"] == label]["dp"].to_numpy(),
@@ -46,19 +46,28 @@ def make_figure(
                 grey_neurons[grey_neurons["label"] == label]["color"].to_numpy(),
             )
         )
-        
+
         fig.add_trace(
             go.Box(
-                y=good_neurons[good_neurons["label"] == label]["normalised_value"].to_numpy()
+                y=good_neurons[good_neurons["label"] == label][
+                    "normalised_value"
+                ].to_numpy()
                 if normalised
-                else good_neurons[good_neurons["label"] == label]["raw_value"].to_numpy(),
+                else good_neurons[good_neurons["label"] == label][
+                    "raw_value"
+                ].to_numpy(),
                 x=good_neurons[good_neurons["label"] == label]["feature"].to_numpy(),
                 name=f'{label} (n = {new_df["label"].value_counts()[label] // len(np.unique(new_df["feature"].to_numpy()))})',
                 marker_color=colors[i],
                 offsetgroup=label,
                 legendgroup=label,
+                marker={"opacity": 0},
                 text=[label]
-                * len(good_neurons[good_neurons["label"] == label]["normalised_value"].to_numpy()),
+                * len(
+                    good_neurons[good_neurons["label"] == label][
+                        "normalised_value"
+                    ].to_numpy()
+                ),
                 customdata=custom_data_good,
                 hovertemplate="<b> %{text} </b><br><br>"
                 + "Feature: %{x}<br>"
@@ -67,12 +76,16 @@ def make_figure(
                 + "<extra></extra>",
             )
         )
-        
+
         fig.add_trace(
             go.Box(
-                y=good_neurons[good_neurons["label"] == label]["normalised_value"].to_numpy()
+                y=good_neurons[good_neurons["label"] == label][
+                    "normalised_value"
+                ].to_numpy()
                 if normalised
-                else good_neurons[good_neurons["label"] == label]["raw_value"].to_numpy(),
+                else good_neurons[good_neurons["label"] == label][
+                    "raw_value"
+                ].to_numpy(),
                 x=good_neurons[good_neurons["label"] == label]["feature"].to_numpy(),
                 name=f'{label} (n = {new_df["label"].value_counts()[label] // len(np.unique(new_df["feature"].to_numpy()))})',
                 marker_color=colors[i],
@@ -82,11 +95,15 @@ def make_figure(
                 offsetgroup=label,
                 legendgroup=label,
                 # legendgrouptitle=dict(text=label),
-                line = dict(color = 'rgba(0,0,0,0)'),
-                fillcolor = 'rgba(0,0,0,0)',
+                line=dict(color="rgba(0,0,0,0)"),
+                fillcolor="rgba(0,0,0,0)",
                 showlegend=False,
                 text=[label]
-                * len(good_neurons[good_neurons["label"] == label]["normalised_value"].to_numpy()),
+                * len(
+                    good_neurons[good_neurons["label"] == label][
+                        "normalised_value"
+                    ].to_numpy()
+                ),
                 customdata=custom_data_good,
                 hovertemplate="<b> %{text} </b><br><br>"
                 + "Feature: %{x}<br>"
@@ -95,12 +112,16 @@ def make_figure(
                 + "<extra></extra>",
             )
         )
-        
+
         fig.add_trace(
             go.Box(
-                y=grey_neurons[grey_neurons["label"] == label]["normalised_value"].to_numpy()
+                y=grey_neurons[grey_neurons["label"] == label][
+                    "normalised_value"
+                ].to_numpy()
                 if normalised
-                else grey_neurons[grey_neurons["label"] == label]["raw_value"].to_numpy(),
+                else grey_neurons[grey_neurons["label"] == label][
+                    "raw_value"
+                ].to_numpy(),
                 x=grey_neurons[grey_neurons["label"] == label]["feature"].to_numpy(),
                 name=f'{label} (n = {new_df["label"].value_counts()[label] // len(np.unique(new_df["feature"].to_numpy()))})',
                 marker_color="gray",
@@ -110,11 +131,15 @@ def make_figure(
                 offsetgroup=label,
                 legendgroup=label,
                 # legendgrouptitle=dict(text=label),
-                line = dict(color = 'rgba(0,0,0,0)'),
-                fillcolor = 'rgba(0,0,0,0)',
+                line=dict(color="rgba(0,0,0,0)"),
+                fillcolor="rgba(0,0,0,0)",
                 showlegend=False,
                 text=[label]
-                * len(grey_neurons[grey_neurons["label"] == label]["normalised_value"].to_numpy()),
+                * len(
+                    grey_neurons[grey_neurons["label"] == label][
+                        "normalised_value"
+                    ].to_numpy()
+                ),
                 customdata=custom_data_grey,
                 hovertemplate="<b> %{text} </b><br><br>"
                 + "Feature: %{x}<br>"
@@ -123,7 +148,6 @@ def make_figure(
                 + "<extra></extra>",
             )
         )
-        
 
     fig.update_layout(
         title=go.layout.Title(
@@ -141,8 +165,8 @@ def make_figure(
     fig.update_traces(
         marker=dict(size=1, line=dict(width=2, color="DarkSlateGrey")),
         selector=dict(mode="markers"),
-    ) 
-    
+    )
+
     fig.update_traces(hoverinfo="none", hovertemplate=None)
 
     return fig
@@ -157,8 +181,8 @@ def update_on_click(
 ):
     # This is to remove previously added highlighted points!
     # Why 6*3? Because there are 3 traces per cell type (1 for box, 1 for points, 1 for zero values)
-    if len(fig.data) > 6*3:
-        fig.data = fig.data[:6*3]
+    if len(fig.data) > 6 * 3:
+        fig.data = fig.data[: 6 * 3]
 
     n_neurons = np.unique(new_df["unit"].to_numpy()).shape[0]
     if np.array((which == "temporal")).any():

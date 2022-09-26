@@ -148,6 +148,11 @@ def update_output_div(input_value, figure):
         + str(input_value["points"][0]["customdata"][1])
         + "-amplitudes.png"
     )
+    fn_fp_image_url = (
+        "https://files.fededagos.me/individual-plots/"
+        + str(input_value["points"][0]["customdata"][1])
+        + "-fp_fn_rates.png"
+    )
 
     actual_figure = go.Figure(figure)
     return [
@@ -200,6 +205,23 @@ def update_output_div(input_value, figure):
                             [
                                 html.Img(
                                     src=opto_plots_url,
+                                    className="responsive",
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                html.Hr(),
+                html.Details(
+                    [
+                        html.Summary(
+                            "Click to show/hide temporal quality checks plots"
+                        ),
+                        html.Br(),
+                        html.Div(
+                            [
+                                html.Img(
+                                    src=fn_fp_image_url,
                                     className="responsive",
                                 ),
                             ]
