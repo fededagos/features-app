@@ -233,6 +233,16 @@ def update_output_div(click_input, value, normalised, figure, store):
             + str(click_input["points"][0]["customdata"][1])
             + "_opto_plots_combined.svg"
         )
+        amplitude_img_url = (
+            "https://files.fededagos.me/individual-plots/"
+            + str(click_input["points"][0]["customdata"][1])
+            + "-amplitudes.png"
+        )
+        fn_fp_image_url = (
+            "https://files.fededagos.me/individual-plots/"
+            + str(click_input["points"][0]["customdata"][1])
+            + "-fp_fn_rates.png"
+        )
 
         use_normalised = True if normalised == "Normalised" else False
         features = list(value)
@@ -268,6 +278,18 @@ def update_output_div(click_input, value, normalised, figure, store):
                                 ),
                             ],
                         ),
+                        html.Br(),
+                        html.P("Amplitude distribution:"),
+                        html.Img(
+                            src=amplitude_img_url,
+                            style={
+                                "max-width": "75%",
+                                "display": "block",
+                                "margin-left": "auto",
+                                "margin-right": "auto",
+                            },
+                            className="responsive",
+                        ),
                         html.Hr(),
                         html.Details(
                             [
@@ -277,6 +299,23 @@ def update_output_div(click_input, value, normalised, figure, store):
                                     [
                                         html.Img(
                                             src=opto_plots_url, className="responsive"
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        html.Hr(),
+                        html.Details(
+                            [
+                                html.Summary(
+                                    "Click to show/hide temporal quality checks plots"
+                                ),
+                                html.Br(),
+                                html.Div(
+                                    [
+                                        html.Img(
+                                            src=fn_fp_image_url,
+                                            className="responsive",
                                         ),
                                     ]
                                 ),
