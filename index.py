@@ -10,22 +10,6 @@ from apps import waveform_features, temporal_features, explore_features
 
 app.title = "Feature plots"
 
-# app.layout = html.Div(
-#     [
-#         dcc.Location(id="url", refresh=False),
-#         html.Div(
-#             [
-#                 dcc.Link("Temporal Features | ", href="/apps/temporal_features"),
-#                 dcc.Link("Waveform Features | ", href="/apps/waveform_features"),
-#                 dcc.Link("Features Explorer", href="/apps/explore_features"),
-#             ],
-#             className="row",
-#         ),
-#         html.Div(id="page-content", children=[]),
-#     ]
-# )
-
-
 app.layout = html.Div(
     [
         dcc.Location(id="url", refresh=False),

@@ -19,6 +19,8 @@ layout = html.Div(
     [
         html.Div(
             [
+                html.Button("Reset graph", id="reset-wvf-graph", n_clicks=0),
+                html.P(),
                 dcc.Graph(
                     id="wf-graph",
                     figure=fig,
@@ -31,7 +33,9 @@ layout = html.Div(
                     background_color="white",
                     border_color="white",
                 ),
-            ]
+            ],
+            id="wvf-graph-container",
+            className="wrapperbig",
         ),
         html.Div(
             [
@@ -65,7 +69,7 @@ def update_output_div(hoverData):
     image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(properties_dict["customdata"][1])
-        + "-wvf.jpg"
+        + "-wvf.svg"
     )
     dp = properties_dict["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
@@ -84,17 +88,27 @@ def update_output_div(hoverData):
     children = [
         html.Div(
             [
-                html.Img(src=image_url, style={"height": "40%"}),
+                html.Img(
+                    src=image_url, style={"height": "400px", "background": "white"}
+                ),
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
                 html.P(f"Raw feature Value: {feature_value:.2f}"),
             ],
-            style={"color": "black" if title == "PkC_cs" else "white"},
+            style={
+                "text-align": "left",
+                "color": "black" if title == "PkC_cs" else "white",
+            },
         ),
     ]
 
     return True, bbox, children, color, direction
+
+
+@app.callback(Output("wf-graph", "clickData"), [Input("reset-wvf-graph", "n_clicks")])
+def reset_clickData(n_clicks):
+    return None
 
 
 @app.callback(
@@ -105,30 +119,40 @@ def update_output_div(hoverData):
 )
 def update_output_div(input_value, figure):
     if input_value is None:
-        return no_update, no_update
+        return [
+            html.Div(
+                [html.P("")],
+            )
+        ], fig
     dp = input_value["points"][0]["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
     unit = input_value["points"][0]["customdata"][1]
     acg_image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "-acg.jpg"
+        + "-acg.svg"
     )
     wvf_image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "-wvf.jpg"
+        + "-wvf.svg"
     )
     feat_image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "-feat.jpg"
+        + "-feat.svg"
     )
 
     opto_plots_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "_opto_plots_combined.jpg"
+        + "_opto_plots_combined.svg"
+    )
+
+    amplitude_img_url = (
+        "https://files.fededagos.me/individual-plots/"
+        + str(input_value["points"][0]["customdata"][1])
+        + "-amplitudes.png"
     )
 
     actual_figure = go.Figure(figure)
@@ -147,7 +171,7 @@ def update_output_div(input_value, figure):
                             children=[
                                 html.Img(
                                     src=acg_image_url,
-                                    className="responsive",
+                                    className="responsivesvg",
                                 )
                             ],
                         ),
@@ -156,7 +180,7 @@ def update_output_div(input_value, figure):
                             children=[
                                 html.Img(
                                     src=wvf_image_url,
-                                    className="responsive",
+                                    className="responsivesvg",
                                 ),
                             ],
                         ),
@@ -170,6 +194,18 @@ def update_output_div(input_value, figure):
                             ],
                         ),
                     ],
+                ),
+                html.Br(),
+                html.P("Amplitude distribution:"),
+                html.Img(
+                    src=amplitude_img_url,
+                    style={
+                        "max-width": "75%",
+                        "display": "block",
+                        "margin-left": "auto",
+                        "margin-right": "auto",
+                    },
+                    className="responsive",
                 ),
                 html.Hr(),
                 html.Details(

@@ -18,12 +18,14 @@ layout = html.Div(
     [
         html.Div(
             [
+                html.Button("Reset graph", id="reset-graph", n_clicks=0),
+                html.P(),
                 dcc.Graph(
                     id="graph",
                     figure=fig,
                     clear_on_unhover=True,
                     style={"height": "75vh"},
-                    className = 'card'
+                    className="card",
                 ),
                 dcc.Tooltip(
                     id="graph-tip",
@@ -31,7 +33,9 @@ layout = html.Div(
                     border_color="white",
                     direction="bottom",
                 ),
-            ]
+            ],
+            id="graph-container",
+            className="wrapperbig",
         ),
         html.Div(
             [
@@ -45,6 +49,11 @@ layout = html.Div(
         ),
     ]
 )
+
+
+@app.callback(Output("graph", "clickData"), [Input("reset-graph", "n_clicks")])
+def reset_clickData(n_clicks):
+    return None
 
 
 @app.callback(
@@ -65,7 +74,7 @@ def update_output_div(hoverData):
     image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(properties_dict["customdata"][1])
-        + "-acg.jpg"
+        + "-acg.svg"
     )
     dp = properties_dict["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
@@ -84,13 +93,16 @@ def update_output_div(hoverData):
     children = [
         html.Div(
             [
-                html.Img(src=image_url, style={"width": "60%"}),
+                html.Img(src=image_url, style={"width": "70%", "background": "white"}),
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
                 html.P(f"Raw feature Value: {feature_value:.2f}"),
             ],
-            style={"color": "black" if title == "PkC_cs" else "white"},
+            style={
+                "text-align": "left",
+                "color": "black" if title == "PkC_cs" else "white",
+            },
         ),
     ]
 
@@ -106,7 +118,11 @@ def update_output_div(hoverData):
 def update_output_div(input_value, figure):
 
     if input_value is None:
-        return no_update, no_update
+        return [
+            html.Div(
+                [html.P("")],
+            )
+        ], fig
 
     dp = input_value["points"][0]["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
@@ -114,18 +130,28 @@ def update_output_div(input_value, figure):
     acg_image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "-acg.jpg"
+        + "-acg.svg"
     )
     wvf_image_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "-wvf.jpg"
+        + "-wvf.svg"
     )
 
     opto_plots_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "_opto_plots_combined.jpg"
+        + "_opto_plots_combined.svg"
+    )
+    amplitude_img_url = (
+        "https://files.fededagos.me/individual-plots/"
+        + str(input_value["points"][0]["customdata"][1])
+        + "-amplitudes.png"
+    )
+    fn_fp_image_url = (
+        "https://files.fededagos.me/individual-plots/"
+        + str(input_value["points"][0]["customdata"][1])
+        + "-fp_fn_rates.png"
     )
 
     actual_figure = go.Figure(figure)
@@ -133,7 +159,7 @@ def update_output_div(input_value, figure):
         html.Div(
             [
                 html.Hr(),
-                html.H4(f"Cell type: {input_value['points'][0]['text']}"),
+                html.H5(f"Cell type: {input_value['points'][0]['text']}"),
                 html.P(f"Unit {unit} in {dp}"),
                 html.Div(
                     className="row",
@@ -143,7 +169,7 @@ def update_output_div(input_value, figure):
                             children=[
                                 html.Img(
                                     src=acg_image_url,
-                                    className="responsive",
+                                    className="responsivesvg",
                                 )
                             ],
                         ),
@@ -152,11 +178,23 @@ def update_output_div(input_value, figure):
                             children=[
                                 html.Img(
                                     src=wvf_image_url,
-                                    className="responsive",
+                                    className="responsivesvg",
                                 ),
                             ],
                         ),
                     ],
+                ),
+                html.Br(),
+                html.P("Amplitude distribution:"),
+                html.Img(
+                    src=amplitude_img_url,
+                    style={
+                        "max-width": "75%",
+                        "display": "block",
+                        "margin-left": "auto",
+                        "margin-right": "auto",
+                    },
+                    className="responsive",
                 ),
                 html.Hr(),
                 html.Details(
@@ -165,7 +203,27 @@ def update_output_div(input_value, figure):
                         html.Br(),
                         html.Div(
                             [
-                                html.Img(src=opto_plots_url, className="responsive"),
+                                html.Img(
+                                    src=opto_plots_url,
+                                    className="responsive",
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                html.Hr(),
+                html.Details(
+                    [
+                        html.Summary(
+                            "Click to show/hide temporal quality checks plots"
+                        ),
+                        html.Br(),
+                        html.Div(
+                            [
+                                html.Img(
+                                    src=fn_fp_image_url,
+                                    className="responsive",
+                                ),
                             ]
                         ),
                     ]
