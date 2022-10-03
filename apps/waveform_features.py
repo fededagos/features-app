@@ -120,9 +120,11 @@ def reset_clickData(n_clicks):
 def update_output_div(input_value, figure):
     if input_value is None:
         return [
-            html.Div(
-                [html.P("")],
-            )
+            html.Hr(),
+            html.H3("Inspect element:"),
+            html.P(
+                "Click on a point in the graph to fix it here for further inspection."
+            ),
         ], fig
     dp = input_value["points"][0]["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
