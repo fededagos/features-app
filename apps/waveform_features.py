@@ -1,6 +1,7 @@
 from dash import Dash, dcc, html, Input, Output, no_update
 import pandas as pd
 import pathlib
+import json
 import plotly.graph_objects as go
 from app import app
 from utils.plotting import make_figure, update_on_click, alternative_update
@@ -14,6 +15,11 @@ df = pd.read_csv(DATA_PATH.joinpath("all_features.csv"))
 fig = make_figure(df, which="waveform")
 
 fig.update_traces(hoverinfo="none", hovertemplate=None)
+
+with open(DATA_PATH.joinpath("iframe_src.txt")) as f:
+    data = f.read()
+
+iframe_src = json.loads(data)
 
 layout = html.Div(
     [
@@ -156,6 +162,11 @@ def update_output_div(input_value, figure):
         + str(input_value["points"][0]["customdata"][1])
         + "-amplitudes.png"
     )
+    
+    try:
+        drug_sheet_url = iframe_src[input_value["points"][0]["customdata"][0]]
+    except KeyError:
+        drug_sheet_url = iframe_src["missing"]
 
     actual_figure = go.Figure(figure)
 
@@ -221,6 +232,26 @@ def update_output_div(input_value, figure):
                         ),
                     ]
                 ),
+                html.Hr(),
+                html.Details(
+                    [
+                        html.Summary(
+                            "Click to show/hide drug efficacy sheet for the corresponding dataset"
+                        ),
+                        html.Br(),
+                        html.Div(
+                            [html.Iframe(
+                    src=drug_sheet_url,
+                    style={
+                        "width": "100%",
+                        "height": "1000px",
+                    },
+                )],
+                style={"width": "100%", "padding-top": "1%"},
+                        ),
+                    ]
+                ),
+            html.Hr(),
             ]
         )
     ], update_on_click(

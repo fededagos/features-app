@@ -1,6 +1,7 @@
 from dash import Dash, dcc, html, Input, Output, State, no_update
 import pandas as pd
 import pathlib
+import json
 from app import app
 from utils.plotting import make_figure, update_on_click
 import plotly.graph_objects as go
@@ -10,6 +11,11 @@ PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
 df = pd.read_csv(DATA_PATH.joinpath("all_features.csv"))
+
+with open(DATA_PATH.joinpath("iframe_src.txt")) as f:
+    data = f.read()
+
+iframe_src = json.loads(data)
 
 layout = html.Div(
     [
@@ -166,6 +172,11 @@ def update_output_div(click_input, value, normalised, figure, store):
             + str(click_input["points"][0]["customdata"][1])
             + "_opto_plots_combined.svg"
         )
+        
+        try:
+            drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
+        except KeyError:
+            drug_sheet_url = iframe_src["missing"]
 
         use_normalised = True if normalised == "Normalised" else False
         features = list(value)
@@ -253,6 +264,10 @@ def update_output_div(click_input, value, normalised, figure, store):
             + str(click_input["points"][0]["customdata"][1])
             + "-fp_fn_rates.png"
         )
+        try:
+            drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
+        except KeyError:
+            drug_sheet_url = iframe_src["missing"]
 
         use_normalised = True if normalised == "Normalised" else False
         features = list(value)
@@ -331,6 +346,26 @@ def update_output_div(click_input, value, normalised, figure, store):
                                 ),
                             ]
                         ),
+                        html.Hr(),
+                        html.Details(
+                            [
+                                html.Summary(
+                                    "Click to show/hide drug efficacy sheet for the corresponding dataset"
+                                ),
+                                html.Br(),
+                                html.Div(
+                                    [html.Iframe(
+                            src=drug_sheet_url,
+                            style={
+                                "width": "100%",
+                                "height": "1000px",
+                            },
+                        )],
+                        style={"width": "100%", "padding-top": "1%"},
+                                ),
+                            ]
+                        ),
+                    html.Hr(),
                     ]
                 )
             ],

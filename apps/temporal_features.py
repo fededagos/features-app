@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 import pathlib
+import json
 from app import app
 from utils.plotting import make_figure, update_on_click
 
@@ -13,6 +14,11 @@ DATA_PATH = PATH.joinpath("../datasets").resolve()
 df = pd.read_csv(DATA_PATH.joinpath("all_features.csv"))
 
 fig = make_figure(df, which="temporal")
+
+with open(DATA_PATH.joinpath("iframe_src.txt")) as f:
+    data = f.read()
+
+iframe_src = json.loads(data)
 
 layout = html.Div(
     [
@@ -155,6 +161,10 @@ def update_output_div(input_value, figure):
         + str(input_value["points"][0]["customdata"][1])
         + "-fp_fn_rates.png"
     )
+    try:
+        drug_sheet_url = iframe_src[input_value["points"][0]["customdata"][0]]
+    except KeyError:
+        drug_sheet_url = iframe_src["missing"]
 
     actual_figure = go.Figure(figure)
     return [
@@ -230,6 +240,26 @@ def update_output_div(input_value, figure):
                         ),
                     ]
                 ),
+                html.Hr(),
+                html.Details(
+                    [
+                        html.Summary(
+                            "Click to show/hide drug efficacy sheet for the corresponding dataset"
+                        ),
+                        html.Br(),
+                        html.Div(
+                            [html.Iframe(
+                    src=drug_sheet_url,
+                    style={
+                        "width": "100%",
+                        "height": "1000px",
+                    },
+                )],
+                style={"width": "100%", "padding-top": "1%"},
+                        ),
+                    ]
+                ),
+            html.Hr(),
             ]
         )
     ], update_on_click(
