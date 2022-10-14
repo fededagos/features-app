@@ -6,6 +6,7 @@ import pathlib
 import json
 from app import app
 from utils.plotting import make_figure, update_on_click
+from apps.footer import make_footer
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
@@ -149,18 +150,14 @@ def update_output_div(input_value, figure):
     opto_plots_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
-        + "_opto_plots_combined.svg"
+        + "_opto_plots_combined.png"
     )
     amplitude_img_url = (
         "https://files.fededagos.me/individual-plots/"
         + str(input_value["points"][0]["customdata"][1])
         + "-amplitudes.png"
     )
-    fn_fp_image_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(input_value["points"][0]["customdata"][1])
-        + "-fp_fn_rates.png"
-    )
+
     try:
         drug_sheet_url = iframe_src[input_value["points"][0]["customdata"][0]]
     except KeyError:
@@ -197,69 +194,7 @@ def update_output_div(input_value, figure):
                     ],
                 ),
                 html.Br(),
-                html.P("Amplitude distribution:"),
-                html.Img(
-                    src=amplitude_img_url,
-                    style={
-                        "max-width": "75%",
-                        "display": "block",
-                        "margin-left": "auto",
-                        "margin-right": "auto",
-                    },
-                    className="responsive",
-                ),
-                html.Hr(),
-                html.Details(
-                    [
-                        html.Summary("Click to show/hide opto plots"),
-                        html.Br(),
-                        html.Div(
-                            [
-                                html.Img(
-                                    src=opto_plots_url,
-                                    className="responsive",
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-                html.Hr(),
-                html.Details(
-                    [
-                        html.Summary(
-                            "Click to show/hide temporal quality checks plots"
-                        ),
-                        html.Br(),
-                        html.Div(
-                            [
-                                html.Img(
-                                    src=fn_fp_image_url,
-                                    className="responsive",
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-                html.Hr(),
-                html.Details(
-                    [
-                        html.Summary(
-                            "Click to show/hide drug efficacy sheet for the corresponding dataset"
-                        ),
-                        html.Br(),
-                        html.Div(
-                            [html.Iframe(
-                    src=drug_sheet_url,
-                    style={
-                        "width": "100%",
-                        "height": "1000px",
-                    },
-                )],
-                style={"width": "100%", "padding-top": "1%"},
-                        ),
-                    ]
-                ),
-            html.Hr(),
+                *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url)
             ]
         )
     ], update_on_click(

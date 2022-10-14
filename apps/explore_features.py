@@ -5,6 +5,7 @@ import json
 from app import app
 from utils.plotting import make_figure, update_on_click
 import plotly.graph_objects as go
+from apps.footer import make_footer
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
@@ -19,7 +20,7 @@ iframe_src = json.loads(data)
 
 layout = html.Div(
     [
-        dcc.Store(id="store", data={"input_changed": False}),
+        dcc.Store(id="store", data={"input_changed": [0]}),
         html.Div(
             [
                 dcc.Dropdown(
@@ -123,6 +124,7 @@ def update_output_div(hoverData):
     Output(component_id="click-data-features", component_property="children"),
     Output(component_id="feature-graph", component_property="figure"),
     Output(component_id="store", component_property="data"),
+    Output(component_id="feature-graph", component_property="clickData"),
     Input(component_id="feature-graph", component_property="clickData"),
     Input("feature-dropdown", "value"),
     Input("yaxis-type", "value"),
@@ -132,9 +134,10 @@ def update_output_div(hoverData):
 def update_output_div(click_input, value, normalised, figure, store):
 
     if value is not None and len(value) != 0:
-        store["input_changed"] = True
+        store["input_changed"].append(len(value))
     elif value is None or len(value) == 0:
-        store["input_changed"] = False
+        store["input_changed"] = [0]
+
         return (
             [
                 html.Hr(),
@@ -145,14 +148,22 @@ def update_output_div(click_input, value, normalised, figure, store):
             ],
             go.Figure(),
             store,
+            None,
         )
+
+    input_changed = (
+        store["input_changed"][-1] != store["input_changed"][-2]
+        if len(store["input_changed"]) > 2
+        else False
+    )
 
     if click_input is None:
         use_normalised = True if normalised == "Normalised" else False
         features = list(value)
         actual_figure = make_figure(df, which=features, normalised=use_normalised)
-        return no_update, actual_figure, store
-    elif click_input is not None and not store["input_changed"]:
+        return no_update, actual_figure, store, None
+
+    elif click_input is not None and not input_changed:
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
@@ -170,9 +181,14 @@ def update_output_div(click_input, value, normalised, figure, store):
         opto_plots_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "_opto_plots_combined.svg"
+            + "_opto_plots_combined.png"
         )
-        
+        amplitude_img_url = (
+            "https://files.fededagos.me/individual-plots/"
+            + str(click_input["points"][0]["customdata"][1])
+            + "-amplitudes.png"
+        )
+
         try:
             drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
         except KeyError:
@@ -197,7 +213,7 @@ def update_output_div(click_input, value, normalised, figure, store):
                                     children=[
                                         html.Img(
                                             src=acg_image_url,
-                                            className="responsive",
+                                            className="responsivesvg",
                                         )
                                     ],
                                 ),
@@ -206,26 +222,14 @@ def update_output_div(click_input, value, normalised, figure, store):
                                     children=[
                                         html.Img(
                                             src=wvf_image_url,
-                                            className="responsive",
+                                            className="responsivesvg",
                                         ),
                                     ],
                                 ),
                             ],
                         ),
-                        html.Hr(),
-                        html.Details(
-                            [
-                                html.Summary("Click to show/hide opto plots"),
-                                html.Br(),
-                                html.Div(
-                                    [
-                                        html.Img(
-                                            src=opto_plots_url, className="responsive"
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
+                        html.Br(),
+                        *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url),
                     ]
                 )
             ],
@@ -233,8 +237,9 @@ def update_output_div(click_input, value, normalised, figure, store):
                 actual_figure, df, which=features, normalised=True, subselect=unit
             ),
             store,
+            click_input,
         )
-    elif click_input is not None and store["input_changed"]:
+    elif click_input is not None and input_changed:
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
@@ -252,18 +257,14 @@ def update_output_div(click_input, value, normalised, figure, store):
         opto_plots_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
-            + "_opto_plots_combined.svg"
+            + "_opto_plots_combined.png"
         )
         amplitude_img_url = (
             "https://files.fededagos.me/individual-plots/"
             + str(click_input["points"][0]["customdata"][1])
             + "-amplitudes.png"
         )
-        fn_fp_image_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
-            + "-fp_fn_rates.png"
-        )
+
         try:
             drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
         except KeyError:
@@ -304,68 +305,7 @@ def update_output_div(click_input, value, normalised, figure, store):
                             ],
                         ),
                         html.Br(),
-                        html.P("Amplitude distribution:"),
-                        html.Img(
-                            src=amplitude_img_url,
-                            style={
-                                "max-width": "75%",
-                                "display": "block",
-                                "margin-left": "auto",
-                                "margin-right": "auto",
-                            },
-                            className="responsive",
-                        ),
-                        html.Hr(),
-                        html.Details(
-                            [
-                                html.Summary("Click to show/hide opto plots"),
-                                html.Br(),
-                                html.Div(
-                                    [
-                                        html.Img(
-                                            src=opto_plots_url, className="responsive"
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        html.Hr(),
-                        html.Details(
-                            [
-                                html.Summary(
-                                    "Click to show/hide temporal quality checks plots"
-                                ),
-                                html.Br(),
-                                html.Div(
-                                    [
-                                        html.Img(
-                                            src=fn_fp_image_url,
-                                            className="responsive",
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        html.Hr(),
-                        html.Details(
-                            [
-                                html.Summary(
-                                    "Click to show/hide drug efficacy sheet for the corresponding dataset"
-                                ),
-                                html.Br(),
-                                html.Div(
-                                    [html.Iframe(
-                            src=drug_sheet_url,
-                            style={
-                                "width": "100%",
-                                "height": "1000px",
-                            },
-                        )],
-                        style={"width": "100%", "padding-top": "1%"},
-                                ),
-                            ]
-                        ),
-                    html.Hr(),
+                        *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url),
                     ]
                 )
             ],
@@ -377,4 +317,5 @@ def update_output_div(click_input, value, normalised, figure, store):
                 subselect=unit,
             ),
             store,
+            click_input,
         )
