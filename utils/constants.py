@@ -1,0 +1,1 @@
+PLOTS_FOLDER_URL = "https://files.fededagos.me/individual-plots/new/"

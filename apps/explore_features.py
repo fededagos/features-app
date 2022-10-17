@@ -6,6 +6,7 @@ from app import app
 from utils.plotting import make_figure, update_on_click
 import plotly.graph_objects as go
 from apps.footer import make_footer
+from utils.constants import PLOTS_FOLDER_URL
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
@@ -83,17 +84,19 @@ def update_output_div(hoverData):
     properties_dict = hoverData["points"][0]
 
     bbox = properties_dict["bbox"]
-    image_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(properties_dict["customdata"][1])
-        + "-wvf.svg"
-    )
     dp = properties_dict["customdata"][0].split("/")
     dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
     unit = properties_dict["customdata"][1]
     feature_value = properties_dict["customdata"][2]
     title = properties_dict["text"]
     color = properties_dict["customdata"][3]
+    plotting_id = properties_dict["customdata"][4]
+    
+    image_url = (
+        PLOTS_FOLDER_URL
+        + str(plotting_id)
+        + "-wvf.svg"
+    )
 
     x_dist = properties_dict["bbox"]["x0"]
 
@@ -167,25 +170,27 @@ def update_output_div(click_input, value, normalised, figure, store):
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
+        plotting_id = click_input["points"][0]["customdata"][4]
+        
         acg_image_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "-acg.svg"
         )
         wvf_image_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "-wvf.svg"
         )
 
         opto_plots_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "_opto_plots_combined.png"
         )
         amplitude_img_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "-amplitudes.png"
         )
 
@@ -234,7 +239,7 @@ def update_output_div(click_input, value, normalised, figure, store):
                 )
             ],
             update_on_click(
-                actual_figure, df, which=features, normalised=True, subselect=unit
+                actual_figure, df, which=features, normalised=True, subselect=plotting_id
             ),
             store,
             click_input,
@@ -243,25 +248,27 @@ def update_output_div(click_input, value, normalised, figure, store):
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
+        plotting_id = click_input["points"][0]["customdata"][4]
+        
         acg_image_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "-acg.svg"
         )
         wvf_image_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "-wvf.svg"
         )
 
         opto_plots_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "_opto_plots_combined.png"
         )
         amplitude_img_url = (
-            "https://files.fededagos.me/individual-plots/"
-            + str(click_input["points"][0]["customdata"][1])
+            PLOTS_FOLDER_URL
+            + str(plotting_id)
             + "-amplitudes.png"
         )
 
@@ -314,7 +321,7 @@ def update_output_div(click_input, value, normalised, figure, store):
                 df,
                 which=features,
                 normalised=use_normalised,
-                subselect=unit,
+                subselect=plotting_id,
             ),
             store,
             click_input,

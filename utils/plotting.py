@@ -35,6 +35,7 @@ def make_figure(
                 good_neurons[good_neurons["label"] == label]["unit"].to_numpy(),
                 good_neurons[good_neurons["label"] == label]["raw_value"].to_numpy(),
                 good_neurons[good_neurons["label"] == label]["color"].to_numpy(),
+                good_neurons[good_neurons["label"] == label]["plotting_id"].to_numpy(),
             )
         )
 
@@ -44,6 +45,7 @@ def make_figure(
                 grey_neurons[grey_neurons["label"] == label]["unit"].to_numpy(),
                 grey_neurons[grey_neurons["label"] == label]["raw_value"].to_numpy(),
                 grey_neurons[grey_neurons["label"] == label]["color"].to_numpy(),
+                grey_neurons[grey_neurons["label"] == label]["plotting_id"].to_numpy(),
             )
         )
 
@@ -199,7 +201,7 @@ def update_on_click(
 
     # Adding highlighted point if any
     if subselect is not None:
-        highlighted_point = new_df[new_df["unit"] == subselect]
+        highlighted_point = new_df[new_df["plotting_id"] == subselect]
         highlighted_label = highlighted_point["label"].to_numpy()[0]
         highlighted_custom_data = list(
             zip(
@@ -207,6 +209,7 @@ def update_on_click(
                 highlighted_point["unit"].to_numpy(),
                 highlighted_point["raw_value"].to_numpy(),
                 highlighted_point["color"].to_numpy(),
+                highlighted_point["plotting_id"].to_numpy(),
             )
         )
         fig.add_trace(
@@ -272,6 +275,7 @@ def alternative_update(
                 highlighted_point["unit"].to_numpy(),
                 highlighted_point["raw_value"].to_numpy(),
                 highlighted_point["color"].to_numpy(),
+                highlighted_point["plotting_id"].to_numpy(),
             )
         )
 
