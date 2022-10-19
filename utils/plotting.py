@@ -9,7 +9,7 @@ N_TEMPORAL_FEATURES = 15
 def make_figure(
     new_df: pd.DataFrame, which="temporal", normalised=True, subselect=None
 ):
-    n_neurons = np.unique(new_df["unit"].to_numpy()).shape[0]
+    n_neurons = np.unique(new_df["plotting_id"].to_numpy()).shape[0]
     if np.array((which == "temporal")).any():
         new_df = new_df.iloc[: N_TEMPORAL_FEATURES * n_neurons]
         update_title = True

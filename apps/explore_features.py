@@ -239,7 +239,7 @@ def update_output_div(click_input, value, normalised, figure, store):
                 )
             ],
             update_on_click(
-                actual_figure, df, which=features, normalised=True, subselect=plotting_id
+                actual_figure, df, which=features, normalised=use_normalised, subselect=plotting_id
             ),
             store,
             click_input,
