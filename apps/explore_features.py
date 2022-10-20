@@ -21,7 +21,10 @@ iframe_src = json.loads(data)
 
 layout = html.Div(
     [
-        dcc.Store(id="store", data={"input_changed": [0]}),
+        dcc.Store(
+            id="store",
+            data={"input_changed": [0], "norm_changed": [1]},
+        ),
         html.Div(
             [
                 dcc.Dropdown(
@@ -91,12 +94,8 @@ def update_output_div(hoverData):
     title = properties_dict["text"]
     color = properties_dict["customdata"][3]
     plotting_id = properties_dict["customdata"][4]
-    
-    image_url = (
-        PLOTS_FOLDER_URL
-        + str(plotting_id)
-        + "-wvf.svg"
-    )
+
+    image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
 
     x_dist = properties_dict["bbox"]["x0"]
 
@@ -138,6 +137,7 @@ def update_output_div(click_input, value, normalised, figure, store):
 
     if value is not None and len(value) != 0:
         store["input_changed"].append(len(value))
+        store["norm_changed"].append(int(normalised == "Normalised"))
     elif value is None or len(value) == 0:
         store["input_changed"] = [0]
 
@@ -159,6 +159,11 @@ def update_output_div(click_input, value, normalised, figure, store):
         if len(store["input_changed"]) > 2
         else False
     )
+    norm_changed = (
+        store["norm_changed"][-1] != store["norm_changed"][-2]
+        if len(store["norm_changed"]) > 2
+        else False
+    )
 
     if click_input is None:
         use_normalised = True if normalised == "Normalised" else False
@@ -166,33 +171,19 @@ def update_output_div(click_input, value, normalised, figure, store):
         actual_figure = make_figure(df, which=features, normalised=use_normalised)
         return no_update, actual_figure, store, None
 
-    elif click_input is not None and not input_changed:
+    elif click_input is not None and not input_changed and not norm_changed:
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
         plotting_id = click_input["points"][0]["customdata"][4]
-        
-        acg_image_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "-acg.svg"
-        )
-        wvf_image_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "-wvf.svg"
-        )
+
+        acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
+        wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
 
         opto_plots_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "_opto_plots_combined.png"
+            PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
         )
-        amplitude_img_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "-amplitudes.png"
-        )
+        amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
 
         try:
             drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
@@ -239,38 +230,28 @@ def update_output_div(click_input, value, normalised, figure, store):
                 )
             ],
             update_on_click(
-                actual_figure, df, which=features, normalised=use_normalised, subselect=plotting_id
+                actual_figure,
+                df,
+                which=features,
+                normalised=use_normalised,
+                subselect=plotting_id,
             ),
             store,
             click_input,
         )
-    elif click_input is not None and input_changed:
+    elif click_input is not None and (input_changed or norm_changed):
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
         unit = click_input["points"][0]["customdata"][1]
         plotting_id = click_input["points"][0]["customdata"][4]
-        
-        acg_image_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "-acg.svg"
-        )
-        wvf_image_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "-wvf.svg"
-        )
+
+        acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
+        wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
 
         opto_plots_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "_opto_plots_combined.png"
+            PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
         )
-        amplitude_img_url = (
-            PLOTS_FOLDER_URL
-            + str(plotting_id)
-            + "-amplitudes.png"
-        )
+        amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
 
         try:
             drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
