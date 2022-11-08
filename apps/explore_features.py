@@ -2,6 +2,7 @@ from dash import Dash, dcc, html, Input, Output, State, no_update
 import pandas as pd
 import pathlib
 import json
+import dash_loading_spinners as dls
 from app import app
 from utils.plotting import make_joint_figure_side_by_side, update_on_click
 import plotly.graph_objects as go
@@ -43,10 +44,7 @@ layout = html.Div(
                     "Reset graph",
                     id="reset-feature-graph",
                     n_clicks=0,
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
+                    style={"flex-grow": 1, "margin-left": "5px",},
                 ),
             ],
             className="datasetselect",
@@ -69,12 +67,17 @@ layout = html.Div(
         ),
         html.Div(
             [
-                dcc.Graph(
-                    id="feature-graph",
-                    figure=go.Figure(),
-                    clear_on_unhover=True,
-                    style={"height": "75vh"},
-                    className="card",
+                dls.Hash(
+                    [
+                        dcc.Graph(
+                            id="feature-graph",
+                            figure=go.Figure(),
+                            clear_on_unhover=True,
+                            style={"height": "75vh"},
+                            className="card",
+                        ),
+                    ],
+                    debounce=300,
                 ),
                 dcc.Tooltip(
                     id="graph-tip-features",
@@ -255,12 +258,17 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
         wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
         amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+        cell_type = click_input['points'][0]['text']
 
         # All hull data has a plotting id greater than 1000
         if int(plotting_id) < 1000:
             opto_plots_url = (
                 PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
             )
+            
+        elif (cell_type=="PkC_ss" or cell_type=="PkC_cs") and  "YC001" not in dp:
+            opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+            
         else:
             opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
 

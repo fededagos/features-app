@@ -2,6 +2,7 @@ from dash import Dash, dcc, html, Input, Output, State, no_update
 import pandas as pd
 import pathlib
 import json
+import dash_loading_spinners as dls
 import plotly.graph_objects as go
 from app import app
 from utils.plotting import update_on_click, make_joint_figure
@@ -27,10 +28,7 @@ layout = html.Div(
     [
         html.Div(
             [
-                dcc.Store(
-                    id="lab-choice-waveform",
-                    data={"lab": ["hausser"]},
-                ),
+                dcc.Store(id="lab-choice-waveform", data={"lab": ["hausser"]},),
                 dcc.Dropdown(
                     ["Hausser data", "Hull data", "Combined data"],
                     "Hausser data",
@@ -47,27 +45,27 @@ layout = html.Div(
                     "Reset graph",
                     id="reset-wvf-graph",
                     n_clicks=0,
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
+                    style={"flex-grow": 1, "margin-left": "5px",},
                 ),
             ],
             className="datasetselect",
         ),
         html.Div(
             [
-                dcc.Graph(
-                    id="wf-graph",
-                    figure=fig,
-                    clear_on_unhover=True,
-                    style={"height": "75vh"},
-                    className="card",
+                dls.Hash(
+                    [
+                        dcc.Graph(
+                            id="wf-graph",
+                            figure=fig,
+                            clear_on_unhover=True,
+                            style={"height": "75vh"},
+                            className="card",
+                        )
+                    ],
+                    debounce=300,
                 ),
                 dcc.Tooltip(
-                    id="graph-tip-wf",
-                    background_color="white",
-                    border_color="white",
+                    id="graph-tip-wf", background_color="white", border_color="white",
                 ),
             ],
             id="wvf-graph-container",
@@ -238,8 +236,7 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column",
                                 children=[
                                     html.Img(
-                                        src=acg_image_url,
-                                        className="responsivesvg",
+                                        src=acg_image_url, className="responsivesvg",
                                     )
                                 ],
                             ),
@@ -247,8 +244,7 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column",
                                 children=[
                                     html.Img(
-                                        src=wvf_image_url,
-                                        className="responsivesvg",
+                                        src=wvf_image_url, className="responsivesvg",
                                     ),
                                 ],
                             ),
@@ -256,8 +252,7 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column",
                                 children=[
                                     html.Img(
-                                        src=feat_image_url,
-                                        className="responsive2",
+                                        src=feat_image_url, className="responsive2",
                                     ),
                                 ],
                             ),

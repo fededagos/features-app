@@ -4,6 +4,7 @@ import plotly.express as px
 import pandas as pd
 import pathlib
 import json
+import dash_loading_spinners as dls
 from app import app
 from utils.plotting import update_on_click, make_joint_figure
 from apps.footer import make_footer
@@ -26,10 +27,7 @@ layout = html.Div(
     [
         html.Div(
             [
-                dcc.Store(
-                    id="lab-choice-temporal",
-                    data={"lab": ["hausser"]},
-                ),
+                dcc.Store(id="lab-choice-temporal", data={"lab": ["hausser"]},),
                 dcc.Dropdown(
                     ["Hausser data", "Hull data", "Combined data"],
                     "Hausser data",
@@ -46,22 +44,24 @@ layout = html.Div(
                     "Reset graph",
                     id="reset-graph",
                     n_clicks=0,
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
+                    style={"flex-grow": 1, "margin-left": "5px",},
                 ),
             ],
             className="datasetselect",
         ),
         html.Div(
             [
-                dcc.Graph(
-                    id="graph",
-                    figure=fig,
-                    clear_on_unhover=True,
-                    style={"height": "75vh"},
-                    className="card",
+                dls.Hash(
+                    [
+                        dcc.Graph(
+                            id="graph",
+                            figure=fig,
+                            clear_on_unhover=True,
+                            style={"height": "75vh"},
+                            className="card",
+                        ),
+                    ],
+                    debounce=300,
                 ),
                 dcc.Tooltip(
                     id="graph-tip",
@@ -236,8 +236,7 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column2",
                                 children=[
                                     html.Img(
-                                        src=acg_image_url,
-                                        className="responsivesvg",
+                                        src=acg_image_url, className="responsivesvg",
                                     )
                                 ],
                             ),
@@ -245,8 +244,7 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column2",
                                 children=[
                                     html.Img(
-                                        src=wvf_image_url,
-                                        className="responsivesvg",
+                                        src=wvf_image_url, className="responsivesvg",
                                     ),
                                 ],
                             ),

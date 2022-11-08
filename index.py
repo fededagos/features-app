@@ -6,7 +6,7 @@ from app import app
 from app import server
 
 # Connect to your app pages
-from apps import waveform_features, temporal_features, explore_features
+from apps import waveform_features, temporal_features, explore_features, about
 
 app.title = "Feature plots"
 
@@ -28,6 +28,7 @@ app.layout = html.Div(
                 dcc.Link(
                     "Features Explorer", href="/apps/explore_features", className="tab"
                 ),
+                dcc.Link("About", href="/apps/about", className="tab"),
             ],
             className="wrapper",
         ),
@@ -41,10 +42,12 @@ app.layout = html.Div(
 def display_page(pathname):
     if pathname == "/apps/temporal_features":
         return temporal_features.layout
-    if pathname == "/apps/waveform_features":
+    elif pathname == "/apps/waveform_features":
         return waveform_features.layout
-    if pathname == "/apps/explore_features":
+    elif pathname == "/apps/explore_features":
         return explore_features.layout
+    elif pathname == "/apps/about":
+        return about.layout
     else:
         return temporal_features.layout
 
