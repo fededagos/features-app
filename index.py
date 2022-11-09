@@ -1,3 +1,6 @@
+import dash_auth
+from users import USERNAME_PASSWORD_PAIRS
+
 from dash import Dash, dcc, html, Input, Output, no_update
 from dash.dependencies import Input, Output
 
@@ -9,6 +12,8 @@ from app import server
 from apps import waveform_features, temporal_features, explore_features, about
 
 app.title = "Feature plots"
+
+auth = dash_auth.BasicAuth(app, USERNAME_PASSWORD_PAIRS)
 
 app.layout = html.Div(
     [

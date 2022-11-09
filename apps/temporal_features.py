@@ -14,9 +14,9 @@ from utils.constants import PLOTS_FOLDER_URL
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("hull_hausser_all_features.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("SfN-2022-dashboard.csv"))
 
-fig = make_joint_figure(df, which="temporal", lab="hausser")
+fig = make_joint_figure(df, which="temporal", lab="combined")
 
 with open(DATA_PATH.joinpath("iframe_src.txt")) as f:
     data = f.read()
@@ -27,10 +27,10 @@ layout = html.Div(
     [
         html.Div(
             [
-                dcc.Store(id="lab-choice-temporal", data={"lab": ["hausser"]},),
+                dcc.Store(id="lab-choice-temporal", data={"lab": ["combined"]},),
                 dcc.Dropdown(
-                    ["Hausser data", "Hull data", "Combined data"],
-                    "Hausser data",
+                    ["Combined data", "Hausser data", "Hull data"],
+                    "Combined data",
                     searchable=False,
                     clearable=False,
                     id="dataset-choice-temporal",
@@ -93,7 +93,7 @@ layout = html.Div(
     [Input("reset-graph", "n_clicks")],
 )
 def reset_clickData(n_clicks):
-    return None, "Hausser data"
+    return None, "Combined data"
 
 
 @app.callback(
@@ -207,12 +207,19 @@ def update_figure(input_value, figure, lab, store_data):
     acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
     wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
     amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+    cell_type = input_value["points"][0]["text"]
 
     # All hull data has a plotting id greater than 1000
-    if int(plotting_id) < 1000:
+    if (int(plotting_id) < 1000) and not (
+        (cell_type == "PkC_ss" or cell_type == "PkC_cs") and ("YC001" not in dp)
+    ):
         opto_plots_url = (
             PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
         )
+
+    elif (cell_type == "PkC_ss" or cell_type == "PkC_cs") and "YC001" not in dp:
+        opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+
     else:
         opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
 

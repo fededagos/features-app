@@ -3,3 +3,4 @@ __pycache__
 **/__pycache__
 stderr.log
 **/.DS_Store
+users.py

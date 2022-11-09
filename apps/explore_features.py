@@ -13,7 +13,7 @@ from utils.constants import PLOTS_FOLDER_URL, TEMPORAL_FEATURES
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("hull_hausser_all_features.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("SfN-2022-dashboard.csv"))
 
 with open(DATA_PATH.joinpath("iframe_src.txt")) as f:
     data = f.read()
@@ -24,13 +24,13 @@ layout = html.Div(
     [
         dcc.Store(
             id="store",
-            data={"input_changed": [0], "norm_changed": [1], "lab": ["hausser"]},
+            data={"input_changed": [0], "norm_changed": [1], "lab": ["combined"]},
         ),
         html.Div(
             [
                 dcc.Dropdown(
-                    ["Hausser data", "Hull data", "Combined data"],
-                    "Hausser data",
+                    ["Combined data", "Hausser data", "Hull data"],
+                    "Combined data",
                     searchable=False,
                     clearable=False,
                     id="dataset-choice-feature",
@@ -258,17 +258,19 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
         wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
         amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
-        cell_type = click_input['points'][0]['text']
+        cell_type = click_input["points"][0]["text"]
 
         # All hull data has a plotting id greater than 1000
-        if int(plotting_id) < 1000:
+        if (int(plotting_id) < 1000) and not (
+            (cell_type == "PkC_ss" or cell_type == "PkC_cs") and ("YC001" not in dp)
+        ):
             opto_plots_url = (
                 PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
             )
-            
-        elif (cell_type=="PkC_ss" or cell_type=="PkC_cs") and  "YC001" not in dp:
+
+        elif (cell_type == "PkC_ss" or cell_type == "PkC_cs") and "YC001" not in dp:
             opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
-            
+
         else:
             opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
 
@@ -335,13 +337,24 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         dp = dp[-1]
         unit = click_input["points"][0]["customdata"][1]
         plotting_id = click_input["points"][0]["customdata"][4]
+        cell_type = click_input["points"][0]["text"]
 
         acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
         wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
 
-        opto_plots_url = (
-            PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
-        )
+        if (int(plotting_id) < 1000) and not (
+            (cell_type == "PkC_ss" or cell_type == "PkC_cs") and ("YC001" not in dp)
+        ):
+            opto_plots_url = (
+                PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
+            )
+
+        elif (cell_type == "PkC_ss" or cell_type == "PkC_cs") and "YC001" not in dp:
+            opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+
+        else:
+            opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
+
         amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
 
         try:

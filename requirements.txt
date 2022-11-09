@@ -6,3 +6,4 @@ gunicorn
 pillow==8.0.0
 matplotlib==3.5
 dash-loading-spinners
+dash-auth
