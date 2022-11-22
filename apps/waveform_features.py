@@ -1,13 +1,15 @@
-from dash import Dash, dcc, html, Input, Output, State, no_update
-import pandas as pd
-import pathlib
 import json
+import time
+import pathlib
+from dash import dcc, html, Input, Output, State, no_update
+import pandas as pd
 import dash_loading_spinners as dls
 import plotly.graph_objects as go
 from app import app
 from utils.plotting import update_on_click, make_joint_figure
 from apps.footer import make_footer
 from utils.constants import PLOTS_FOLDER_URL
+from plotly.io import write_image
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
@@ -19,7 +21,7 @@ fig = make_joint_figure(df, which="waveform", lab="combined")
 
 fig.update_traces(hoverinfo="none", hovertemplate=None)
 
-with open(DATA_PATH.joinpath("iframe_src.txt")) as f:
+with open(DATA_PATH.joinpath("iframe_src.txt"), encoding="utf-8") as f:
     data = f.read()
 
 iframe_src = json.loads(data)
@@ -28,7 +30,10 @@ layout = html.Div(
     [
         html.Div(
             [
-                dcc.Store(id="lab-choice-waveform", data={"lab": ["combined"]},),
+                dcc.Store(
+                    id="lab-choice-waveform",
+                    data={"lab": ["combined"]},
+                ),
                 dcc.Dropdown(
                     ["Combined data", "Hausser data", "Hull data"],
                     "Combined data",
@@ -45,7 +50,20 @@ layout = html.Div(
                     "Reset graph",
                     id="reset-wvf-graph",
                     n_clicks=0,
-                    style={"flex-grow": 1, "margin-left": "5px",},
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
+                ),
+                html.Div(
+                    [
+                        html.Button("Download plot", id="btn-image-wvf", n_clicks=0),
+                        dcc.Download(id="download-image-wvf"),
+                    ],
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
                 ),
             ],
             className="datasetselect",
@@ -65,7 +83,9 @@ layout = html.Div(
                     debounce=300,
                 ),
                 dcc.Tooltip(
-                    id="graph-tip-wf", background_color="white", border_color="white",
+                    id="graph-tip-wf",
+                    background_color="white",
+                    border_color="white",
                 ),
             ],
             id="wvf-graph-container",
@@ -83,6 +103,30 @@ layout = html.Div(
         ),
     ]
 )
+
+
+@app.callback(
+    Output("download-image-wvf", "data"),
+    Output("btn-image-wvf", "n_clicks"),
+    Input("btn-image-wvf", "n_clicks"),
+    State("wf-graph", "figure"),
+    prevent_initial_call=True,
+)
+def func(n_clicks, figure):
+    time.sleep(0.5)
+    if n_clicks is None or figure is None:
+        return no_update, no_update
+
+    if n_clicks != 0:
+        fmt = "pdf"
+        filename = f"figure.{fmt}"
+        write_image(figure, "assets/plots/" + filename)
+        return (
+            dcc.send_file(
+                "./assets/plots/" + filename,
+            ),
+            0,
+        )
 
 
 @app.callback(
@@ -112,11 +156,7 @@ def update_hover(hoverData):
 
     x_dist = properties_dict["bbox"]["x0"]
 
-    if x_dist > 500:
-        direction = "left"
-    else:
-        direction = "right"
-
+    direction = "left" if x_dist > 500 else "right"
     children = [
         html.Div(
             [
@@ -209,14 +249,14 @@ def update_figure(input_value, figure, lab, store_data):
     cell_type = input_value["points"][0]["text"]
 
     # All hull data has a plotting id greater than 1000
-    if (int(plotting_id) < 1000) and not (
-        (cell_type == "PkC_ss" or cell_type == "PkC_cs") and ("YC001" not in dp)
+    if int(plotting_id) < 1000 and not (
+        cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp
     ):
         opto_plots_url = (
             PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
         )
 
-    elif (cell_type == "PkC_ss" or cell_type == "PkC_cs") and "YC001" not in dp:
+    elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
         opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
 
     else:
@@ -243,7 +283,8 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column",
                                 children=[
                                     html.Img(
-                                        src=acg_image_url, className="responsivesvg",
+                                        src=acg_image_url,
+                                        className="responsivesvg",
                                     )
                                 ],
                             ),
@@ -251,7 +292,8 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column",
                                 children=[
                                     html.Img(
-                                        src=wvf_image_url, className="responsivesvg",
+                                        src=wvf_image_url,
+                                        className="responsivesvg",
                                     ),
                                 ],
                             ),
@@ -259,7 +301,8 @@ def update_figure(input_value, figure, lab, store_data):
                                 className="column",
                                 children=[
                                     html.Img(
-                                        src=feat_image_url, className="responsive2",
+                                        src=feat_image_url,
+                                        className="responsive2",
                                     ),
                                 ],
                             ),

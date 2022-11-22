@@ -1,13 +1,20 @@
-from dash import Dash, dcc, html, Input, Output, State, no_update
-import pandas as pd
-import pathlib
 import json
+import pathlib
+
 import dash_loading_spinners as dls
-from app import app
-from utils.plotting import make_joint_figure_side_by_side, update_on_click
+import pandas as pd
 import plotly.graph_objects as go
+import plotly.io as pio
+from dash import Input, Output, State, dcc, html, no_update
+from plotly.io import write_image
+
+from app import app
 from apps.footer import make_footer
 from utils.constants import PLOTS_FOLDER_URL, TEMPORAL_FEATURES
+from utils.plotting import make_joint_figure_side_by_side, update_on_click
+
+pio.kaleido.scope.mathjax = None
+import time
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
@@ -15,7 +22,7 @@ DATA_PATH = PATH.joinpath("../datasets").resolve()
 
 df = pd.read_csv(DATA_PATH.joinpath("SfN-2022-dashboard.csv"))
 
-with open(DATA_PATH.joinpath("iframe_src.txt")) as f:
+with open(DATA_PATH.joinpath("iframe_src.txt"), encoding="utf-8") as f:
     data = f.read()
 
 iframe_src = json.loads(data)
@@ -44,7 +51,22 @@ layout = html.Div(
                     "Reset graph",
                     id="reset-feature-graph",
                     n_clicks=0,
-                    style={"flex-grow": 1, "margin-left": "5px",},
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
+                ),
+                html.Div(
+                    [
+                        html.Button(
+                            "Download plot", id="btn-image-explore", n_clicks=0
+                        ),
+                        dcc.Download(id="download-image-explore"),
+                    ],
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
                 ),
             ],
             className="datasetselect",
@@ -102,6 +124,30 @@ layout = html.Div(
 
 
 @app.callback(
+    Output("download-image-explore", "data"),
+    Output("btn-image-explore", "n_clicks"),
+    Input("btn-image-explore", "n_clicks"),
+    State("feature-graph", "figure"),
+    prevent_initial_call=True,
+)
+def func(n_clicks, figure):
+    time.sleep(1)
+    if n_clicks is None or figure is None:
+        return no_update, no_update
+
+    if n_clicks != 0:
+        fmt = "pdf"
+        filename = f"figure.{fmt}"
+        write_image(figure, "assets/plots/" + filename, width=1500, height=700)
+        return (
+            dcc.send_file(
+                "./assets/plots/" + filename,
+            ),
+            0,
+        )
+
+
+@app.callback(
     Output(component_id="graph-tip-features", component_property="show"),
     Output(component_id="graph-tip-features", component_property="bbox"),
     Output(component_id="graph-tip-features", component_property="children"),
@@ -133,10 +179,7 @@ def update_hover(hoverData):
 
     x_dist = properties_dict["bbox"]["x0"]
 
-    if x_dist > 500:
-        direction = "left"
-    else:
-        direction = "right"
+    direction = "left" if x_dist > 500 else "right"
 
     children = [
         html.Div(
@@ -211,7 +254,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
     if value is not None and len(value) != 0:
         store["input_changed"].append(len(value))
         store["norm_changed"].append(int(normalised == "Normalised"))
-    elif value is None or len(value) == 0:
+    else:
         store["input_changed"] = [0]
 
         return (
@@ -230,26 +273,27 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
             no_update,
         )
 
-    input_changed = (
-        store["input_changed"][-1] != store["input_changed"][-2]
-        if len(store["input_changed"]) > 2
-        else False
-    )
     norm_changed = (
         store["norm_changed"][-1] != store["norm_changed"][-2]
         if len(store["norm_changed"]) > 2
         else False
     )
 
+    input_changed = (
+        store["input_changed"][-1] != store["input_changed"][-2]
+        if len(store["input_changed"]) > 2
+        else False
+    )
+
     if click_input is None or lab_changed:
-        use_normalised = True if normalised == "Normalised" else False
+        use_normalised = normalised == "Normalised"
         features = list(value)
         actual_figure = make_joint_figure_side_by_side(
             df, which=features, normalised=use_normalised, lab=lab_id
         )
         return no_update, actual_figure, store, None, no_update, no_update, no_update
 
-    elif click_input is not None and not input_changed and not norm_changed:
+    elif not input_changed and not norm_changed:
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-1]
         unit = click_input["points"][0]["customdata"][1]
@@ -261,14 +305,14 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         cell_type = click_input["points"][0]["text"]
 
         # All hull data has a plotting id greater than 1000
-        if (int(plotting_id) < 1000) and not (
-            (cell_type == "PkC_ss" or cell_type == "PkC_cs") and ("YC001" not in dp)
+        if int(plotting_id) < 1000 and (
+            cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp
         ):
             opto_plots_url = (
                 PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
             )
 
-        elif (cell_type == "PkC_ss" or cell_type == "PkC_cs") and "YC001" not in dp:
+        elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
             opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
 
         else:
@@ -279,7 +323,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         except KeyError:
             drug_sheet_url = iframe_src["missing"]
 
-        use_normalised = True if normalised == "Normalised" else False
+        use_normalised = normalised == "Normalised"
         features = list(value)
         actual_figure = go.Figure(figure)
 
@@ -332,7 +376,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
             no_update,
             no_update,
         )
-    elif click_input is not None and (input_changed or norm_changed or lab_changed):
+    else:
         dp = click_input["points"][0]["customdata"][0].split("/")
         dp = dp[-1]
         unit = click_input["points"][0]["customdata"][1]
@@ -342,14 +386,14 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
         wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
 
-        if (int(plotting_id) < 1000) and not (
-            (cell_type == "PkC_ss" or cell_type == "PkC_cs") and ("YC001" not in dp)
+        if int(plotting_id) < 1000 and (
+            cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp
         ):
             opto_plots_url = (
                 PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
             )
 
-        elif (cell_type == "PkC_ss" or cell_type == "PkC_cs") and "YC001" not in dp:
+        elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
             opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
 
         else:
@@ -362,7 +406,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         except KeyError:
             drug_sheet_url = iframe_src["missing"]
 
-        use_normalised = True if normalised == "Normalised" else False
+        use_normalised = normalised == "Normalised"
         features = list(value)
         actual_figure = make_joint_figure_side_by_side(
             df, which=features, normalised=use_normalised, lab=lab_id

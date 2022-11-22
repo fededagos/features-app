@@ -1,5 +1,5 @@
-from app import app
 from dash import dcc, html
+from app import app
 
 layout = html.Div(
     [

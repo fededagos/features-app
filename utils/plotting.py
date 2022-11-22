@@ -1,6 +1,6 @@
-import plotly.graph_objects as go
-import pandas as pd
 import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
 from matplotlib import colors as c
 
 from utils.constants import *
@@ -338,9 +338,6 @@ def make_joint_figure(
         df = df.loc[df["lab"] == "hausser"].copy()
     elif lab == "hull":
         df = df.loc[df["lab"] == "hull"].copy()
-    else:
-        pass
-
     n_neurons = np.unique(df["plotting_id"].to_numpy()).shape[0]
 
     if np.array((which == "temporal")).any():
@@ -542,9 +539,6 @@ def make_joint_figure_side_by_side(
         df = df.loc[df["lab"] == "hausser"].copy()
     elif lab == "hull":
         df = df.loc[df["lab"] == "hull"].copy()
-    else:
-        pass
-
     n_neurons = np.unique(df["plotting_id"].to_numpy()).shape[0]
 
     if np.array((which == "temporal")).any():

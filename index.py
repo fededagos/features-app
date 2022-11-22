@@ -45,14 +45,12 @@ app.layout = html.Div(
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def display_page(pathname):
-    if pathname == "/apps/temporal_features":
-        return temporal_features.layout
-    elif pathname == "/apps/waveform_features":
-        return waveform_features.layout
+    if pathname == "/apps/about":
+        return about.layout
     elif pathname == "/apps/explore_features":
         return explore_features.layout
-    elif pathname == "/apps/about":
-        return about.layout
+    elif pathname == "/apps/waveform_features":
+        return waveform_features.layout
     else:
         return temporal_features.layout
 
