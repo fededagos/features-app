@@ -1,5 +1,6 @@
 import json
 import pathlib
+import time
 
 import dash_loading_spinners as dls
 import pandas as pd
@@ -14,7 +15,6 @@ from utils.constants import PLOTS_FOLDER_URL, TEMPORAL_FEATURES
 from utils.plotting import make_joint_figure_side_by_side, update_on_click
 
 pio.kaleido.scope.mathjax = None
-import time
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
@@ -51,10 +51,7 @@ layout = html.Div(
                     "Reset graph",
                     id="reset-feature-graph",
                     n_clicks=0,
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
+                    style={"flex-grow": 1, "margin-left": "5px",},
                 ),
                 html.Div(
                     [
@@ -63,10 +60,7 @@ layout = html.Div(
                         ),
                         dcc.Download(id="download-image-explore"),
                     ],
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
+                    style={"flex-grow": 1, "margin-left": "5px",},
                 ),
             ],
             className="datasetselect",
@@ -140,9 +134,7 @@ def func(n_clicks, figure):
         filename = f"figure.{fmt}"
         write_image(figure, "assets/plots/" + filename, width=1500, height=700)
         return (
-            dcc.send_file(
-                "./assets/plots/" + filename,
-            ),
+            dcc.send_file("./assets/plots/" + filename,),
             0,
         )
 
