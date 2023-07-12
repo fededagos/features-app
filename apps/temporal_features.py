@@ -1,31 +1,86 @@
-from dash import Dash, dcc, html, Input, Output, no_update
+from dash import Dash, dcc, html, Input, Output, no_update, State
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 import pathlib
+import json
+import dash_loading_spinners as dls
 from app import app
-from utils.plotting import make_figure, update_on_click
+from utils.plotting import update_on_click, make_joint_figure
+from apps.footer import make_footer
+from utils.constants import PLOTS_FOLDER_URL
+from plotly.io import write_image
+import time
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
+PLOT_PATH = PATH.joinpath("../assets/plots").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("all_features.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("SfN-2022-dashboard.csv"))
 
-fig = make_figure(df, which="temporal")
+fig = make_joint_figure(df, which="temporal", lab="combined")
+
+with open(DATA_PATH.joinpath("iframe_src.txt"), encoding="utf-8") as f:
+    data = f.read()
+
+iframe_src = json.loads(data)
 
 layout = html.Div(
     [
         html.Div(
             [
-                html.Button("Reset graph", id="reset-graph", n_clicks=0),
-                html.P(),
-                dcc.Graph(
-                    id="graph",
-                    figure=fig,
-                    clear_on_unhover=True,
-                    style={"height": "75vh"},
-                    className="card",
+                dcc.Store(
+                    id="lab-choice-temporal",
+                    data={"lab": ["combined"]},
+                ),
+                dcc.Dropdown(
+                    ["Combined data", "Hausser data", "Hull data"],
+                    "Combined data",
+                    searchable=False,
+                    clearable=False,
+                    id="dataset-choice-temporal",
+                    style={
+                        "flex-grow": 4,
+                        "min-width": "200px",
+                        "margin-right": "5px",
+                    },
+                ),
+                html.Button(
+                    "Reset graph",
+                    id="reset-graph",
+                    n_clicks=0,
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
+                ),
+                html.Div(
+                    [
+                        html.Button("Download plot", id="btn-image", n_clicks=0),
+                        dcc.Download(id="download-image"),
+                    ],
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
+                ),
+            ],
+            className="datasetselect",
+        ),
+        html.Div(
+            [
+                dls.Hash(
+                    [
+                        dcc.Graph(
+                            id="graph",
+                            figure=fig,
+                            clear_on_unhover=True,
+                            style={"height": "75vh"},
+                            className="card",
+                        ),
+                    ],
+                    debounce=300,
                 ),
                 dcc.Tooltip(
                     id="graph-tip",
@@ -51,9 +106,37 @@ layout = html.Div(
 )
 
 
-@app.callback(Output("graph", "clickData"), [Input("reset-graph", "n_clicks")])
+@app.callback(
+    Output("download-image", "data"),
+    Output("btn-image", "n_clicks"),
+    Input("btn-image", "n_clicks"),
+    State("graph", "figure"),
+    prevent_initial_call=True,
+)
+def func(n_clicks, figure):
+    time.sleep(0.5)
+    if n_clicks is None or figure is None:
+        return no_update, no_update
+
+    if n_clicks != 0:
+        fmt = "pdf"
+        filename = f"figure.{fmt}"
+        write_image(figure, PLOT_PATH.joinpath(filename))
+        return (
+            dcc.send_file(
+                PLOT_PATH.joinpath(filename),
+            ),
+            0,
+        )
+
+
+@app.callback(
+    Output("graph", "clickData"),
+    Output("dataset-choice-temporal", "value"),
+    [Input("reset-graph", "n_clicks")],
+)
 def reset_clickData(n_clicks):
-    return None
+    return None, "Combined data"
 
 
 @app.callback(
@@ -64,36 +147,37 @@ def reset_clickData(n_clicks):
     Output(component_id="graph-tip", component_property="direction"),
     Input(component_id="graph", component_property="hoverData"),
 )
-def update_output_div(hoverData):
+def update_graphtip(hoverData):
     if hoverData is None:
         return False, no_update, no_update, no_update, no_update
 
     properties_dict = hoverData["points"][0]
 
     bbox = properties_dict["bbox"]
-    image_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(properties_dict["customdata"][1])
-        + "-acg.svg"
-    )
     dp = properties_dict["customdata"][0].split("/")
-    dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
+    dp = dp[-1]
     unit = properties_dict["customdata"][1]
     feature_value = properties_dict["customdata"][2]
     title = properties_dict["text"]
     color = properties_dict["customdata"][3]
+    plotting_id = properties_dict["customdata"][4]
+
+    image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
 
     x_dist = properties_dict["bbox"]["x0"]
 
-    if x_dist > 500:
-        direction = "left"
-    else:
-        direction = "right"
-
+    direction = "left" if x_dist > 500 else "right"
     children = [
         html.Div(
             [
-                html.Img(src=image_url, style={"width": "70%", "background": "white"}),
+                html.Img(
+                    src=image_url,
+                    style={
+                        "min-width": "250px",
+                        "max-width": "70%",
+                        "background": "white",
+                    },
+                ),
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
@@ -112,124 +196,118 @@ def update_output_div(hoverData):
 @app.callback(
     Output(component_id="click-data", component_property="children"),
     Output(component_id="graph", component_property="figure"),
+    Output(component_id="lab-choice-temporal", component_property="data"),
     Input(component_id="graph", component_property="clickData"),
     Input(component_id="graph", component_property="figure"),
+    Input(component_id="dataset-choice-temporal", component_property="value"),
+    Input(component_id="lab-choice-temporal", component_property="data"),
 )
-def update_output_div(input_value, figure):
+def update_figure(input_value, figure, lab, store_data):
 
-    if input_value is None:
-        return [
-            html.Div(
-                [html.P("")],
-            )
-        ], fig
+    # Check if user requested for a lab data input change
+    lab_correspondence = {
+        "Hausser data": "hausser",
+        "Hull data": "hull",
+        "Combined data": "combined",
+    }
+    lab_id = lab_correspondence[lab]
+    store_data["lab"].append(lab_id)
+    lab_changed = store_data["lab"][-1] != store_data["lab"][-2]
 
-    dp = input_value["points"][0]["customdata"][0].split("/")
-    dp = dp[-3] + "/" + dp[-2] + "/" + dp[-1]
-    unit = input_value["points"][0]["customdata"][1]
-    acg_image_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(input_value["points"][0]["customdata"][1])
-        + "-acg.svg"
-    )
-    wvf_image_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(input_value["points"][0]["customdata"][1])
-        + "-wvf.svg"
-    )
-
-    opto_plots_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(input_value["points"][0]["customdata"][1])
-        + "_opto_plots_combined.svg"
-    )
-    amplitude_img_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(input_value["points"][0]["customdata"][1])
-        + "-amplitudes.png"
-    )
-    fn_fp_image_url = (
-        "https://files.fededagos.me/individual-plots/"
-        + str(input_value["points"][0]["customdata"][1])
-        + "-fp_fn_rates.png"
-    )
-
-    actual_figure = go.Figure(figure)
-    return [
-        html.Div(
+    if input_value is None and not lab_changed:
+        return (
             [
                 html.Hr(),
-                html.H5(f"Cell type: {input_value['points'][0]['text']}"),
-                html.P(f"Unit {unit} in {dp}"),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="column2",
-                            children=[
-                                html.Img(
-                                    src=acg_image_url,
-                                    className="responsivesvg",
-                                )
-                            ],
-                        ),
-                        html.Div(
-                            className="column2",
-                            children=[
-                                html.Img(
-                                    src=wvf_image_url,
-                                    className="responsivesvg",
-                                ),
-                            ],
-                        ),
-                    ],
+                html.H3("Inspect element:"),
+                html.P(
+                    "Click on a point in the graph to fix it here for further inspection."
                 ),
-                html.Br(),
-                html.P("Amplitude distribution:"),
-                html.Img(
-                    src=amplitude_img_url,
-                    style={
-                        "max-width": "75%",
-                        "display": "block",
-                        "margin-left": "auto",
-                        "margin-right": "auto",
-                    },
-                    className="responsive",
-                ),
-                html.Hr(),
-                html.Details(
-                    [
-                        html.Summary("Click to show/hide opto plots"),
-                        html.Br(),
-                        html.Div(
-                            [
-                                html.Img(
-                                    src=opto_plots_url,
-                                    className="responsive",
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-                html.Hr(),
-                html.Details(
-                    [
-                        html.Summary(
-                            "Click to show/hide temporal quality checks plots"
-                        ),
-                        html.Br(),
-                        html.Div(
-                            [
-                                html.Img(
-                                    src=fn_fp_image_url,
-                                    className="responsive",
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-            ]
+            ],
+            fig,
+            store_data,
         )
-    ], update_on_click(
-        actual_figure, df, which="temporal", normalised=True, subselect=unit
+    elif lab_changed:
+        return (
+            [
+                html.Hr(),
+                html.H3("Inspect element:"),
+                html.P(
+                    "Click on a point in the graph to fix it here for further inspection."
+                ),
+            ],
+            make_joint_figure(df, which="temporal", lab=store_data["lab"][-1]),
+            store_data,
+        )
+
+    dp = input_value["points"][0]["customdata"][0].split("/")
+    dp = dp[-1]
+    unit = input_value["points"][0]["customdata"][1]
+    plotting_id = input_value["points"][0]["customdata"][4]
+    acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
+    wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
+    amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+    cell_type = input_value["points"][0]["text"]
+
+    # All hull data has a plotting id greater than 1000
+    if int(plotting_id) < 1000 and not (cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp):
+        opto_plots_url = (
+            PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
+        )
+
+    elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
+        opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+
+    else:
+        opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
+
+    try:
+        drug_sheet_url = iframe_src[input_value["points"][0]["customdata"][0]]
+    except KeyError:
+        drug_sheet_url = iframe_src["missing"]
+
+    actual_figure = go.Figure(figure)
+    return (
+        [
+            html.Div(
+                [
+                    html.Hr(),
+                    html.H5(f"Cell type: {input_value['points'][0]['text']}"),
+                    html.P(f"Unit {unit} in {dp}"),
+                    html.Div(
+                        className="row",
+                        children=[
+                            html.Div(
+                                className="column2",
+                                children=[
+                                    html.Img(
+                                        src=acg_image_url,
+                                        className="responsivesvg",
+                                    )
+                                ],
+                            ),
+                            html.Div(
+                                className="column2",
+                                children=[
+                                    html.Img(
+                                        src=wvf_image_url,
+                                        className="responsivesvg",
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                    html.Br(),
+                    *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url),
+                ]
+            )
+        ],
+        update_on_click(
+            actual_figure,
+            df,
+            which="temporal",
+            normalised=True,
+            subselect=plotting_id,
+            lab=lab_id,
+        ),
+        store_data,
     )

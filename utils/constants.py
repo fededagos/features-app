@@ -1,0 +1,40 @@
+PLOTS_FOLDER_URL = "https://files.fededagos.me/individual-plots/"
+
+TEMPORAL_FEATURES = [
+    "mfr",
+    "mifr",
+    "med_isi",
+    "mode_isi",
+    "prct5ISI",
+    "entropy",
+    "CV2_mean",
+    "CV2_median",
+    "CV",
+    "IR",
+    "Lv",
+    "LvR",
+    "LcV",
+    "SI",
+    "SKW",
+]
+
+WAVEFORM_FEATURES = [
+    "relevant_channel",
+    "trough_voltage",
+    "trough_t",
+    "peak_voltage",
+    "peak_t",
+    "repolarisation_t",
+    "depolarisation_t",
+    "peak_50_width",
+    "trough_50_width",
+    "onset_t",
+    "onset_amp",
+    "wvf_width",
+    "peak_trough_ratio",
+    "recovery_slope",
+    "repolarisation_slope",
+    "depolarisation_slope",
+    "spatial_decay_24um",
+    "dendritic_comp_amp",
+]
