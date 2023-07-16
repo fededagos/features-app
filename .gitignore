@@ -4,3 +4,4 @@ __pycache__
 stderr.log
 **/.DS_Store
 users.py
+Preapare_dataset_for_dashboard.ipynb
