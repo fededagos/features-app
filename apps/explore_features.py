@@ -6,7 +6,7 @@ import dash_loading_spinners as dls
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
-from dash import Input, Output, State, dcc, html, no_update
+from dash import Input, Output, State, dcc, get_asset_url, html, no_update
 from plotly.io import write_image
 
 from app import app
@@ -20,7 +20,7 @@ pio.kaleido.scope.mathjax = None
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("SfN-2022-dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("Jul-28-combined_dashboard.csv"))
 
 with open(DATA_PATH.joinpath("iframe_src.txt"), encoding="utf-8") as f:
     data = f.read()
@@ -51,7 +51,10 @@ layout = html.Div(
                     "Reset graph",
                     id="reset-feature-graph",
                     n_clicks=0,
-                    style={"flex-grow": 1, "margin-left": "5px",},
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
                 ),
                 html.Div(
                     [
@@ -60,7 +63,10 @@ layout = html.Div(
                         ),
                         dcc.Download(id="download-image-explore"),
                     ],
-                    style={"flex-grow": 1, "margin-left": "5px",},
+                    style={
+                        "flex-grow": 1,
+                        "margin-left": "5px",
+                    },
                 ),
             ],
             className="datasetselect",
@@ -134,7 +140,9 @@ def func(n_clicks, figure):
         filename = f"figure.{fmt}"
         write_image(figure, "assets/plots/" + filename, width=1500, height=700)
         return (
-            dcc.send_file("./assets/plots/" + filename,),
+            dcc.send_file(
+                "./assets/plots/" + filename,
+            ),
             0,
         )
 
@@ -165,9 +173,9 @@ def update_hover(hoverData):
 
     # If hovering on a temporal feature show the ACG, otherwise show the waveform
     if which_feature in set(TEMPORAL_FEATURES):
-        image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
+        image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
     else:
-        image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
+        image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
 
     x_dist = properties_dict["bbox"]["x0"]
 
@@ -214,7 +222,6 @@ def update_hover(hoverData):
     State("store", "data"),
 )
 def update_figure(click_input, value, normalised, figure, lab, clicks, store):
-
     # The first and easiest thing to implement is the reset button
     if clicks > 0:
         return (
@@ -291,29 +298,28 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         unit = click_input["points"][0]["customdata"][1]
         plotting_id = click_input["points"][0]["customdata"][4]
 
-        acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
-        wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
-        amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+        acg_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
+        wvf_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
+        amplitude_img_url = get_asset_url(
+            PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+        )
         cell_type = click_input["points"][0]["text"]
 
         # All hull data has a plotting id greater than 1000
         if int(plotting_id) < 1000 and (
             cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp
         ):
-            opto_plots_url = (
+            opto_plots_url = get_asset_url(
                 PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
             )
 
         elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
-            opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+            opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "purkinje_cell.png")
 
         else:
-            opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
-
-        try:
-            drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
-        except KeyError:
-            drug_sheet_url = iframe_src["missing"]
+            opto_plots_url = get_asset_url(
+                PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
+            )
 
         use_normalised = normalised == "Normalised"
         features = list(value)
@@ -350,7 +356,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
                             ],
                         ),
                         html.Br(),
-                        *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url),
+                        *make_footer(amplitude_img_url, opto_plots_url),
                     ]
                 )
             ],
@@ -375,28 +381,27 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         plotting_id = click_input["points"][0]["customdata"][4]
         cell_type = click_input["points"][0]["text"]
 
-        acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
-        wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
+        acg_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
+        wvf_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
 
         if int(plotting_id) < 1000 and (
             cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp
         ):
-            opto_plots_url = (
+            opto_plots_url = get_asset_url(
                 PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
             )
 
         elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
-            opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+            opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "purkinje_cell.png")
 
         else:
-            opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
+            opto_plots_url = get_asset_url(
+                PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
+            )
 
-        amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
-
-        try:
-            drug_sheet_url = iframe_src[click_input["points"][0]["customdata"][0]]
-        except KeyError:
-            drug_sheet_url = iframe_src["missing"]
+        amplitude_img_url = get_asset_url(
+            PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+        )
 
         use_normalised = normalised == "Normalised"
         features = list(value)
@@ -435,7 +440,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
                             ],
                         ),
                         html.Br(),
-                        *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url),
+                        *make_footer(amplitude_img_url, opto_plots_url),
                     ]
                 )
             ],

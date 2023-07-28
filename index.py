@@ -1,19 +1,13 @@
-# import dash_auth
-# from users import USERNAME_PASSWORD_PAIRS
-
-from dash import Dash, dcc, html, Input, Output, no_update
+from dash import Dash, Input, Output, dcc, html, no_update
 from dash.dependencies import Input, Output
 
 # Connect to main app.py file
-from app import app
-from app import server
+from app import app, server
 
 # Connect to your app pages
-from apps import waveform_features, temporal_features, explore_features, about
+from apps import about, explore_features, temporal_features, waveform_features
 
 app.title = "Feature plots"
-
-# auth = dash_auth.BasicAuth(app, USERNAME_PASSWORD_PAIRS)
 
 app.layout = html.Div(
     [
@@ -56,4 +50,4 @@ def display_page(pathname):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8050, host="127.0.0.1")

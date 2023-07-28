@@ -1,4 +1,4 @@
-PLOTS_FOLDER_URL = "https://files.fededagos.me/individual-plots/"
+PLOTS_FOLDER_URL = "dashboard_plots/"
 
 TEMPORAL_FEATURES = [
     "mfr",
@@ -38,3 +38,17 @@ WAVEFORM_FEATURES = [
     "spatial_decay_24um",
     "dendritic_comp_amp",
 ]
+
+C4_COLORS = {
+    "PkC_ss": [28, 120, 181],
+    "PkC_cs": [0, 0, 0],
+    "MLI": [224, 85, 159],
+    "MFB": [214, 37, 41],
+    "GrC": [42, 161, 73],
+    "GoC": [56, 174, 62],
+    "laser": [96, 201, 223],
+    "drug": [239, 126, 34],
+    "background": [244, 242, 241],
+    "MLI_A": [224, 85, 150],
+    "MLI_B": [220, 80, 160],
+}

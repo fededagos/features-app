@@ -1,3 +1,5 @@
+import os
+
 import dash
 from flask import Flask
 
@@ -9,5 +11,6 @@ app = dash.Dash(
     meta_tags=[
         {"name": "viewport", "content": "width=device-width, initial-scale=1.0"}
     ],
+    assets_folder=os.path.join(os.getcwd(), "assets"),
 )
 server = app.server

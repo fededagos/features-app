@@ -1,23 +1,24 @@
-from dash import Dash, dcc, html, Input, Output, no_update, State
-import plotly.graph_objects as go
-import plotly.express as px
-import pandas as pd
-import pathlib
 import json
+import pathlib
+import time
+
 import dash_loading_spinners as dls
+import pandas as pd
+import plotly.graph_objects as go
+from dash import Input, Output, State, dcc, get_asset_url, html, no_update
+from plotly.io import write_image
+
 from app import app
-from utils.plotting import update_on_click, make_joint_figure
 from apps.footer import make_footer
 from utils.constants import PLOTS_FOLDER_URL
-from plotly.io import write_image
-import time
+from utils.plotting import make_joint_figure, update_on_click
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 PLOT_PATH = PATH.joinpath("../assets/plots").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("SfN-2022-dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("Jul-28-combined_dashboard.csv"))
 
 fig = make_joint_figure(df, which="temporal", lab="combined")
 
@@ -135,7 +136,7 @@ def func(n_clicks, figure):
     Output("dataset-choice-temporal", "value"),
     [Input("reset-graph", "n_clicks")],
 )
-def reset_clickData(n_clicks):
+def reset_click_data(n_clicks):
     return None, "Combined data"
 
 
@@ -162,7 +163,7 @@ def update_graphtip(hoverData):
     color = properties_dict["customdata"][3]
     plotting_id = properties_dict["customdata"][4]
 
-    image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
+    image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
 
     x_dist = properties_dict["bbox"]["x0"]
 
@@ -203,7 +204,6 @@ def update_graphtip(hoverData):
     Input(component_id="lab-choice-temporal", component_property="data"),
 )
 def update_figure(input_value, figure, lab, store_data):
-
     # Check if user requested for a lab data input change
     lab_correspondence = {
         "Hausser data": "hausser",
@@ -243,27 +243,26 @@ def update_figure(input_value, figure, lab, store_data):
     dp = dp[-1]
     unit = input_value["points"][0]["customdata"][1]
     plotting_id = input_value["points"][0]["customdata"][4]
-    acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
-    wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
-    amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+    acg_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
+    wvf_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
+    amplitude_img_url = get_asset_url(
+        PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+    )
     cell_type = input_value["points"][0]["text"]
 
     # All hull data has a plotting id greater than 1000
-    if int(plotting_id) < 1000 and not (cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp):
-        opto_plots_url = (
+    if int(plotting_id) < 1000 and not (
+        cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp
+    ):
+        opto_plots_url = get_asset_url(
             PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
         )
 
     elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
-        opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+        opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "purkinje_cell.png")
 
     else:
-        opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
-
-    try:
-        drug_sheet_url = iframe_src[input_value["points"][0]["customdata"][0]]
-    except KeyError:
-        drug_sheet_url = iframe_src["missing"]
+        opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "opto_plots_unavailable.png")
 
     actual_figure = go.Figure(figure)
     return (
@@ -297,7 +296,7 @@ def update_figure(input_value, figure, lab, store_data):
                         ],
                     ),
                     html.Br(),
-                    *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url),
+                    *make_footer(amplitude_img_url, opto_plots_url),
                 ]
             )
         ],

@@ -28,7 +28,6 @@ def make_figure(
     good_neurons = new_df[new_df["color"] != "gray"]
     grey_neurons = new_df[new_df["color"] == "gray"]
     for i, label in enumerate(["PkC_cs", "PkC_ss", "GoC", "GrC", "MLI", "MFB"]):
-
         custom_data_good = list(
             zip(
                 good_neurons[good_neurons["label"] == label]["dp"].to_numpy(),
@@ -257,7 +256,6 @@ def alternative_update(
     normalised=True,
     subselect=None,
 ):
-
     if len(fig.data) > 6:
         fig.data = fig.data[:6]
     fig.layout.clickmode = "event+select"
@@ -354,14 +352,12 @@ def make_joint_figure(
 
     fig = go.Figure()
     for lab in np.unique(df["lab"].to_numpy()):
-
         plotting_df = df[df["lab"] == lab]
         if len(plotting_df) == 0:
             continue
         good_neurons = plotting_df[plotting_df["color"] != "gray"]
         grey_neurons = plotting_df[plotting_df["color"] == "gray"]
         for i, label in enumerate(["PkC_cs", "PkC_ss", "GoC", "GrC", "MLI", "MFB"]):
-
             if len(plotting_df[plotting_df["label"] == label]) == 0:
                 continue
 
