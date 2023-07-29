@@ -5,6 +5,8 @@ from matplotlib import colors as c
 
 from utils.constants import *
 
+MARKERS_DICT = {"hausser": "circle", "hull": "diamond", "lisberger": "x"}
+
 
 def make_figure(
     new_df: pd.DataFrame, which="temporal", normalised=True, subselect=None
@@ -186,11 +188,16 @@ def update_on_click(
         # Why 6*3? Because there are 3 traces per cell type (1 for box, 1 for points, 1 for zero values; 6 cell types)
         default_traces = 6 * 3
     elif lab == "hull":
-        # 4*3 Because the hull lab has 3 cell types only
-        default_traces = 4 * 3
+        # 5*3 Because the hull lab has 5 cell types only
+        default_traces = 5 * 3
+    elif lab == "combined_mouse":
+        default_traces = 11 * 3
+    elif lab == "lisberger":
+        # The lisberger lab also has 5 cell types
+        default_traces = 5 * 3
     else:
-        # The labs combined have (6+4)*3 = 30 traces in total
-        default_traces = 10 * 3
+        # All combined
+        default_traces = 16 * 3
 
     if len(fig.data) > default_traces:
         fig.data = fig.data[:default_traces]
@@ -227,7 +234,11 @@ def update_on_click(
                 if normalised
                 else highlighted_point["raw_value"].to_numpy(),
                 x=highlighted_point["feature"].to_numpy(),
-                marker=dict(size=12, line=dict(width=2, color="DarkSlateGrey")),
+                marker=dict(
+                    size=12,
+                    line=dict(width=2, color="DarkSlateGrey"),
+                    symbol=MARKERS_DICT[highlighted_point["lab"].to_numpy()[0]],
+                ),
                 marker_color=highlighted_point["color"],
                 name=f"{highlighted_label} {subselect}",
                 legendgroup=highlighted_label,
@@ -336,6 +347,11 @@ def make_joint_figure(
         df = df.loc[df["lab"] == "hausser"].copy()
     elif lab == "hull":
         df = df.loc[df["lab"] == "hull"].copy()
+    elif lab == "combined_mouse":
+        df = df.loc[df["lab"].isin(["hausser", "hull"])].copy()
+    else:
+        df = df.loc[df["lab"] == "lisberger"].copy()
+
     n_neurons = np.unique(df["plotting_id"].to_numpy()).shape[0]
 
     if np.array((which == "temporal")).any():
@@ -410,6 +426,7 @@ def make_joint_figure(
                     offsetgroup=label,
                     legendgroup=label,
                     marker={"opacity": 0},
+                    showlegend=False,
                     text=[label]
                     * len(
                         good_neurons[good_neurons["label"] == label][
@@ -439,6 +456,7 @@ def make_joint_figure(
                     ].to_numpy(),
                     name=f'{lab.capitalize()} {label} (n = {plotting_df["label"].value_counts()[label] // len(np.unique(plotting_df["feature"].to_numpy()))})',
                     marker_color=neuron_color,
+                    marker={"symbol": MARKERS_DICT[lab]},
                     boxpoints="all",
                     jitter=0.6,
                     pointpos=0,
@@ -447,7 +465,7 @@ def make_joint_figure(
                     # legendgrouptitle=dict(text=label),
                     line=dict(color="rgba(0,0,0,0)"),
                     fillcolor="rgba(0,0,0,0)",
-                    showlegend=False,
+                    showlegend=True,
                     text=[label]
                     * len(
                         good_neurons[good_neurons["label"] == label][
@@ -520,6 +538,7 @@ def make_joint_figure(
         )
 
         fig.update_traces(hoverinfo="none", hovertemplate=None)
+        fig.update_layout(legend={"itemsizing": "constant", "itemwidth": 30})
 
     return fig
 
@@ -535,6 +554,11 @@ def make_joint_figure_side_by_side(
         df = df.loc[df["lab"] == "hausser"].copy()
     elif lab == "hull":
         df = df.loc[df["lab"] == "hull"].copy()
+    elif lab == "combined_mouse":
+        df = df.loc[df["lab"].isin(["hausser", "hull"])].copy()
+    elif lab == "lisberger":
+        df = df.loc[df["lab"] == "lisberger"].copy()
+
     n_neurons = np.unique(df["plotting_id"].to_numpy()).shape[0]
 
     if np.array((which == "temporal")).any():
@@ -609,6 +633,7 @@ def make_joint_figure_side_by_side(
                     offsetgroup=str(label) + str(lab),
                     legendgroup=label,
                     marker={"opacity": 0},
+                    showlegend=False,
                     text=[label]
                     * len(
                         good_neurons[good_neurons["label"] == label][
@@ -646,7 +671,8 @@ def make_joint_figure_side_by_side(
                     # legendgrouptitle=dict(text=label),
                     line=dict(color="rgba(0,0,0,0)"),
                     fillcolor="rgba(0,0,0,0)",
-                    showlegend=False,
+                    showlegend=True,
+                    marker={"symbol": MARKERS_DICT[lab]},
                     text=[label]
                     * len(
                         good_neurons[good_neurons["label"] == label][
@@ -719,5 +745,6 @@ def make_joint_figure_side_by_side(
         )
 
         fig.update_traces(hoverinfo="none", hovertemplate=None)
+        fig.update_layout(legend={"itemsizing": "constant", "itemwidth": 30})
 
     return fig

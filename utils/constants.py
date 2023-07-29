@@ -52,3 +52,11 @@ C4_COLORS = {
     "MLI_A": [224, 85, 150],
     "MLI_B": [220, 80, 160],
 }
+
+LAB_CORRESPONDENCE = {
+    "Hausser data": "hausser",
+    "Hull data": "hull",
+    "Combined mouse data": "combined_mouse",
+    "Lisberger data (macaque)": "lisberger",
+    "All data": "all",
+}

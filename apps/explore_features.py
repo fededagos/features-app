@@ -11,7 +11,7 @@ from plotly.io import write_image
 
 from app import app
 from apps.footer import make_footer
-from utils.constants import PLOTS_FOLDER_URL, TEMPORAL_FEATURES
+from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL, TEMPORAL_FEATURES
 from utils.plotting import make_joint_figure_side_by_side, update_on_click
 
 pio.kaleido.scope.mathjax = None
@@ -31,19 +31,25 @@ layout = html.Div(
     [
         dcc.Store(
             id="store",
-            data={"input_changed": [0], "norm_changed": [1], "lab": ["combined"]},
+            data={"input_changed": [0], "norm_changed": [1], "lab": ["combined_mouse"]},
         ),
         html.Div(
             [
                 dcc.Dropdown(
-                    ["Combined data", "Hausser data", "Hull data"],
-                    "Combined data",
+                    [
+                        "Combined mouse data",
+                        "Hausser data",
+                        "Hull data",
+                        "Lisberger data (macaque)",
+                        "All data",
+                    ],
+                    "Combined mouse data",
                     searchable=False,
                     clearable=False,
                     id="dataset-choice-feature",
                     style={
                         "flex-grow": 4,
-                        "min-width": "200px",
+                        "min-width": "250px",
                         "margin-right": "5px",
                     },
                 ),
@@ -198,7 +204,7 @@ def update_hover(hoverData):
                 html.P(f"Unit: {unit}"),
                 html.P(f"Raw feature Value: {feature_value:.2f}"),
             ],
-            style={"color": "black" if title == "PkC_cs" else "white"},
+            style={"color": "white"},
         ),
     ]
 
@@ -241,11 +247,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         )
 
     # Check if user requested for a lab data input change
-    lab_correspondence = {
-        "Hausser data": "hausser",
-        "Hull data": "hull",
-        "Combined data": "combined",
-    }
+    lab_correspondence = LAB_CORRESPONDENCE
     lab_id = lab_correspondence[lab]
     store["lab"].append(lab_id)
     lab_changed = store["lab"][-1] != store["lab"][-2]

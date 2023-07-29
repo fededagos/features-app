@@ -732,3 +732,60 @@ there.
   align-items: stretch;
   padding: 5px;
 }
+
+
+.page-container {
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Center the button container and text inside .dataset-container */
+.dataset-container {
+  /* Your existing styles for the dataset container */
+  border: 1px solid #bcbcbc;
+  background-color: #fcfcfc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center; /* Center the text inside the container */
+  max-width: 800px;
+  margin: 0 auto; /* Center the container horizontally */
+}
+
+.dataset-container h2,
+.dataset-container p {
+  text-align: center;
+}
+
+.download-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px; 
+  border-radius: 5px;
+  text-align: center;
+  /* max-width: 500px; */
+  margin: 0 auto; /* Center the button horizontally */
+
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+}
+
+/* Style the link text when not hovered */
+.download-button,
+.download-button:link {
+  color: #fff;
+  text-decoration: none; /* Remove underline from the link text */
+}
+
+/* Style the link text when hovered */
+.download-button:hover {
+  background-color: #6bb2ff; /* Change the background color on hover */
+  color: #000000; /* Set a custom color for the text on hover (e.g., red) */
+  text-decoration: none; /* Remove underline from the link text on hover */
+}
+/* Add spacing between consecutive dataset containers */
+.dataset-container + .dataset-container {
+  margin-top: 20px; /* Add vertical spacing (adjust as needed) */
+}

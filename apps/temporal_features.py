@@ -10,7 +10,7 @@ from plotly.io import write_image
 
 from app import app
 from apps.footer import make_footer
-from utils.constants import PLOTS_FOLDER_URL
+from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL
 from utils.plotting import make_joint_figure, update_on_click
 
 # get relative data folder
@@ -20,7 +20,7 @@ PLOT_PATH = PATH.joinpath("../assets/plots").resolve()
 
 df = pd.read_csv(DATA_PATH.joinpath("Jul-28-combined_dashboard.csv"))
 
-fig = make_joint_figure(df, which="temporal", lab="combined")
+fig = make_joint_figure(df, which="temporal", lab="combined_mouse")
 
 with open(DATA_PATH.joinpath("iframe_src.txt"), encoding="utf-8") as f:
     data = f.read()
@@ -33,17 +33,22 @@ layout = html.Div(
             [
                 dcc.Store(
                     id="lab-choice-temporal",
-                    data={"lab": ["combined"]},
+                    data={"lab": ["combined_mouse"]},
                 ),
                 dcc.Dropdown(
-                    ["Combined data", "Hausser data", "Hull data"],
-                    "Combined data",
+                    [
+                        "Combined mouse data",
+                        "Hausser data",
+                        "Hull data",
+                        "Lisberger data (macaque)",
+                    ],
+                    "Combined mouse data",
                     searchable=False,
                     clearable=False,
                     id="dataset-choice-temporal",
                     style={
                         "flex-grow": 4,
-                        "min-width": "200px",
+                        "min-width": "250px",
                         "margin-right": "5px",
                     },
                 ),
@@ -137,7 +142,7 @@ def func(n_clicks, figure):
     [Input("reset-graph", "n_clicks")],
 )
 def reset_click_data(n_clicks):
-    return None, "Combined data"
+    return None, "Combined mouse data"
 
 
 @app.callback(
@@ -186,7 +191,7 @@ def update_graphtip(hoverData):
             ],
             style={
                 "text-align": "left",
-                "color": "black" if title == "PkC_cs" else "white",
+                "color": "white",
             },
         ),
     ]
@@ -205,11 +210,7 @@ def update_graphtip(hoverData):
 )
 def update_figure(input_value, figure, lab, store_data):
     # Check if user requested for a lab data input change
-    lab_correspondence = {
-        "Hausser data": "hausser",
-        "Hull data": "hull",
-        "Combined data": "combined",
-    }
+    lab_correspondence = LAB_CORRESPONDENCE
     lab_id = lab_correspondence[lab]
     store_data["lab"].append(lab_id)
     lab_changed = store_data["lab"][-1] != store_data["lab"][-2]

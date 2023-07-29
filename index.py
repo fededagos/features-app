@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output
 from app import app, server
 
 # Connect to your app pages
-from apps import about, explore_features, temporal_features, waveform_features
+from apps import about, download, explore_features, temporal_features, waveform_features
 
 app.title = "Feature plots"
 
@@ -27,6 +27,7 @@ app.layout = html.Div(
                 dcc.Link(
                     "Features Explorer", href="/apps/explore_features", className="tab"
                 ),
+                dcc.Link("Download datasets", href="/apps/download", className="tab"),
                 dcc.Link("About", href="/apps/about", className="tab"),
             ],
             className="wrapper",
@@ -45,6 +46,8 @@ def display_page(pathname):
         return explore_features.layout
     elif pathname == "/apps/waveform_features":
         return waveform_features.layout
+    elif pathname == "/apps/download":
+        return download.layout
     else:
         return temporal_features.layout
 
