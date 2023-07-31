@@ -79,17 +79,36 @@ layout = html.Div(
         ),
         html.Div(
             [
-                dcc.Dropdown(
-                    df["feature"].unique(),
-                    id="feature-dropdown",
-                    placeholder="Select one or more features to plot...",
-                    multi=True,
-                ),
-                dcc.RadioItems(
-                    ["Normalised", "Raw values"],
-                    "Normalised",
-                    id="yaxis-type",
-                    inline=True,
+                html.Div(
+                    [
+                        dcc.Dropdown(
+                            df["feature"].unique(),
+                            id="feature-dropdown",
+                            placeholder="Select one or more features to plot...",
+                            multi=True,
+                            style={
+                                "flex-grow": 1,
+                                "margin-right": "5px",
+                                "min-width": "50vw",
+                            },
+                        ),
+                        dcc.RadioItems(
+                            ["Normalised", "Raw values"],
+                            "Normalised",
+                            id="yaxis-type",
+                            inline=True,
+                            style={"flex-grow": 0},
+                        ),
+                    ],
+                    style={
+                        "display": "flex",
+                        "flex-wrap": "wrap",
+                        "margin": "5px",
+                        "justify-content": "center",
+                        "max-width": "80vw",
+                        "margin-left": "auto",
+                        "margin-right": "auto",
+                    },
                 ),
             ],
         ),
@@ -114,6 +133,7 @@ layout = html.Div(
                 ),
             ],
             id="dropdown-selection",
+            className="wrapperbig",
         ),
         html.Div(
             [
@@ -416,8 +436,13 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
                 html.Div(
                     [
                         html.Hr(),
-                        html.H4(f"Cell type: {click_input['points'][0]['text']}"),
-                        html.P(f"Unit {unit} in {dp}"),
+                        html.H4(
+                            [
+                                "Cell type: ",
+                                html.Strong(click_input["points"][0]["text"]),
+                            ]
+                        ),
+                        html.H5(f"Unit {unit} in {dp}"),
                         html.Div(
                             className="row",
                             children=[

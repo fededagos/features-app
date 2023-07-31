@@ -626,6 +626,7 @@ there.
 @media (min-width: 1200px) {}
 
 .responsive {
+  flex: 1;
   max-width: 100%;
   height: auto;
 }
@@ -708,11 +709,12 @@ there.
 .wrapperbig {
   margin-right: auto;
   margin-left: auto;
-  max-width: 1500px;
+  /* max-width: 1500px; */
+  max-width: 80vw;
   padding-right: 10px;
   padding-left: 10px;
   margin-top: 5px;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .card {
@@ -731,6 +733,7 @@ there.
   justify-content: center;
   align-items: stretch;
   padding: 5px;
+  flex-wrap: wrap; /* Add this line to wrap flex items */
 }
 
 
@@ -788,4 +791,55 @@ there.
 /* Add spacing between consecutive dataset containers */
 .dataset-container + .dataset-container {
   margin-top: 20px; /* Add vertical spacing (adjust as needed) */
+}
+
+
+.information-container {
+  /* Your existing styles for the dataset container */
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center; /* Center the text inside the container */
+  max-width: 800px;
+  margin: 0 auto; /* Center the container horizontally */
+}
+
+.information-container h2,
+.information-container p {
+  text-align: center;
+}
+
+.information-container+.dataset-container {
+  margin-top: 20px; /* Add vertical spacing (adjust as needed) */
+}
+
+.inspectimg {
+  flex: 1;
+  max-width: auto;
+  height: auto;
+  /* object-fit: cover; */
+  /* max-height: 50vh; */
+  padding: 10px;
+  max-height: 50vh;
+
+}
+
+/* Apply extra rules to SVG images */
+.inspectimg[src$=".svg"] {
+  flex: 1; 
+  max-height: 30vh; 
+}
+
+.inspectimg:nth-child(3) {
+  flex: 2;
+  align-self: stretch;
+  background-color: lightgreen;
+}
+
+.containerinspect {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /* height: 300px; */
 }

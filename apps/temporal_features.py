@@ -271,8 +271,10 @@ def update_figure(input_value, figure, lab, store_data):
             html.Div(
                 [
                     html.Hr(),
-                    html.H5(f"Cell type: {input_value['points'][0]['text']}"),
-                    html.P(f"Unit {unit} in {dp}"),
+                    html.H4(
+                        ["Cell type: ", html.Strong(input_value["points"][0]["text"])]
+                    ),
+                    html.H5(f"Unit {unit} in {dp}"),
                     html.Div(
                         className="row",
                         children=[

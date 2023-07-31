@@ -12,6 +12,7 @@ app.title = "Feature plots"
 app.layout = html.Div(
     [
         dcc.Location(id="url", refresh=False),
+        html.Div(html.H1(html.Strong("C4 database")), style={"text-align": "center"}),
         html.Div(
             [
                 dcc.Link(
