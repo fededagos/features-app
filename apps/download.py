@@ -6,12 +6,16 @@ from app import app
 
 layout = html.Div(
     [
-        html.H1(html.Strong("Dataset Download Page"), style={"text-align": "center"}),
+        html.H2(html.Strong("Datasets Download"), style={"text-align": "center"}),
         html.Div(
             className="information-container",
             children=[
-                html.H2("General information about the datasets"),
-                html.P("All datasets are in the `.h5` format, etc..."),
+                # html.H2("General information about the datasets"),
+                dcc.Markdown(
+                    """All datasets are in the common `.h5` format. 
+                    If you are not familiar with `.h5` check out the [`h5py`](https://docs.h5py.org/en/stable/quick.html) quickstart guide and our
+                    helper functions in [`npyx`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/h5.py) for easier handling of the files. """
+                ),
             ],
         ),
         html.Div(
@@ -19,7 +23,7 @@ layout = html.Div(
             children=[
                 html.H2("Hausser dataset"),
                 html.P(
-                    "The Hausser dataset contains both labelled and unlabelled neurons."
+                    "Contains both labelled (optotagged and crosscorrelogram identified) and unlabelled neurons recorded by the Hausser lab at UCL. Neurons are recorded in the mouse using Neuropixels 1.0 and 2.0 probes."
                 ),
                 html.A(
                     "Download Hausser Dataset",
@@ -34,7 +38,9 @@ layout = html.Div(
             className="dataset-container",
             children=[
                 html.H2("Hull labelled dataset"),
-                html.P("Description of dataset 2"),
+                html.P(
+                    "Contains labelled (optotagged and crosscorrelogram identified) neurons recorded by the Hull lab at Duke. Neurons are recorded in the mouse using Neuropixels 1.0 probes."
+                ),
                 html.A(
                     "Download Hull labelled dataset",
                     id="btn-2",
@@ -48,7 +54,9 @@ layout = html.Div(
             className="dataset-container",
             children=[
                 html.H2("Lisberger dataset"),
-                html.P("Description of dataset 3"),
+                html.P(
+                    "Contains both labelled (expert-identified) and unlabelled neurons recorded by the Lisberger lab at Duke. Neurons are recorded in the monkey using a variety of electrodes."
+                ),
                 html.A(
                     "Download Lisberger dataset",
                     id="btn-3",
@@ -62,7 +70,9 @@ layout = html.Div(
             className="dataset-container",
             children=[
                 html.H2("Hull unlabelled dataset"),
-                html.P("Description of dataset 4"),
+                html.P(
+                    "Contains unlabelled neurons recorded by the Hull lab at Duke. Neurons are recorded in the mouse using Neuropixels 1.0 probes."
+                ),
                 html.A(
                     "Download Hull unlabelled dataset",
                     id="btn-4",
@@ -76,7 +86,9 @@ layout = html.Div(
             className="dataset-container",
             children=[
                 html.H2("Medina unlabelled dataset"),
-                html.P("Description of dataset 5"),
+                html.P(
+                    "Contains unlabelled neurons recorded by the Medina lab at Baylor College of Medicine. Neurons are recorded in the mouse using Neuropixels 1.0 probes."
+                ),
                 html.A(
                     "Download Medina unlabelled dataset",
                     id="btn-5",

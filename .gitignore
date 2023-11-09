@@ -7,4 +7,5 @@ users.py
 Prepare_dataset_for_dashboard.ipynb
 .npyx_placeholder
 **/.npyx_placeholder
+**/hello
 assets/dashboard_plots
