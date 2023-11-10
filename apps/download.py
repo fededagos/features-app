@@ -28,7 +28,7 @@ layout = html.Div(
                 html.A(
                     "Download Hausser Dataset",
                     id="btn-1",
-                    href="https://figshare.com/ndownloader/files/41720781?private_link=9a9dfce1c64cb807fc96",
+                    href="https://figshare.com/ndownloader/files/43102990?private_link=9a9dfce1c64cb807fc96",
                     className="download-button",
                     target="_blank",
                 ),
@@ -44,7 +44,7 @@ layout = html.Div(
                 html.A(
                     "Download Hull labelled dataset",
                     id="btn-2",
-                    href="https://figshare.com/ndownloader/files/41720784?private_link=9a9dfce1c64cb807fc96",
+                    href="https://figshare.com/ndownloader/files/43102996?private_link=9a9dfce1c64cb807fc96",
                     className="download-button",
                     target="_blank",
                 ),
