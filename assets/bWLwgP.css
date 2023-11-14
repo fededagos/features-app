@@ -347,9 +347,9 @@ input[type="button"] {
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  background-color: transparent;
-  border-radius: 4px;
-  border: 1px solid #bbb;
+  background-color: #f8f8f8; /* very light grey */
+  border-radius: 15px; /* more rounded edges */
+  border: 1px solid #e6e6e6; /* light grey border */
   cursor: pointer;
   box-sizing: border-box;
 }
@@ -365,7 +365,8 @@ input[type="submit"]:focus,
 input[type="reset"]:focus,
 input[type="button"]:focus {
   color: #333;
-  border-color: #888;
+  background-color: #fafafa; /* lighter grey background on hover */
+  border: 1px solid #333; 
   outline: 0;
 }
 
@@ -375,8 +376,8 @@ input[type="submit"].button-primary,
 input[type="reset"].button-primary,
 input[type="button"].button-primary {
   color: #FFF;
-  background-color: #33C3F0;
-  border-color: #33C3F0;
+  background-color: #33C3F0; /* primary color */
+  border-color: #33C3F0; /* primary color border */
 }
 
 .button.button-primary:hover,
@@ -390,8 +391,8 @@ input[type="submit"].button-primary:focus,
 input[type="reset"].button-primary:focus,
 input[type="button"].button-primary:focus {
   color: #FFF;
-  background-color: #1EAEDB;
-  border-color: #1EAEDB;
+  background-color: #1EAEDB; /* darker primary color on hover */
+  border-color: #1EAEDB; /* darker primary color border on hover */
 }
 
 
@@ -411,7 +412,7 @@ select {
   /* The 6px vertically centers text on FF, ignored by Webkit */
   background-color: #fff;
   border: 1px solid #D1D1D1;
-  border-radius: 4px;
+  border-radius: 15px;
   box-shadow: none;
   box-sizing: border-box;
   font-family: inherit;

@@ -18,7 +18,7 @@ PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 PLOT_PATH = PATH.joinpath("../assets/plots").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("Jul-28-combined_dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("Nov-14-combined_dashboard.csv"))
 
 fig = make_joint_figure(df, which="temporal", lab="combined_mouse")
 
@@ -102,9 +102,7 @@ layout = html.Div(
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             id="click-data",
         ),
@@ -167,6 +165,8 @@ def update_graphtip(hoverData):
     title = properties_dict["text"]
     color = properties_dict["customdata"][3]
     plotting_id = properties_dict["customdata"][4]
+    cerebellum_layer = properties_dict["customdata"][5]
+    feature_name = properties_dict["customdata"][6]
 
     image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
 
@@ -187,7 +187,8 @@ def update_graphtip(hoverData):
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
-                html.P(f"Raw feature Value: {feature_value:.2f}"),
+                html.P(f"Cerebellar layer: {cerebellum_layer}"),
+                html.P(f"{feature_name}: {feature_value:.2f}"),
             ],
             style={
                 "text-align": "left",
@@ -220,9 +221,7 @@ def update_figure(input_value, figure, lab, store_data):
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             fig,
             store_data,
@@ -232,9 +231,7 @@ def update_figure(input_value, figure, lab, store_data):
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             make_joint_figure(df, which="temporal", lab=store_data["lab"][-1]),
             store_data,
@@ -246,18 +243,12 @@ def update_figure(input_value, figure, lab, store_data):
     plotting_id = input_value["points"][0]["customdata"][4]
     acg_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
     wvf_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
-    amplitude_img_url = get_asset_url(
-        PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
-    )
+    amplitude_img_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png")
     cell_type = input_value["points"][0]["text"]
 
     # All hull data has a plotting id greater than 1000
-    if int(plotting_id) < 1000 and not (
-        cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp
-    ):
-        opto_plots_url = get_asset_url(
-            PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
-        )
+    if int(plotting_id) < 1000 and not (cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp):
+        opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png")
 
     elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
         opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "purkinje_cell.png")
@@ -271,9 +262,7 @@ def update_figure(input_value, figure, lab, store_data):
             html.Div(
                 [
                     html.Hr(),
-                    html.H4(
-                        ["Cell type: ", html.Strong(input_value["points"][0]["text"])]
-                    ),
+                    html.H4(["Cell type: ", html.Strong(input_value["points"][0]["text"])]),
                     html.H5(f"Unit {unit} in {dp}"),
                     html.Div(
                         className="row",

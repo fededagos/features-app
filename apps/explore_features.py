@@ -11,8 +11,14 @@ from plotly.io import write_image
 
 from app import app
 from apps.footer import make_footer
-from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL, TEMPORAL_FEATURES
-from utils.plotting import make_joint_figure_side_by_side, update_on_click
+from utils.constants import (
+    LAB_CORRESPONDENCE,
+    PLOTS_FOLDER_URL,
+    SELECTED_FEATURES,
+    TEMPORAL_FEATURES,
+    USE_FEATURES_SELECTION,
+)
+from utils.plotting import make_joint_figure, update_on_click
 
 pio.kaleido.scope.mathjax = None
 
@@ -20,7 +26,7 @@ pio.kaleido.scope.mathjax = None
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("Jul-28-combined_dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("Nov-14-combined_dashboard.csv"))
 
 with open(DATA_PATH.joinpath("iframe_src.txt"), encoding="utf-8") as f:
     data = f.read()
@@ -64,9 +70,7 @@ layout = html.Div(
                 ),
                 html.Div(
                     [
-                        html.Button(
-                            "Download plot", id="btn-image-explore", n_clicks=0
-                        ),
+                        html.Button("Download plot", id="btn-image-explore", n_clicks=0),
                         dcc.Download(id="download-image-explore"),
                     ],
                     style={
@@ -82,7 +86,9 @@ layout = html.Div(
                 html.Div(
                     [
                         dcc.Dropdown(
-                            df["feature"].unique(),
+                            options=df[df["feature"].isin(SELECTED_FEATURES.keys())]["feature"].unique()
+                            if USE_FEATURES_SELECTION
+                            else df["feature"].unique(),
                             id="feature-dropdown",
                             placeholder="Select one or more features to plot...",
                             multi=True,
@@ -139,9 +145,7 @@ layout = html.Div(
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             id="click-data-features",
         ),
@@ -196,6 +200,8 @@ def update_hover(hoverData):
     title = properties_dict["text"]
     color = properties_dict["customdata"][3]
     plotting_id = properties_dict["customdata"][4]
+    cerebellum_layer = properties_dict["customdata"][5]
+    feature_name = properties_dict["customdata"][6]
 
     # If hovering on a temporal feature show the ACG, otherwise show the waveform
     if which_feature in set(TEMPORAL_FEATURES):
@@ -222,7 +228,8 @@ def update_hover(hoverData):
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
-                html.P(f"Raw feature Value: {feature_value:.2f}"),
+                html.P(f"Cerebellar layer: {cerebellum_layer}"),
+                html.P(f"{feature_name}: {feature_value:.2f}"),
             ],
             style={"color": "white"},
         ),
@@ -254,9 +261,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             go.Figure(),
             store,
@@ -282,9 +287,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             go.Figure(),
             store,
@@ -294,24 +297,16 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
             no_update,
         )
 
-    norm_changed = (
-        store["norm_changed"][-1] != store["norm_changed"][-2]
-        if len(store["norm_changed"]) > 2
-        else False
-    )
+    norm_changed = store["norm_changed"][-1] != store["norm_changed"][-2] if len(store["norm_changed"]) > 2 else False
 
     input_changed = (
-        store["input_changed"][-1] != store["input_changed"][-2]
-        if len(store["input_changed"]) > 2
-        else False
+        store["input_changed"][-1] != store["input_changed"][-2] if len(store["input_changed"]) > 2 else False
     )
 
     if click_input is None or lab_changed:
         use_normalised = normalised == "Normalised"
         features = list(value)
-        actual_figure = make_joint_figure_side_by_side(
-            df, which=features, normalised=use_normalised, lab=lab_id
-        )
+        actual_figure = make_joint_figure(df, which=features, normalised=use_normalised, lab=lab_id)
         return no_update, actual_figure, store, None, no_update, no_update, no_update
 
     elif not input_changed and not norm_changed:
@@ -322,26 +317,18 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
 
         acg_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
         wvf_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
-        amplitude_img_url = get_asset_url(
-            PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
-        )
+        amplitude_img_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png")
         cell_type = click_input["points"][0]["text"]
 
         # All hull data has a plotting id greater than 1000
-        if int(plotting_id) < 1000 and (
-            cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp
-        ):
-            opto_plots_url = get_asset_url(
-                PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
-            )
+        if int(plotting_id) < 1000 and (cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp):
+            opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png")
 
         elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
             opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "purkinje_cell.png")
 
         else:
-            opto_plots_url = get_asset_url(
-                PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
-            )
+            opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "opto_plots_unavailable.png")
 
         use_normalised = normalised == "Normalised"
         features = list(value)
@@ -406,30 +393,20 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         acg_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
         wvf_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
 
-        if int(plotting_id) < 1000 and (
-            cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp
-        ):
-            opto_plots_url = get_asset_url(
-                PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
-            )
+        if int(plotting_id) < 1000 and (cell_type not in ["PkC_ss", "PkC_cs"] or "YC001" in dp):
+            opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png")
 
         elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
             opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "purkinje_cell.png")
 
         else:
-            opto_plots_url = get_asset_url(
-                PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
-            )
+            opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "opto_plots_unavailable.png")
 
-        amplitude_img_url = get_asset_url(
-            PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
-        )
+        amplitude_img_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png")
 
         use_normalised = normalised == "Normalised"
         features = list(value)
-        actual_figure = make_joint_figure_side_by_side(
-            df, which=features, normalised=use_normalised, lab=lab_id
-        )
+        actual_figure = make_joint_figure(df, which=features, normalised=use_normalised, lab=lab_id)
 
         return (
             [

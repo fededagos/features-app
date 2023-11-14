@@ -1,5 +1,7 @@
 PLOTS_FOLDER_URL = "dashboard_plots/"
 
+USE_FEATURES_SELECTION = True
+
 TEMPORAL_FEATURES = [
     "mfr",
     "mifr",
@@ -59,4 +61,25 @@ LAB_CORRESPONDENCE = {
     "Combined mouse data": "combined_mouse",
     "Lisberger data (macaque)": "lisberger",
     "All data": "all",
+}
+
+
+SELECTED_FEATURES = {
+    "mfr": "Mean FR (Hz)",
+    "mifr": "Mean inst. FR (Hz)",
+    "CV": "CV",
+    "CV2_mean": "CV2",
+    "LcV": "Log CV",
+    "IR": "Instantaneous irregularity",
+    "entropy": "Entropy (bits/s)",
+    "Lv": "Local variation",
+    "LvR": "Revised local variation",
+    "acg_burst_vs_mfr": "Burst ratio",
+    "SKW": "ISI skewness",
+    "trough_voltage": "Depolarisation amplitude (\u03bcV)",
+    "peak_voltage": "Repolarisation amplitude (\u03bcV)",
+    "wvf_width": "Waveform width (ms)",
+    "peak_trough_ratio": "Peak-trough ratio",
+    "tau_recovery": "Recovery slope (\u03bcV/ms)",
+    "spatial_decay_24um": "Spatial decay (%/24\u03bcm)",
 }
