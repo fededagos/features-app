@@ -1,4 +1,4 @@
-from dash import dcc, html
+from dash import dcc, get_asset_url, html
 
 from app import app
 
@@ -21,37 +21,41 @@ layout = html.Div(
                 html.Div(
                     [
                         html.Img(
-                            src="https://www.hackerspace-ffm.de/wiki/images/Test-sign_640.png",
+                            src=get_asset_url("unis/UCL_LOGO.svg"),
                             style={
-                                "maxWidth": "100%",
+                                "maxWidth": "calc(25% - 20px)",  # 25% for 4 logos in a row, minus the gap
                                 "maxHeight": "100px",
+                                "minWidth": "100px",
                                 "flex": "1 1 auto",
                                 "objectFit": "contain",
                             },
                         ),
                         html.Img(
-                            src="https://www.hackerspace-ffm.de/wiki/images/Test-sign_640.png",
+                            src=get_asset_url("unis/Baylor.svg"),
                             style={
-                                "maxWidth": "100%",
+                                "maxWidth": "calc(25% - 20px)",  # 25% for 4 logos in a row, minus the gap
                                 "maxHeight": "100px",
+                                "minWidth": "100px",
                                 "flex": "1 1 auto",
                                 "objectFit": "contain",
                             },
                         ),
                         html.Img(
-                            src="https://www.hackerspace-ffm.de/wiki/images/Test-sign_640.png",
+                            src=get_asset_url("unis/Duke.svg"),
                             style={
-                                "maxWidth": "100%",
+                                "maxWidth": "calc(25% - 20px)",  # 25% for 4 logos in a row, minus the gap
                                 "maxHeight": "100px",
+                                "minWidth": "100px",
                                 "flex": "1 1 auto",
                                 "objectFit": "contain",
                             },
                         ),
                         html.Img(
-                            src="https://www.hackerspace-ffm.de/wiki/images/Test-sign_640.png",
+                            src=get_asset_url("unis/bar-ilan.svg"),
                             style={
-                                "maxWidth": "100%",
+                                "maxWidth": "calc(25% - 20px)",  # 25% for 4 logos in a row, minus the gap
                                 "maxHeight": "100px",
+                                "minWidth": "100px",
                                 "flex": "1 1 auto",
                                 "objectFit": "contain",
                             },
@@ -59,11 +63,12 @@ layout = html.Div(
                     ],
                     style={
                         "display": "flex",
+                        "flexDirection": "row",
                         "flexWrap": "wrap",
                         "justifyContent": "center",
                         "alignItems": "center",
                         "gap": "20px",
-                        "marginBottom": "50px",  # Adjust the gap and margin as needed
+                        "marginBottom": "50px",
                     },
                 ),
                 html.H1(
@@ -72,16 +77,15 @@ layout = html.Div(
                 html.P(lipsum, style={"margin-bottom": "2em"}),  # Adjust the bottom margin as needed
                 html.Div(
                     [
-                        html.A("Take me to it!", href="/apps/about", className="button", style={"marginRight": "10px"}),
-                        html.A("Another button", href="#", className="button"),
+                        html.A("About", href="/apps/about", className="button", style={"marginRight": "10px"}),
+                        html.A("Explore dataset", href="/apps/temporal_features", className="button"),
                     ],
                     style={"display": "flex", "flexWrap": "wrap", "justifyContent": "center", "gap": "10px"},
                 ),
             ],
             className="wrapper",
             style={
-                "display": "flex",
-                "flexDirection": "column",
+                "marginTop": "10px",  # This makes sure that the wrapper is not too close to the top
                 "justifyContent": "center",
                 "alignItems": "center",
                 "minHeight": "100vh",  # This makes sure that the wrapper takes the full viewport height

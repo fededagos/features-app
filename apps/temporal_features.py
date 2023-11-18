@@ -61,16 +61,16 @@ layout = html.Div(
                         "margin-left": "5px",
                     },
                 ),
-                html.Div(
-                    [
-                        html.Button("Download plot", id="btn-image", n_clicks=0),
-                        dcc.Download(id="download-image"),
-                    ],
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
-                ),
+                # html.Div(
+                #     [
+                #         html.Button("Download plot", id="btn-image", n_clicks=0),
+                #         dcc.Download(id="download-image"),
+                #     ],
+                #     style={
+                #         "flex-grow": 1,
+                #         "margin-left": "5px",
+                #     },
+                # ),
             ],
             className="datasetselect",
         ),
@@ -110,28 +110,28 @@ layout = html.Div(
 )
 
 
-@app.callback(
-    Output("download-image", "data"),
-    Output("btn-image", "n_clicks"),
-    Input("btn-image", "n_clicks"),
-    State("graph", "figure"),
-    prevent_initial_call=True,
-)
-def func(n_clicks, figure):
-    time.sleep(0.5)
-    if n_clicks is None or figure is None:
-        return no_update, no_update
+# @app.callback(
+#     Output("download-image", "data"),
+#     Output("btn-image", "n_clicks"),
+#     Input("btn-image", "n_clicks"),
+#     State("graph", "figure"),
+#     prevent_initial_call=True,
+# )
+# def func(n_clicks, figure):
+#     time.sleep(0.5)
+#     if n_clicks is None or figure is None:
+#         return no_update, no_update
 
-    if n_clicks != 0:
-        fmt = "pdf"
-        filename = f"figure.{fmt}"
-        write_image(figure, PLOT_PATH.joinpath(filename))
-        return (
-            dcc.send_file(
-                PLOT_PATH.joinpath(filename),
-            ),
-            0,
-        )
+#     if n_clicks != 0:
+#         fmt = "pdf"
+#         filename = f"figure.{fmt}"
+#         write_image(figure, PLOT_PATH.joinpath(filename))
+#         return (
+#             dcc.send_file(
+#                 PLOT_PATH.joinpath(filename),
+#             ),
+#             0,
+#         )
 
 
 @app.callback(

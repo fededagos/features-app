@@ -15,21 +15,21 @@ def make_footer(amplitude_img_url, opto_plots_url):
             className="responsive",
         ),
         html.Hr(),
-        html.Details(
-            [
-                html.Summary(
-                    "Click to show/hide opto plots", style={"font-size": "larger"}
-                ),
-                html.Br(),
-                html.Div(
-                    [
-                        html.Img(
-                            src=opto_plots_url,
-                            className="responsive",
-                        ),
-                    ]
-                ),
-            ]
-        ),
-        html.Hr(),
+        # html.Details(
+        #     [
+        #         html.Summary(
+        #             "Click to show/hide opto plots", style={"font-size": "larger"}
+        #         ),
+        #         html.Br(),
+        #         html.Div(
+        #             [
+        #                 html.Img(
+        #                     src=opto_plots_url,
+        #                     className="responsive",
+        #                 ),
+        #             ]
+        #         ),
+        #     ]
+        # ),
+        # html.Hr(),
     ]

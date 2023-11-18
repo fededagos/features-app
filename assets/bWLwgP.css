@@ -856,7 +856,6 @@ there.
 }
 
 .toc-container {
-  /* Your existing styles for the dataset container */
   border: 1px solid #bcbcbc;
   background-color: #e9e9e9;
   border-radius: 5px;
@@ -864,4 +863,29 @@ there.
   margin-bottom: 20px;
   margin: 0 auto; /* Center the container horizontally */
   display: inline-block;
+}
+
+@media only screen and (max-width: 767px) {
+  #toc-column {
+      order: -1; /* Makes the TOC appear first on smaller screens */
+      width: 100%; /* TOC takes full width */
+      max-width: none; /* Resets any max-width */
+  }
+
+  #main-column {
+      width: 100%; /* Main content takes full width */
+  }
+
+  .about-container .row {
+      flex-direction: column; /* Stack flex children on small screens */
+  }
+}
+
+@media only screen and (min-width: 768px) { /* Adjust for large screens */
+  #toc-column {
+      position: sticky;
+      top: 0; /* Adjust this value as needed to account for your site's header or any fixed position elements */
+      height: 100vh; /* You can adjust the height as needed */
+      overflow-y: auto; /* Makes the TOC scrollable if it overflows the viewport height */
+  }
 }

@@ -62,16 +62,16 @@ layout = html.Div(
                         "margin-left": "5px",
                     },
                 ),
-                html.Div(
-                    [
-                        html.Button("Download plot", id="btn-image-wvf", n_clicks=0),
-                        dcc.Download(id="download-image-wvf"),
-                    ],
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
-                ),
+                # html.Div(
+                #     [
+                #         html.Button("Download plot", id="btn-image-wvf", n_clicks=0),
+                #         dcc.Download(id="download-image-wvf"),
+                #     ],
+                #     style={
+                #         "flex-grow": 1,
+                #         "margin-left": "5px",
+                #     },
+                # ),
             ],
             className="datasetselect",
         ),
@@ -110,28 +110,28 @@ layout = html.Div(
 )
 
 
-@app.callback(
-    Output("download-image-wvf", "data"),
-    Output("btn-image-wvf", "n_clicks"),
-    Input("btn-image-wvf", "n_clicks"),
-    State("wf-graph", "figure"),
-    prevent_initial_call=True,
-)
-def func(n_clicks, figure):
-    time.sleep(0.5)
-    if n_clicks is None or figure is None:
-        return no_update, no_update
+# @app.callback(
+#     Output("download-image-wvf", "data"),
+#     Output("btn-image-wvf", "n_clicks"),
+#     Input("btn-image-wvf", "n_clicks"),
+#     State("wf-graph", "figure"),
+#     prevent_initial_call=True,
+# )
+# def func(n_clicks, figure):
+#     time.sleep(0.5)
+#     if n_clicks is None or figure is None:
+#         return no_update, no_update
 
-    if n_clicks != 0:
-        fmt = "pdf"
-        filename = f"figure.{fmt}"
-        write_image(figure, "assets/plots/" + filename)
-        return (
-            dcc.send_file(
-                "./assets/plots/" + filename,
-            ),
-            0,
-        )
+#     if n_clicks != 0:
+#         fmt = "pdf"
+#         filename = f"figure.{fmt}"
+#         write_image(figure, "assets/plots/" + filename)
+#         return (
+#             dcc.send_file(
+#                 "./assets/plots/" + filename,
+#             ),
+#             0,
+#         )
 
 
 @app.callback(

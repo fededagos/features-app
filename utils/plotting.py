@@ -14,15 +14,15 @@ def update_on_click(
     which="temporal",
     normalised=True,
     subselect=None,
-    lab="hausser",
+    lab=None,
     features_selection=USE_FEATURES_SELECTION,
 ):
     # This is to remove previously added highlighted points!
     if lab == "hausser":
-        # Why 6*2? Because there are 3 traces per cell type (1 for box, 1 for points; 6 cell types)
+        # Why 6*2? Because there are 2 traces per cell type (1 for box, 1 for points; 6 cell types)
         default_traces = 6 * 2
     elif lab == "hull":
-        # 5*3 Because the hull lab has 5 cell types only
+        # 5*2 Because the hull lab has 5 cell types only
         default_traces = 5 * 2
     elif lab == "combined_mouse":
         default_traces = 6 * 2
@@ -36,7 +36,8 @@ def update_on_click(
     if len(fig.data) > default_traces:
         fig.data = fig.data[:default_traces]
 
-    input_dataframe = input_dataframe.loc[input_dataframe["lab"] == lab].copy()
+    if lab in ["hausser", "hull", "combined_mouse", "lisberger"]:
+        input_dataframe = input_dataframe.loc[input_dataframe["lab"] == lab].copy()
     if np.array((which == "temporal")).any():
         input_dataframe = input_dataframe[input_dataframe["feature"].isin(TEMPORAL_FEATURES)]
     elif np.array((which == "waveform")).any():
@@ -50,9 +51,6 @@ def update_on_click(
         input_dataframe = input_dataframe[input_dataframe["feature"].isin(SELECTED_FEATURES.keys())]
 
     input_dataframe["feature"] = input_dataframe["feature"].replace(SELECTED_FEATURES)
-
-    colors = ["orange", "blue", "green", "brown", "red", "purple"]
-    color_dict = dict(zip(["PkC_cs", "PkC_ss", "GoC", "GrC", "MLI", "MFB"], colors))
 
     # Adding highlighted point if any
     if subselect is not None:

@@ -18,6 +18,8 @@ TEMPORAL_FEATURES = [
     "LcV",
     "SI",
     "SKW",
+    "acg_burst_vs_mfr",
+    "acg_oscill_vs_mfr",
 ]
 
 WAVEFORM_FEATURES = [
@@ -34,7 +36,8 @@ WAVEFORM_FEATURES = [
     "onset_amp",
     "wvf_width",
     "peak_trough_ratio",
-    "recovery_slope",
+    "tau_recovery",
+    "multiplicative_a_recovery" "recovery_slope",
     "repolarisation_slope",
     "depolarisation_slope",
     "spatial_decay_24um",
