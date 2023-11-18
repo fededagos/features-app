@@ -1,23 +1,25 @@
 import json
-import time
 import pathlib
-from dash import dcc, html, Input, Output, State, no_update
-import pandas as pd
+import time
+
 import dash_loading_spinners as dls
+import pandas as pd
 import plotly.graph_objects as go
-from app import app
-from utils.plotting import update_on_click, make_joint_figure
-from apps.footer import make_footer
-from utils.constants import PLOTS_FOLDER_URL
+from dash import Input, Output, State, dcc, get_asset_url, html, no_update
 from plotly.io import write_image
+
+from app import app
+from apps.footer import make_footer
+from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL, SELECTED_FEATURES
+from utils.plotting import make_joint_figure, update_on_click
 
 # get relative data folder
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("SfN-2022-dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("Nov-14-combined_dashboard.csv"))
 
-fig = make_joint_figure(df, which="waveform", lab="combined")
+fig = make_joint_figure(df, which="waveform", lab="combined_mouse")
 
 fig.update_traces(hoverinfo="none", hovertemplate=None)
 
@@ -32,17 +34,22 @@ layout = html.Div(
             [
                 dcc.Store(
                     id="lab-choice-waveform",
-                    data={"lab": ["combined"]},
+                    data={"lab": ["combined_mouse"]},
                 ),
                 dcc.Dropdown(
-                    ["Combined data", "Hausser data", "Hull data"],
-                    "Combined data",
+                    [
+                        "Combined mouse data",
+                        "Hausser data",
+                        "Hull data",
+                        "Lisberger data (macaque)",
+                    ],
+                    "Combined mouse data",
                     searchable=False,
                     clearable=False,
                     id="dataset-choice-waveform",
                     style={
                         "flex-grow": 4,
-                        "min-width": "200px",
+                        "min-width": "250px",
                         "margin-right": "5px",
                     },
                 ),
@@ -55,16 +62,16 @@ layout = html.Div(
                         "margin-left": "5px",
                     },
                 ),
-                html.Div(
-                    [
-                        html.Button("Download plot", id="btn-image-wvf", n_clicks=0),
-                        dcc.Download(id="download-image-wvf"),
-                    ],
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
-                ),
+                # html.Div(
+                #     [
+                #         html.Button("Download plot", id="btn-image-wvf", n_clicks=0),
+                #         dcc.Download(id="download-image-wvf"),
+                #     ],
+                #     style={
+                #         "flex-grow": 1,
+                #         "margin-left": "5px",
+                #     },
+                # ),
             ],
             className="datasetselect",
         ),
@@ -77,7 +84,7 @@ layout = html.Div(
                             figure=fig,
                             clear_on_unhover=True,
                             style={"height": "75vh"},
-                            className="card",
+                            className="graphcard",
                         )
                     ],
                     debounce=300,
@@ -95,9 +102,7 @@ layout = html.Div(
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             id="click-data-wf",
         ),
@@ -105,28 +110,28 @@ layout = html.Div(
 )
 
 
-@app.callback(
-    Output("download-image-wvf", "data"),
-    Output("btn-image-wvf", "n_clicks"),
-    Input("btn-image-wvf", "n_clicks"),
-    State("wf-graph", "figure"),
-    prevent_initial_call=True,
-)
-def func(n_clicks, figure):
-    time.sleep(0.5)
-    if n_clicks is None or figure is None:
-        return no_update, no_update
+# @app.callback(
+#     Output("download-image-wvf", "data"),
+#     Output("btn-image-wvf", "n_clicks"),
+#     Input("btn-image-wvf", "n_clicks"),
+#     State("wf-graph", "figure"),
+#     prevent_initial_call=True,
+# )
+# def func(n_clicks, figure):
+#     time.sleep(0.5)
+#     if n_clicks is None or figure is None:
+#         return no_update, no_update
 
-    if n_clicks != 0:
-        fmt = "pdf"
-        filename = f"figure.{fmt}"
-        write_image(figure, "assets/plots/" + filename)
-        return (
-            dcc.send_file(
-                "./assets/plots/" + filename,
-            ),
-            0,
-        )
+#     if n_clicks != 0:
+#         fmt = "pdf"
+#         filename = f"figure.{fmt}"
+#         write_image(figure, "assets/plots/" + filename)
+#         return (
+#             dcc.send_file(
+#                 "./assets/plots/" + filename,
+#             ),
+#             0,
+#         )
 
 
 @app.callback(
@@ -151,8 +156,10 @@ def update_hover(hoverData):
     title = properties_dict["text"]
     color = properties_dict["customdata"][3]
     plotting_id = properties_dict["customdata"][4]
+    cerebellum_layer = properties_dict["customdata"][5]
+    feature_name = properties_dict["customdata"][6]
 
-    image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
+    image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
 
     x_dist = properties_dict["bbox"]["x0"]
 
@@ -164,6 +171,7 @@ def update_hover(hoverData):
                     src=image_url,
                     style={
                         "min-width": "250px",
+                        "max-width": "70%",
                         "max-height": "400px",
                         "background": "white",
                     },
@@ -171,11 +179,12 @@ def update_hover(hoverData):
                 html.H2(f"{title}"),
                 html.P(f"Path: {dp}"),
                 html.P(f"Unit: {unit}"),
-                html.P(f"Raw feature Value: {feature_value:.2f}"),
+                html.P(f"Cerebellar layer: {cerebellum_layer}"),
+                html.P(f"{feature_name}: {feature_value:.2f}"),
             ],
             style={
                 "text-align": "left",
-                "color": "black" if title == "PkC_cs" else "white",
+                "color": "white",
             },
         ),
     ]
@@ -188,8 +197,8 @@ def update_hover(hoverData):
     Output("dataset-choice-waveform", "value"),
     Input("reset-wvf-graph", "n_clicks"),
 )
-def reset_clickData(n_clicks):
-    return None, "Combined data"
+def reset_click_data(n_clicks):
+    return None, "Combined mouse data"
 
 
 @app.callback(
@@ -202,13 +211,8 @@ def reset_clickData(n_clicks):
     State(component_id="lab-choice-waveform", component_property="data"),
 )
 def update_figure(input_value, figure, lab, store_data):
-
     # Check if user requested for a lab data input change
-    lab_correspondence = {
-        "Hausser data": "hausser",
-        "Hull data": "hull",
-        "Combined data": "combined",
-    }
+    lab_correspondence = LAB_CORRESPONDENCE
     lab_id = lab_correspondence[lab]
     store_data["lab"].append(lab_id)
     lab_changed = store_data["lab"][-1] != store_data["lab"][-2]
@@ -218,9 +222,7 @@ def update_figure(input_value, figure, lab, store_data):
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             fig,
             store_data,
@@ -230,9 +232,7 @@ def update_figure(input_value, figure, lab, store_data):
             [
                 html.Hr(),
                 html.H3("Inspect element:"),
-                html.P(
-                    "Click on a point in the graph to fix it here for further inspection."
-                ),
+                html.P("Click on a point in the graph to fix it here for further inspection."),
             ],
             make_joint_figure(df, which="waveform", lab=store_data["lab"][-1]),
             store_data,
@@ -242,30 +242,21 @@ def update_figure(input_value, figure, lab, store_data):
     unit = input_value["points"][0]["customdata"][1]
     plotting_id = input_value["points"][0]["customdata"][4]
 
-    acg_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg"
-    wvf_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg"
-    feat_image_url = PLOTS_FOLDER_URL + str(plotting_id) + "-feat.svg"
-    amplitude_img_url = PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png"
+    acg_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-acg.svg")
+    wvf_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-wvf.svg")
+    feat_image_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-feat.svg")
+    amplitude_img_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "-amplitudes.png")
     cell_type = input_value["points"][0]["text"]
 
     # All hull data has a plotting id greater than 1000
-    if int(plotting_id) < 1000 and not (
-        cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp
-    ):
-        opto_plots_url = (
-            PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png"
-        )
+    if int(plotting_id) < 1000 and not (cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp):
+        opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + str(plotting_id) + "_opto_plots_combined.png")
 
     elif cell_type in ["PkC_ss", "PkC_cs"] and "YC001" not in dp:
-        opto_plots_url = PLOTS_FOLDER_URL + "purkinje_cell.png"
+        opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "purkinje_cell.png")
 
     else:
-        opto_plots_url = PLOTS_FOLDER_URL + "opto_plots_unavailable.png"
-
-    try:
-        drug_sheet_url = iframe_src[input_value["points"][0]["customdata"][0]]
-    except KeyError:
-        drug_sheet_url = iframe_src["missing"]
+        opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "opto_plots_unavailable.png")
 
     actual_figure = go.Figure(figure)
 
@@ -274,8 +265,8 @@ def update_figure(input_value, figure, lab, store_data):
             html.Div(
                 [
                     html.Hr(),
-                    html.H4(f"Cell type: {input_value['points'][0]['text']}"),
-                    html.P(f"Unit {unit} in {dp}"),
+                    html.H4(["Cell type: ", html.Strong(input_value["points"][0]["text"])]),
+                    html.H5(f"Unit {unit} in {dp}"),
                     html.Div(
                         className="row",
                         children=[
@@ -309,7 +300,7 @@ def update_figure(input_value, figure, lab, store_data):
                         ],
                     ),
                     html.Br(),
-                    *make_footer(amplitude_img_url, opto_plots_url, drug_sheet_url),
+                    *make_footer(amplitude_img_url, opto_plots_url),
                 ]
             )
         ],
