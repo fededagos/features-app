@@ -86,9 +86,7 @@ layout = html.Div(
                 html.Div(
                     [
                         dcc.Dropdown(
-                            options=df[df["feature"].isin(SELECTED_FEATURES.keys())]["feature"].unique()
-                            if USE_FEATURES_SELECTION
-                            else df["feature"].unique(),
+                            options=[{"label": v, "value": k} for k, v in SELECTED_FEATURES.items()],
                             id="feature-dropdown",
                             placeholder="Select one or more features to plot...",
                             multi=True,

@@ -8,3 +8,4 @@ matplotlib==3.5
 dash-loading-spinners
 dash-auth
 kaleido
+dash-bootstrap-components

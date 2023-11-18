@@ -15,7 +15,7 @@ from apps import (
     waveform_features,
 )
 
-app.title = "Feature plots"
+app.title = "C4 Database"
 
 # top_menu = [
 #     html.Div(html.H1(html.Strong("C4 Database")), style={"text-align": "center"}),
