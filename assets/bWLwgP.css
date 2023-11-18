@@ -711,7 +711,7 @@ there.
   margin-right: auto;
   margin-left: auto;
   /* max-width: 1500px; */
-  max-width: 80vw;
+  max-width: 90vw;
   padding-right: 10px;
   padding-left: 10px;
   margin-top: 5px;
@@ -888,4 +888,13 @@ there.
       height: 100vh; /* You can adjust the height as needed */
       overflow-y: auto; /* Makes the TOC scrollable if it overflows the viewport height */
   }
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.graphcard {
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, 0.18);
 }

@@ -83,7 +83,7 @@ layout = html.Div(
                             figure=fig,
                             clear_on_unhover=True,
                             style={"height": "75vh"},
-                            className="card",
+                            className="graphcard",
                         ),
                     ],
                     debounce=300,
@@ -181,6 +181,7 @@ def update_graphtip(hoverData):
                     style={
                         "min-width": "250px",
                         "max-width": "70%",
+                        "max-height": "400px",
                         "background": "white",
                     },
                 ),

@@ -103,7 +103,8 @@ layout = html.Div(
                             "Normalised",
                             id="yaxis-type",
                             inline=True,
-                            style={"flex-grow": 0},
+                            labelStyle={"display": "inline-block", "margin-right": "20px"},
+                            style={"flex-grow": 0, "margin-left": "5px"},
                         ),
                     ],
                     style={
@@ -127,7 +128,7 @@ layout = html.Div(
                             figure=go.Figure(),
                             clear_on_unhover=True,
                             style={"height": "75vh"},
-                            className="card",
+                            className="graphcard",
                         ),
                     ],
                     debounce=300,
