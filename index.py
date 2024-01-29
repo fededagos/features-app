@@ -11,6 +11,7 @@ from apps import (
     download,
     explore_features,
     landing,
+    model_running,
     temporal_features,
     waveform_features,
 )
@@ -84,10 +85,19 @@ top_menu = dbc.Navbar(
                                 "padding-left": "10px",
                             },
                         ),
+                        dbc.NavItem(
+                            dbc.NavLink("Running the model", href="/apps/model_running"),
+                            style={
+                                "border-right": "1px solid #dee2e6",
+                                "padding-right": "10px",
+                                "padding-left": "10px",
+                            },
+                        ),
                         dbc.NavItem(dbc.NavLink("About", href="/apps/about"), style={"padding-left": "10px"}),
                     ],
                     className="ml-auto",
                     navbar=True,
+                    style={"text-align": "center"},
                 ),
                 id="navbar-collapse",
                 navbar=True,
@@ -123,6 +133,8 @@ def display_page(pathname):
         return temporal_features.layout, top_menu
     elif pathname == "/apps/download":
         return download.layout, top_menu
+    elif pathname == "/apps/model_running":
+        return model_running.layout, top_menu
     else:
         return landing.layout, html.Div()
 

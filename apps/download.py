@@ -6,7 +6,7 @@ from app import app
 
 layout = html.Div(
     [
-        html.H2(html.Strong("Datasets Download"), style={"text-align": "center"}),
+        html.H2(html.Strong("Datasets Download"), style={"text-align": "center", "font-weight": "bold"}),
         html.Div(
             className="information-container",
             children=[
@@ -92,7 +92,7 @@ layout = html.Div(
                 html.A(
                     "Download Medina unlabelled dataset",
                     id="btn-5",
-                    href="https://figshare.com/ndownloader/files/41721195?private_link=9a9dfce1c64cb807fc96",
+                    href="https://figshare.com/ndownloader/files/42117129?private_link=9a9dfce1c64cb807fc96",
                     className="download-button",
                     target="_blank",
                 ),
