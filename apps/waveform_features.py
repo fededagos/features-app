@@ -288,15 +288,15 @@ def update_figure(input_value, figure, lab, store_data):
                                     ),
                                 ],
                             ),
-                            html.Div(
-                                className="column",
-                                children=[
-                                    html.Img(
-                                        src=feat_image_url,
-                                        className="responsive2",
-                                    ),
-                                ],
-                            ),
+#                             html.Div(
+#                                 className="column",
+#                                 children=[
+#                                     html.Img(
+#                                         src=feat_image_url,
+#                                         className="responsive2",
+#                                     ),
+#                                 ],
+#                             ),
                         ],
                     ),
                     html.Br(),
