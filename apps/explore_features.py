@@ -35,145 +35,127 @@ iframe_src = json.loads(data)
 
 layout = html.Div(
     [
-        dcc.Store(
-            id="store",
-            data={"input_changed": [0], "norm_changed": [1], "lab": ["combined_mouse"]},
-        ),
+        # Small screen message
         html.Div(
-            [
-                dcc.Dropdown(
-                    [
-                        "Combined mouse data",
-                        "Hausser data",
-                        "Hull data",
-                        "Lisberger data (macaque)",
-                        "All data",
-                    ],
-                    "Combined mouse data",
-                    searchable=False,
-                    clearable=False,
-                    id="dataset-choice-feature",
-                    style={
-                        "flex-grow": 4,
-                        "min-width": "250px",
-                        "margin-right": "5px",
-                    },
-                ),
-                html.Button(
-                    "Reset graph",
-                    id="reset-feature-graph",
-                    n_clicks=0,
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
-                ),
-                # html.Div(
-                #     [
-                #         html.Button("Download plot", id="btn-image-explore", n_clicks=0),
-                #         dcc.Download(id="download-image-explore"),
-                #     ],
-                #     style={
-                #         "flex-grow": 1,
-                #         "margin-left": "5px",
-                #     },
-                # ),
-            ],
-            className="datasetselect",
+            "Access the dashboard from a device with a larger display to interact with the plots.",
+            className="small-screen-message",
         ),
+        # Original content wrapped in a container
         html.Div(
             [
                 html.Div(
                     [
-                        dcc.Dropdown(
-                            options=[{"label": v, "value": k} for k, v in SELECTED_FEATURES.items()],
-                            id="feature-dropdown",
-                            placeholder="Select one or more features to plot...",
-                            multi=True,
-                            style={
-                                "flex-grow": 1,
-                                "margin-right": "5px",
-                                "min-width": "50vw",
-                            },
+                        dcc.Store(
+                            id="store",
+                            data={"input_changed": [0], "norm_changed": [1], "lab": ["combined_mouse"]},
                         ),
-                        dcc.RadioItems(
-                            ["Normalised", "Raw values"],
-                            "Normalised",
-                            id="yaxis-type",
-                            inline=True,
-                            labelStyle={"display": "inline-block", "margin-right": "20px"},
-                            style={"flex-grow": 0, "margin-left": "5px"},
+                        html.Div(
+                            [
+                                dcc.Dropdown(
+                                    [
+                                        "Combined mouse data",
+                                        "Hausser data",
+                                        "Hull data",
+                                        "Lisberger data (macaque)",
+                                        "All data",
+                                    ],
+                                    "Combined mouse data",
+                                    searchable=False,
+                                    clearable=False,
+                                    id="dataset-choice-feature",
+                                    style={
+                                        "flex-grow": 4,
+                                        "min-width": "250px",
+                                        "margin-right": "5px",
+                                    },
+                                ),
+                                html.Button(
+                                    "Reset graph",
+                                    id="reset-feature-graph",
+                                    n_clicks=0,
+                                    style={
+                                        "flex-grow": 1,
+                                        "margin-left": "5px",
+                                    },
+                                ),
+                            ],
+                            className="datasetselect",
+                        ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        dcc.Dropdown(
+                                            options=[{"label": v, "value": k} for k, v in SELECTED_FEATURES.items()],
+                                            id="feature-dropdown",
+                                            placeholder="Select one or more features to plot...",
+                                            multi=True,
+                                            style={
+                                                "flex-grow": 1,
+                                                "margin-right": "5px",
+                                                "min-width": "50vw",
+                                            },
+                                        ),
+                                        dcc.RadioItems(
+                                            ["Normalised", "Raw values"],
+                                            "Normalised",
+                                            id="yaxis-type",
+                                            inline=True,
+                                            labelStyle={"display": "inline-block", "margin-right": "20px"},
+                                            style={"flex-grow": 0, "margin-left": "5px"},
+                                        ),
+                                    ],
+                                    style={
+                                        "display": "flex",
+                                        "flex-wrap": "wrap",
+                                        "margin": "5px",
+                                        "justify-content": "center",
+                                        "max-width": "80vw",
+                                        "margin-left": "auto",
+                                        "margin-right": "auto",
+                                    },
+                                ),
+                            ],
+                        ),
+                        html.Div(
+                            [
+                                dls.Hash(
+                                    [
+                                        dcc.Graph(
+                                            id="feature-graph",
+                                            figure=go.Figure(),
+                                            clear_on_unhover=True,
+                                            style={"height": "75vh"},
+                                            className="graphcard",
+                                        ),
+                                    ],
+                                    debounce=300,
+                                ),
+                                dcc.Tooltip(
+                                    id="graph-tip-features",
+                                    background_color="white",
+                                    border_color="white",
+                                ),
+                            ],
+                            id="dropdown-selection",
+                            className="wrapperbig",
+                        ),
+                        html.Div(
+                            [
+                                html.Hr(),
+                                html.H3("Inspect element:"),
+                                html.P("Click on a point in the graph to fix it here for further inspection."),
+                            ],
+                            id="click-data-features",
                         ),
                     ],
-                    style={
-                        "display": "flex",
-                        "flex-wrap": "wrap",
-                        "margin": "5px",
-                        "justify-content": "center",
-                        "max-width": "80vw",
-                        "margin-left": "auto",
-                        "margin-right": "auto",
-                    },
                 ),
             ],
+            className="large-screen-content",
         ),
-        html.Div(
-            [
-                dls.Hash(
-                    [
-                        dcc.Graph(
-                            id="feature-graph",
-                            figure=go.Figure(),
-                            clear_on_unhover=True,
-                            style={"height": "75vh"},
-                            className="graphcard",
-                        ),
-                    ],
-                    debounce=300,
-                ),
-                dcc.Tooltip(
-                    id="graph-tip-features",
-                    background_color="white",
-                    border_color="white",
-                ),
-            ],
-            id="dropdown-selection",
-            className="wrapperbig",
-        ),
-        html.Div(
-            [
-                html.Hr(),
-                html.H3("Inspect element:"),
-                html.P("Click on a point in the graph to fix it here for further inspection."),
-            ],
-            id="click-data-features",
-        ),
-    ]
+    ],
+    className="responsive-container",
 )
-
-
-# @app.callback(
-#     Output("download-image-explore", "data"),
-#     Output("btn-image-explore", "n_clicks"),
-#     Input("btn-image-explore", "n_clicks"),
-#     State("feature-graph", "figure"),
-#     prevent_initial_call=True,
-# )
-# def func(n_clicks, figure):
-#     time.sleep(1)
-#     if n_clicks is None or figure is None:
-#         return no_update, no_update
-
-#     if n_clicks != 0:
-#         fmt = "pdf"
-#         filename = f"figure.{fmt}"
-#         write_image(figure, "assets/plots/" + filename, width=1500, height=700)
-#         return (
-#             dcc.send_file(
-#                 "./assets/plots/" + filename,
-#             ),
-#             0,
-#         )
 
 
 @app.callback(

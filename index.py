@@ -8,10 +8,10 @@ from app import app, server
 # Connect to your app pages
 from apps import (
     about,
+    classifier,
     download,
     explore_features,
     landing,
-    model_running,
     temporal_features,
     waveform_features,
 )
@@ -47,7 +47,7 @@ top_menu = dbc.Navbar(
             dbc.NavbarBrand(
                 html.H2("C4 Database", style={"fontWeight": "bold"}),
                 href="/apps/about",
-                style={"fontSize": "24px", "fontWeight": "bold"},
+                style={"fontSize": "24px", "fontWeight": "bold", "white-space": "nowrap"},
             ),
             dbc.NavbarToggler(id="navbar-toggler"),
             dbc.Collapse(
@@ -59,6 +59,7 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(
@@ -67,6 +68,7 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(
@@ -75,6 +77,7 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(
@@ -83,21 +86,27 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(
-                            dbc.NavLink("Running the model", href="/apps/model_running"),
+                            dbc.NavLink("Classifier", href="/apps/classifier"),
                             style={
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(dbc.NavLink("About", href="/apps/about"), style={"padding-left": "10px"}),
                     ],
                     className="ml-auto",
                     navbar=True,
-                    style={"text-align": "center"},
+                    fill=True,
+                    justified=False,
+                    style={
+                        "text-align": "center",
+                    },
                 ),
                 id="navbar-collapse",
                 navbar=True,
@@ -133,8 +142,8 @@ def display_page(pathname):
         return temporal_features.layout, top_menu
     elif pathname == "/apps/download":
         return download.layout, top_menu
-    elif pathname == "/apps/model_running":
-        return model_running.layout, top_menu
+    elif pathname == "/apps/classifier":
+        return classifier.layout, top_menu
     else:
         return landing.layout, html.Div()
 

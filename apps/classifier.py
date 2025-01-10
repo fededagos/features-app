@@ -50,14 +50,25 @@ layout = html.Div(
                             ... it should start from “create an anaconda environment”, and finish with the command-line options in detail
                             """
                         ),
-                        dcc.Markdown(
-                            test_snippet,
-                            style={
-                                "whiteSpace": "pre",
-                                "backgroundColor": "#e9e9e9",
-                                "padding": "10px",
-                                "border": "10px",
-                            },
+                        html.Pre(
+                            children=[
+                                html.Div(
+                                    [
+                                        dcc.Clipboard(
+                                            id="copy-install",
+                                            target_id="code-install",
+                                            className="copy-button",
+                                        ),
+                                    ],
+                                    style={"position": "relative"},  # Ensure positioning context
+                                ),
+                                dcc.Markdown(
+                                    test_snippet,
+                                    id="code-install",
+                                    className="code-markdown",
+                                ),
+                            ],
+                            className="code-div",
                         ),
                         html.H3("Installing npyx", id="installing-npyx"),
                         html.H2("Running the model directly from phy", id="phy", style={"font-weight": "bold"}),
