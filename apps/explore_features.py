@@ -1,13 +1,11 @@
 import json
 import pathlib
-import time
 
 import dash_loading_spinners as dls
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 from dash import Input, Output, State, dcc, get_asset_url, html, no_update
-from plotly.io import write_image
 
 from app import app
 from apps.footer import make_footer
@@ -16,7 +14,6 @@ from utils.constants import (
     PLOTS_FOLDER_URL,
     SELECTED_FEATURES,
     TEMPORAL_FEATURES,
-    USE_FEATURES_SELECTION,
 )
 from utils.plotting import make_joint_figure, update_on_click
 

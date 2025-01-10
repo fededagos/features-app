@@ -1,16 +1,14 @@
 import json
 import pathlib
-import time
 
 import dash_loading_spinners as dls
 import pandas as pd
 import plotly.graph_objects as go
 from dash import Input, Output, State, dcc, get_asset_url, html, no_update
-from plotly.io import write_image
 
 from app import app
 from apps.footer import make_footer
-from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL, SELECTED_FEATURES
+from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL
 from utils.plotting import make_joint_figure, update_on_click
 
 # get relative data folder

@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import Dash, Input, Output, dcc, html, no_update
+from dash import dcc, html
 from dash.dependencies import Input, Output, State
 
 # Connect to main app.py file
@@ -17,29 +17,6 @@ from apps import (
 )
 
 app.title = "C4 Database"
-
-# top_menu = [
-#     html.Div(html.H1(html.Strong("C4 Database")), style={"text-align": "center"}),
-#     html.Div(
-#         [
-#             dcc.Link(
-#                 "Temporal Features",
-#                 href="/apps/temporal_features",
-#                 className="tab first",
-#             ),
-#             dcc.Link(
-#                 "Waveform Features",
-#                 href="/apps/waveform_features",
-#                 className="tab",
-#             ),
-#             dcc.Link("Features Explorer", href="/apps/explore_features", className="tab"),
-#             dcc.Link("Download datasets", href="/apps/download", className="tab"),
-#             dcc.Link("About", href="/apps/about", className="tab"),
-#         ],
-#         className="wrapper",
-#     ),
-#     html.Br(),
-# ]
 
 top_menu = dbc.Navbar(
     dbc.Container(
