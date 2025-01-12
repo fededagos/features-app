@@ -19,7 +19,8 @@ from apps import (
 app.title = "C4 Database"
 
 top_menu = dbc.Navbar(
-    dbc.Container(
+    id="main-navbar",
+    children=dbc.Container(
         [
             dbc.NavbarBrand(
                 html.H2("C4 Database", style={"fontWeight": "bold"}),

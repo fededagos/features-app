@@ -344,7 +344,8 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
                         ),
                         html.Br(),
                         *make_footer(amplitude_img_url, opto_plots_url),
-                    ]
+                    ],
+                    style={"padding": "20px"},
                 )
             ],
             update_on_click(

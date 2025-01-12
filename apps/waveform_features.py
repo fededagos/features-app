@@ -311,7 +311,8 @@ def update_figure(input_value, figure, lab, store_data):
                     ),
                     html.Br(),
                     *make_footer(amplitude_img_url, opto_plots_url),
-                ]
+                ],
+                style={"padding": "20px"},
             )
         ],
         update_on_click(

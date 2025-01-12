@@ -1,0 +1,118 @@
+---
+title: "About"
+format:
+  html:
+    toc: true
+    toc-title: Contents
+    toc-location: left
+    code-fold: false
+    embed-resources: true
+    code-line-numbers: true
+lightbox: true
+jupyter: python3
+---
+
+This web application is intended to be used to visually explore the C4 database using features extracted from the data. Even though the features are not directly used as computed for cell types classification, they can be used to quickly navigate and get insights about the database.
+
+The features are computed directly from the published `.h5` databases [(which can be downloaded here)](https://c4-database.com/apps/download){target="_parent"} using [`npyx`](https://github.com/m-beau/NeuroPyxels){target="_blank"}.
+
+
+## What is the C4 Database?
+
+Reference to paper, what data, how acquired, experiment structure, optotagging, etc.
+
+### Why "C4"?
+
+It originally stood for **Cerebellum Cell-types Classification Collaboration**, a joint effort to systematically classify cerebellar cell types. The name also acknowledges the foundational involvement of four labs from different universities and continents (UCL, Bar-Ilan, Duke and Baylor College of Medicine), emphasizing the global and collaborative nature of the initiative.
+
+Since its beginnings, the collaboration has expanded significantly, with some of the original contributors establishing their own research groups, making the laboratories involved more than 4. This growth has transformed C4 into a broader and dynamic network of researchers dedicated to advancing our understanding of cerebellar function and diversity.
+
+## How to navigate the dashboard
+This dashboard is designed to make it easy to explore the C4 database and visualize key features of cerebellar neurons. Here is a quick guide to the available pages:
+
+### Temporal and Waveform Feature Plots
+
+These sections provide dedicated plots for navigating the temporal and waveform features of the dataset. Each plot offers insights into the corresponding feature types, helping users explore the properties of neurons in detail.
+
+### Features explorer
+In this section, you can customize which features to display and decide whether to show them in their raw (un-normalized) values. This flexibility allows you to analyze the data based on your specific needs and preferences.
+
+:::{.callout-tip}
+For all plots, a dropdown menu allows you to select the dataset being visualized. This feature is useful for focusing on specific subsets of the database or comparing data across datasets.
+:::
+
+### Download Page
+Provides access to download the raw `.h5` datasets.
+
+### Classifier Page
+Explains how to use the cell type classifier trained on the C4 database, enabling you to predict cell types based on extracted features.
+
+To read more about how the classifier was trained, [read our paper.](about:blank)
+
+
+## Features glossary
+
+Here is a short summary of all the features included in the dashboard visualisations. 
+
+The exact code used to computed them is in [`npyx.feat`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/feat.py).
+
+### Temporal features
+
+Temporal features are measured from the initial 20 minutes of spontaneous activity in the experiments.
+
+- *Mean FR (Hz)*: Average firing rate of the neuron over the spontaneous period. It is the number of inter-spike intervals (ISIs) divided by time difference between the first and the last spike.
+- *Mean inst. FR (Hz)*: Average instantaneous firing rate, also computed from inter-spike intervals.
+- *Entropy (bits/s)*: Measure of the variability in the firing rate, expressed in bits per second.
+- *CV2*: A measure of the irregularity of inter-spike intervals, considering only adjacent intervals. It is the average coefficient of variation for a sequence of 2 ISIs.
+- *CV*: Coefficient of variation, quantifying the overall variability in inter-spike intervals. It is the standard deviation of the ISI’s divided by the average ISI.
+- *Instantaneous irregularity*: Degree of fluctuation in firing rate over short timescales. It is computed as the average of the absolute difference between the natural logarithms of 2 consecutive ISIs.
+- *Local variation*: A refined measure of irregularity that focuses on small changes in inter-spike intervals.
+- *Revised local variation*: Updated version of local variation with enhanced sensitivity to changes in spiking patterns. See [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000433).
+- *Log CV*: Logarithmic transformation of the coefficient of variation (taking the logarithm of ISIs).
+- *ISI skewness*: Asymmetry in the distribution of inter-spike intervals, revealing bursting or regular firing.
+- *Burst ratio*: Ratio of the maximum value of the autocorrelogram in the first 4 ms (i.e. a burst) to the mean firing rate.
+
+### Waveform features
+
+Waveform features are measured on the peak channel waveform, or on the largest axonal non-peak-channel waveform.
+
+- *Depolarisation amplitude (µV)*: 
+- *Repolarisation amplitude (µV)*: 
+- *Waveform width (ms)*: 
+- *Peak-trough ratio*: Ratio between the depolarisation peak and the repolarisation trough amplitudes.
+- *Recovery slope (µV/ms)*: Rate of voltage change during the recovery phase following a spike.
+- *Spatial decay (%/24µm)*: 
+
+## Plot details
+
+All plots are generated using Plotly for Python. Each box spans from quartile 1 (Q1) to quartile 3 (Q3). The second quartile (Q2, i.e., the median) is marked by a line inside the box. The fences growing outward from the boxes' edges span +/- 1.5 times the interquartile range (IQR: Q3-Q1).
+
+### Interactive Features
+Hovering over single data points will show additional details about the selected cell, such as its specific feature values and dataset information. Clicking on a point will highlight that cell across features, allowing you to see how different values fit within the feature distributions.
+
+Additionally, clicking on a cell will reveal and fix further plots about it at the bottom of the page, under the main graph.
+
+:::{.column-margin .callout-note}
+Afer clicking on a cell to highlight it, wait a couple seconds for the graph to update before attempting any further interaction with the dashboard.
+:::
+
+On top of this plotly plots come with several built-in interactive features:
+
+- **Hover information**: Hover over data points to see detailed feature values and other related information.
+- **Zooming**: Click and drag to zoom into a specific area, or use the zoom buttons in the modebar
+- **Reset view**: Double-click any empty area in the plots to reset the view to default
+- **Interactive legend**: Click items in the legend to hide/show specific groups or datasets. Double click on an element in the legend to show only data for that element
+
+The modebar (top-right of each plot) provides additional tools for interacting with the plots, including:
+
+- **Download**: Save the plot as a PNG file using the camera icon
+- **Pan**:  Use this tool to drag the plot area and focus on specific sections without zooming in or out
+- **Box select**: Select multiple points by dragging a rectangle
+- **Lasso select**: Select points by drawing a custom shape
+- **Autoscale**: Automatically adjusts the plot to fit all data points within the view
+- **Reset axes**: Resets the axis ranges back to their original defaults for better visualization
+
+
+## Contact
+For any questions or feedback, please [contact us](mailto:fede.dagos@gmail.com).
+

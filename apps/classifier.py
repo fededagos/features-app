@@ -1,91 +1,45 @@
-from dash import dcc, html
+from dash import Input, Output, clientside_callback, dcc, html
 
 from app import app
 
-test_snippet = """
-```python
-import npyx 
-import numpy as np
-
-# Load the data
-np.random.seed(1)
-"""
-
 layout = html.Div(
-    [
-        html.Div(html.H1("About", style={"font-weight": "bold", "textAlign": "center"}), className="row"),
-        html.Div(
-            [
-                html.Div(
-                    id="toc-column",
-                    children=[
-                        html.H6("Table of Contents", style={"font-weight": "bold"}),
-                        html.Ul(
-                            [
-                                html.Li(
-                                    [
-                                        html.A("Running the model from the command line", href="#command-line"),
-                                        html.Ul(
-                                            html.Li(html.A("Installing npyx", href="#installing-npyx")),
-                                        ),
-                                    ]
-                                ),
-                                html.Li(html.A("Running the model directly from phy", href="#phy")),
-                            ],
-                            style={"paddingLeft": "20px"},
-                        ),
-                    ],
-                    className="three columns",
-                    style={
-                        "maxWidth": "200px",
-                    },
-                ),
-                html.Div(
-                    id="main-column",
-                    children=[
-                        html.H2("Running from the command line", id="command-line", style={"font-weight": "bold"}),
-                        html.P(
-                            """
-                            Here we describe how to run the model on your own spike sorted data from the command line.
-                            ... it should start from “create an anaconda environment”, and finish with the command-line options in detail
-                            """
-                        ),
-                        html.Pre(
-                            children=[
-                                html.Div(
-                                    [
-                                        dcc.Clipboard(
-                                            id="copy-install",
-                                            target_id="code-install",
-                                            className="copy-button",
-                                        ),
-                                    ],
-                                    style={"position": "relative"},  # Ensure positioning context
-                                ),
-                                dcc.Markdown(
-                                    test_snippet,
-                                    id="code-install",
-                                    className="code-markdown",
-                                ),
-                            ],
-                            className="code-div",
-                        ),
-                        html.H3("Installing npyx", id="installing-npyx"),
-                        html.H2("Running the model directly from phy", id="phy", style={"font-weight": "bold"}),
-                        html.P(
-                            """
-                            Coming soon...
-                            """
-                        ),
-                    ],
-                    className="nine columns",
-                    style={"textAlign": "left", "marginLeft": "auto", "marginRight": "auto"},
-                ),
-            ],
-            className="row",
-            style={"display": "flex", "flexWrap": "wrap", "alignItems": "flex-start"},
+    children=[
+        html.Iframe(
+            id="classifier-docs",
+            src="../assets/docs/classifier.html",
+            style={"width": "100%", "border": "none"},
         ),
+        # Hidden div to store navbar height
+        html.Div(id="navbar-height-store", style={"display": "none"}),
+        # Interval for initial load (hack to avoid initial height miscalculation, can mess up whole layout)
+        dcc.Interval(id="initial-loader", interval=100, max_intervals=1),
     ],
-    className="about-container",
-    style={"maxWidth": "1200px", "margin": "0 auto"},
+    style={"overflow": "hidden"},
+)
+
+clientside_callback(
+    """
+    function(n_intervals) {
+        const navbar = document.getElementById('main-navbar');
+        return navbar ? navbar.offsetHeight : 0;
+    }
+    """,
+    Output("navbar-height-store", "children"),
+    Input("initial-loader", "n_intervals"),
+)
+
+clientside_callback(
+    """
+    function(navbar_height) {
+        if (navbar_height === null) return {};
+        
+        return {
+            height: `calc(97vh - ${navbar_height}px)`,
+            width: "100%",
+            border: "none"
+        };
+    }
+    """,
+    Output("classifier-docs", "style"),
+    Input("navbar-height-store", "children"),
 )
