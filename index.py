@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import Dash, Input, Output, dcc, html, no_update
+from dash import dcc, html
 from dash.dependencies import Input, Output, State
 
 # Connect to main app.py file
@@ -8,6 +8,7 @@ from app import app, server
 # Connect to your app pages
 from apps import (
     about,
+    classifier,
     download,
     explore_features,
     landing,
@@ -17,36 +18,14 @@ from apps import (
 
 app.title = "C4 Database"
 
-# top_menu = [
-#     html.Div(html.H1(html.Strong("C4 Database")), style={"text-align": "center"}),
-#     html.Div(
-#         [
-#             dcc.Link(
-#                 "Temporal Features",
-#                 href="/apps/temporal_features",
-#                 className="tab first",
-#             ),
-#             dcc.Link(
-#                 "Waveform Features",
-#                 href="/apps/waveform_features",
-#                 className="tab",
-#             ),
-#             dcc.Link("Features Explorer", href="/apps/explore_features", className="tab"),
-#             dcc.Link("Download datasets", href="/apps/download", className="tab"),
-#             dcc.Link("About", href="/apps/about", className="tab"),
-#         ],
-#         className="wrapper",
-#     ),
-#     html.Br(),
-# ]
-
 top_menu = dbc.Navbar(
-    dbc.Container(
+    id="main-navbar",
+    children=dbc.Container(
         [
             dbc.NavbarBrand(
                 html.H2("C4 Database", style={"fontWeight": "bold"}),
                 href="/apps/about",
-                style={"fontSize": "24px", "fontWeight": "bold"},
+                style={"fontSize": "24px", "fontWeight": "bold", "white-space": "nowrap"},
             ),
             dbc.NavbarToggler(id="navbar-toggler"),
             dbc.Collapse(
@@ -58,6 +37,7 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(
@@ -66,6 +46,7 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(
@@ -74,6 +55,7 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(
@@ -82,12 +64,27 @@ top_menu = dbc.Navbar(
                                 "border-right": "1px solid #dee2e6",
                                 "padding-right": "10px",
                                 "padding-left": "10px",
+                                "white-space": "nowrap",
+                            },
+                        ),
+                        dbc.NavItem(
+                            dbc.NavLink("Classifier", href="/apps/classifier"),
+                            style={
+                                "border-right": "1px solid #dee2e6",
+                                "padding-right": "10px",
+                                "padding-left": "10px",
+                                "white-space": "nowrap",
                             },
                         ),
                         dbc.NavItem(dbc.NavLink("About", href="/apps/about"), style={"padding-left": "10px"}),
                     ],
                     className="ml-auto",
                     navbar=True,
+                    fill=True,
+                    justified=False,
+                    style={
+                        "text-align": "center",
+                    },
                 ),
                 id="navbar-collapse",
                 navbar=True,
@@ -123,6 +120,8 @@ def display_page(pathname):
         return temporal_features.layout, top_menu
     elif pathname == "/apps/download":
         return download.layout, top_menu
+    elif pathname == "/apps/classifier":
+        return classifier.layout, top_menu
     else:
         return landing.layout, html.Div()
 

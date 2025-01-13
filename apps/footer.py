@@ -3,7 +3,7 @@ from dash import html
 
 def make_footer(amplitude_img_url, opto_plots_url):
     return [
-        html.H6("Amplitude distribution:"),
+        html.H6("Amplitude distribution (spontaneous period):"),
         html.Img(
             src=amplitude_img_url,
             style={

@@ -5,14 +5,14 @@ from app import app
 layout = html.Div(
     children=[
         html.Iframe(
-            id="about-docs",
-            src="../assets/docs/about.html",
+            id="classifier-docs",
+            src="../assets/docs/classifier.html",
             style={"width": "100%", "border": "none"},
         ),
         # Hidden div to store navbar height
-        html.Div(id="navbar-height-store-about", style={"display": "none"}),
+        html.Div(id="navbar-height-store", style={"display": "none"}),
         # Interval for initial load (hack to avoid initial height miscalculation, can mess up whole layout)
-        dcc.Interval(id="initial-loader-about", interval=100, max_intervals=1),
+        dcc.Interval(id="initial-loader", interval=100, max_intervals=1),
     ],
     style={"overflow": "hidden"},
 )
@@ -24,8 +24,8 @@ clientside_callback(
         return navbar ? navbar.offsetHeight : 0;
     }
     """,
-    Output("navbar-height-store-about", "children"),
-    Input("initial-loader-about", "n_intervals"),
+    Output("navbar-height-store", "children"),
+    Input("initial-loader", "n_intervals"),
 )
 
 clientside_callback(
@@ -40,6 +40,6 @@ clientside_callback(
         };
     }
     """,
-    Output("about-docs", "style"),
-    Input("navbar-height-store-about", "children"),
+    Output("classifier-docs", "style"),
+    Input("navbar-height-store", "children"),
 )

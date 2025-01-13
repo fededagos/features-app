@@ -1,12 +1,10 @@
 import json
 import pathlib
-import time
 
 import dash_loading_spinners as dls
 import pandas as pd
 import plotly.graph_objects as go
-from dash import Input, Output, State, dcc, get_asset_url, html, no_update
-from plotly.io import write_image
+from dash import Input, Output, dcc, get_asset_url, html, no_update
 
 from app import app
 from apps.footer import make_footer
@@ -29,109 +27,87 @@ iframe_src = json.loads(data)
 
 layout = html.Div(
     [
+        # Small screen message
         html.Div(
-            [
-                dcc.Store(
-                    id="lab-choice-temporal",
-                    data={"lab": ["combined_mouse"]},
-                ),
-                dcc.Dropdown(
-                    [
-                        "Combined mouse data",
-                        "Hausser data",
-                        "Hull data",
-                        "Lisberger data (macaque)",
-                    ],
-                    "Combined mouse data",
-                    searchable=False,
-                    clearable=False,
-                    id="dataset-choice-temporal",
-                    style={
-                        "flex-grow": 4,
-                        "min-width": "250px",
-                        "margin-right": "5px",
-                    },
-                ),
-                html.Button(
-                    "Reset graph",
-                    id="reset-graph",
-                    n_clicks=0,
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
-                ),
-                # html.Div(
-                #     [
-                #         html.Button("Download plot", id="btn-image", n_clicks=0),
-                #         dcc.Download(id="download-image"),
-                #     ],
-                #     style={
-                #         "flex-grow": 1,
-                #         "margin-left": "5px",
-                #     },
-                # ),
-            ],
-            className="datasetselect",
+            "Access the dashboard from a device with a larger display to interact with the plots.",
+            className="small-screen-message",
         ),
+        # Original content wrapped in a container
         html.Div(
             [
-                dls.Hash(
+                html.Div(
                     [
-                        dcc.Graph(
-                            id="graph",
-                            figure=fig,
-                            clear_on_unhover=True,
-                            style={"height": "75vh"},
-                            className="graphcard",
+                        dcc.Store(
+                            id="lab-choice-temporal",
+                            data={"lab": ["combined_mouse"]},
+                        ),
+                        dcc.Dropdown(
+                            [
+                                "Combined mouse data",
+                                "Hausser data",
+                                "Hull data",
+                                "Lisberger data (macaque)",
+                            ],
+                            "Combined mouse data",
+                            searchable=False,
+                            clearable=False,
+                            id="dataset-choice-temporal",
+                            style={
+                                "flex-grow": 4,
+                                "min-width": "250px",
+                                "margin-right": "5px",
+                            },
+                        ),
+                        html.Button(
+                            "Reset graph",
+                            id="reset-graph",
+                            n_clicks=0,
+                            style={
+                                "flex-grow": 1,
+                                "margin-left": "5px",
+                            },
                         ),
                     ],
-                    debounce=300,
+                    className="datasetselect",
                 ),
-                dcc.Tooltip(
-                    id="graph-tip",
-                    background_color="white",
-                    border_color="white",
-                    direction="bottom",
+                html.Div(
+                    [
+                        dls.Hash(
+                            [
+                                dcc.Graph(
+                                    id="graph",
+                                    figure=fig,
+                                    clear_on_unhover=True,
+                                    style={"height": "75vh"},
+                                    className="graphcard",
+                                ),
+                            ],
+                            debounce=300,
+                        ),
+                        dcc.Tooltip(
+                            id="graph-tip",
+                            background_color="white",
+                            border_color="white",
+                            direction="bottom",
+                        ),
+                    ],
+                    id="graph-container",
+                    className="wrapperbig",
+                ),
+                html.Div(
+                    [
+                        html.Hr(),
+                        html.H3("Inspect element:"),
+                        html.P("Click on a point in the graph to fix it here for further inspection."),
+                    ],
+                    id="click-data",
                 ),
             ],
-            id="graph-container",
-            className="wrapperbig",
+            className="large-screen-content",
         ),
-        html.Div(
-            [
-                html.Hr(),
-                html.H3("Inspect element:"),
-                html.P("Click on a point in the graph to fix it here for further inspection."),
-            ],
-            id="click-data",
-        ),
-    ]
+    ],
+    className="responsive-container",
 )
-
-
-# @app.callback(
-#     Output("download-image", "data"),
-#     Output("btn-image", "n_clicks"),
-#     Input("btn-image", "n_clicks"),
-#     State("graph", "figure"),
-#     prevent_initial_call=True,
-# )
-# def func(n_clicks, figure):
-#     time.sleep(0.5)
-#     if n_clicks is None or figure is None:
-#         return no_update, no_update
-
-#     if n_clicks != 0:
-#         fmt = "pdf"
-#         filename = f"figure.{fmt}"
-#         write_image(figure, PLOT_PATH.joinpath(filename))
-#         return (
-#             dcc.send_file(
-#                 PLOT_PATH.joinpath(filename),
-#             ),
-#             0,
-#         )
 
 
 @app.callback(
@@ -290,8 +266,9 @@ def update_figure(input_value, figure, lab, store_data):
                     ),
                     html.Br(),
                     *make_footer(amplitude_img_url, opto_plots_url),
-                ]
-            )
+                ],
+                style={"padding": "20px"},
+            ),
         ],
         update_on_click(
             actual_figure,

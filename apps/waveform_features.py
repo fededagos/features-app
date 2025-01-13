@@ -1,16 +1,14 @@
 import json
 import pathlib
-import time
 
 import dash_loading_spinners as dls
 import pandas as pd
 import plotly.graph_objects as go
 from dash import Input, Output, State, dcc, get_asset_url, html, no_update
-from plotly.io import write_image
 
 from app import app
 from apps.footer import make_footer
-from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL, SELECTED_FEATURES
+from utils.constants import LAB_CORRESPONDENCE, PLOTS_FOLDER_URL
 from utils.plotting import make_joint_figure, update_on_click
 
 # get relative data folder
@@ -30,83 +28,95 @@ iframe_src = json.loads(data)
 
 layout = html.Div(
     [
+        # Small screen message
+        html.Div(
+            "Access the dashboard from a device with a larger display to interact with the plots.",
+            className="small-screen-message",
+        ),
+        # Original content wrapped in a container
         html.Div(
             [
-                dcc.Store(
-                    id="lab-choice-waveform",
-                    data={"lab": ["combined_mouse"]},
-                ),
-                dcc.Dropdown(
+                html.Div(
                     [
-                        "Combined mouse data",
-                        "Hausser data",
-                        "Hull data",
-                        "Lisberger data (macaque)",
+                        dcc.Store(
+                            id="lab-choice-waveform",
+                            data={"lab": ["combined_mouse"]},
+                        ),
+                        dcc.Dropdown(
+                            [
+                                "Combined mouse data",
+                                "Hausser data",
+                                "Hull data",
+                                "Lisberger data (macaque)",
+                            ],
+                            "Combined mouse data",
+                            searchable=False,
+                            clearable=False,
+                            id="dataset-choice-waveform",
+                            style={
+                                "flex-grow": 4,
+                                "min-width": "250px",
+                                "margin-right": "5px",
+                            },
+                        ),
+                        html.Button(
+                            "Reset graph",
+                            id="reset-wvf-graph",
+                            n_clicks=0,
+                            style={
+                                "flex-grow": 1,
+                                "margin-left": "5px",
+                            },
+                        ),
+                        # html.Div(
+                        #     [
+                        #         html.Button("Download plot", id="btn-image-wvf", n_clicks=0),
+                        #         dcc.Download(id="download-image-wvf"),
+                        #     ],
+                        #     style={
+                        #         "flex-grow": 1,
+                        #         "margin-left": "5px",
+                        #     },
+                        # ),
                     ],
-                    "Combined mouse data",
-                    searchable=False,
-                    clearable=False,
-                    id="dataset-choice-waveform",
-                    style={
-                        "flex-grow": 4,
-                        "min-width": "250px",
-                        "margin-right": "5px",
-                    },
+                    className="datasetselect",
                 ),
-                html.Button(
-                    "Reset graph",
-                    id="reset-wvf-graph",
-                    n_clicks=0,
-                    style={
-                        "flex-grow": 1,
-                        "margin-left": "5px",
-                    },
-                ),
-                # html.Div(
-                #     [
-                #         html.Button("Download plot", id="btn-image-wvf", n_clicks=0),
-                #         dcc.Download(id="download-image-wvf"),
-                #     ],
-                #     style={
-                #         "flex-grow": 1,
-                #         "margin-left": "5px",
-                #     },
-                # ),
-            ],
-            className="datasetselect",
-        ),
-        html.Div(
-            [
-                dls.Hash(
+                html.Div(
                     [
-                        dcc.Graph(
-                            id="wf-graph",
-                            figure=fig,
-                            clear_on_unhover=True,
-                            style={"height": "75vh"},
-                            className="graphcard",
-                        )
+                        dls.Hash(
+                            [
+                                dcc.Graph(
+                                    id="wf-graph",
+                                    figure=fig,
+                                    clear_on_unhover=True,
+                                    style={"height": "75vh"},
+                                    className="graphcard",
+                                )
+                            ],
+                            debounce=300,
+                        ),
+                        dcc.Tooltip(
+                            id="graph-tip-wf",
+                            background_color="white",
+                            border_color="white",
+                        ),
                     ],
-                    debounce=300,
+                    id="wvf-graph-container",
+                    className="wrapperbig",
                 ),
-                dcc.Tooltip(
-                    id="graph-tip-wf",
-                    background_color="white",
-                    border_color="white",
+                html.Div(
+                    [
+                        html.Hr(),
+                        html.H3("Inspect element:"),
+                        html.P("Click on a point in the graph to fix it here for further inspection."),
+                    ],
+                    id="click-data-wf",
                 ),
             ],
-            id="wvf-graph-container",
-            className="wrapperbig",
+            className="large-screen-content",
         ),
-        html.Div(
-            [
-                html.Hr(),
-                html.H3("Inspect element:"),
-                html.P("Click on a point in the graph to fix it here for further inspection."),
-            ],
-            id="click-data-wf",
-        ),
-    ]
+    ],
+    className="responsive-container",
 )
 
 
@@ -288,20 +298,21 @@ def update_figure(input_value, figure, lab, store_data):
                                     ),
                                 ],
                             ),
-#                             html.Div(
-#                                 className="column",
-#                                 children=[
-#                                     html.Img(
-#                                         src=feat_image_url,
-#                                         className="responsive2",
-#                                     ),
-#                                 ],
-#                             ),
+                            #                             html.Div(
+                            #                                 className="column",
+                            #                                 children=[
+                            #                                     html.Img(
+                            #                                         src=feat_image_url,
+                            #                                         className="responsive2",
+                            #                                     ),
+                            #                                 ],
+                            #                             ),
                         ],
                     ),
                     html.Br(),
                     *make_footer(amplitude_img_url, opto_plots_url),
-                ]
+                ],
+                style={"padding": "20px"},
             )
         ],
         update_on_click(

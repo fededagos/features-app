@@ -1,0 +1,141 @@
+---
+title: "About"
+format:
+  html:
+    toc: true
+    toc-title: Contents
+    toc-location: left
+    code-fold: false
+    embed-resources: true
+    code-line-numbers: true
+lightbox: true
+jupyter: python3
+---
+
+* TODO:
+  - [ ] Refactor tabs to match 3 sections, and add corresponding links in header
+  - [ ] Add image of C4 collaboration
+  - [ ] Polish documentation to use the classifier in tab 1
+  - [ ] Make interactive WVF/ACG plot without features in tab 2
+  - [ ] Polish feature explorer in tab 3
+
+___
+
+Welcome to the **cerebellar cell-types classification collaboration (C4) portal**.
+
+Here you can:
+
+* Find the [**documentation to run the C4 classifier**]() <span style="color:red">**ADD LINK**</span> on your cerebellar cortex recordings. The classifier should work out of the box for Neuropixels recordings, provided that you filtered your data appropriately. The classifier relies on [NeuroPyxels](https://github.com/m-beau/NeuroPyxels).\
+* Visualize and download the [**C4 ground-truth database**]() <span style="color:red">**ADD LINK**</span> of opto-tagged Purkinje cells, molecular layer interneurons, Golgi cells, and mossy fibres, recorded in awake mice.\
+* [**Explore classical spiking and waveform statistics**]() <span style="color:red">**ADD LINK**</span> from the neurons of the C4 database (some key statistics are summarized in the supplementary table 1 of Beau et al., 2025). The C4 classifier predicts cell type identity from neurons' raw waveforms and autocorrelgrams, not from 'classical features'. However, these features are commonly reported in papers thus allow to put the C4 database in perspective with the literature.
+
+## The C4 database and classifier
+
+This is a TLDR. All details about the generation of the C4 database and its utilization to build a cerebellar cell-type classifier are in press at [Beau et al., 2025]() <span style="color:red">**ADD LINK**</span>.
+
+The C4 database contains ground-truth recordings of cerebellar neurons obtained using Neuropixels probes in awake mice. The ground-truth identifications were established by combining optogenetic activation of specific cell types (using various Cre lines) with pharmacological synaptic blockade to confirm direct responses. Layer information was determined using Phyllum, a custom analysis tool that accurately identifies cerebellar layers from electrophysiological recordings. The database includes carefully curated recordings of 202 neurons: 69 Purkinje cell simple spikes, 58 Purkinje cell complex spikes, 27 molecular layer interneurons, 18 Golgi cells, and 30 mossy fibers.
+
+The classifier uses a semi-supervised deep learning approach that combines unsupervised pre-training with supervised classification. It first uses variational autoencoders trained on a large unlabeled dataset (3,090 neurons) to reduce the dimensionality of both spike waveforms and three-dimensional autocorrelograms (3D-ACGs). These compressed representations, along with layer information, serve as inputs to a supervised classifier trained on the ground-truth dataset. The classifier generates confidence-calibrated predictions by averaging outputs across multiple model initializations. When requiring a confidence ratio above 2 (ratio of highest to second-highest predicted probability), the classifier achieves >95% accuracy on the ground-truth dataset and generalizes well to expert-classified recordings from both mice and monkeys, demonstrating its ability to generalize across species and experimental setups.
+
+## The cerebellum cell-types classification collaboration (C4)
+
+The **Cerebellum Cell-types Classification Collaboration** is a multi-institutional effort to collect a database of cerebellar cell-types and use it to build a cell-type classifier. The name also jokingly refers to the involvement of teams across four universities (Häusser and Clark lab at UCL, Cohen at Bar-Ilan university, the Lisberger and Hull labs at Duke, and the Medina lab at Baylor College of Medicine).
+
+![](../C4-people.png)
+
+:::{.callout-note title="Contact"}
+For any questions or feedback, please [contact us](mailto:maximebeaujeanroch047@gmail.com).
+:::
+
+
+## <span style="color:red">**1, 2 and 3 below are placeholders until we create the appropriate tab structure:**</span>
+
+## 1 - C4 classifier documentation
+
+Classifier tab.
+
+## 2 - C4 database visualization and download
+
+### 2.1 - C4 database visualization
+
+<span style="color:red">**TODO**</span>: interactive version of Figure 4 D, E (when hovering above a waveform or an ACG line, a pop-up window with both the waveform and the ACG of that neuron + relevant h5 metadta lights up.)
+
+### 2.2 - Download Page
+
+Provides access to download the raw `.h5` datasets. <span style="color:red">**ADD LINK**</span>
+
+
+## 3 - C4 database spiking and waveform features explorer
+
+In the features explorer, you will find interactive plots to navigate the temporal and waveform features of the dataset. Each plot offers insights into the corresponding feature types, helping users explore the properties of neurons in detail.
+
+The features are computed directly from the published `.h5` databases [(which can be downloaded here)](https://c4-database.com/apps/download){target="_parent"} using [NeuroPyxels](https://github.com/m-beau/NeuroPyxels){target="_blank"}.
+
+### 3.1 - Features glossary
+
+Here is a short summary of all the features included in the dashboard visualisations. 
+
+The exact code used to computed them is in [`npyx.feat`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/feat.py).
+
+
+##### > Temporal features
+
+Temporal features are measured from the initial 20 minutes of spontaneous activity in the experiments.
+
+- *Mean FR (Hz)*: Average firing rate of the neuron over the spontaneous period. It is the number of inter-spike intervals (ISIs) divided by time difference between the first and the last spike.
+- *Mean inst. FR (Hz)*: Average instantaneous firing rate, also computed from inter-spike intervals.
+- *Entropy (bits/s)*: Measure of the variability in the firing rate, expressed in bits per second.
+- *CV2*: A measure of the irregularity of inter-spike intervals, considering only adjacent intervals. It is the average coefficient of variation for a sequence of 2 ISIs.
+- *CV*: Coefficient of variation, quantifying the overall variability in inter-spike intervals. It is the standard deviation of the ISI’s divided by the average ISI.
+- *Instantaneous irregularity*: Degree of fluctuation in firing rate over short timescales. It is computed as the average of the absolute difference between the natural logarithms of 2 consecutive ISIs.
+- *Local variation*: A refined measure of irregularity that focuses on small changes in inter-spike intervals.
+- *Revised local variation*: Updated version of local variation with enhanced sensitivity to changes in spiking patterns. See [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000433).
+- *Log CV*: Logarithmic transformation of the coefficient of variation (taking the logarithm of ISIs).
+- *ISI skewness*: Asymmetry in the distribution of inter-spike intervals, revealing bursting or regular firing.
+- *Burst ratio*: Ratio of the maximum value of the autocorrelogram in the first 4 ms (i.e. a burst) to the mean firing rate.
+
+##### > Waveform features
+
+Waveform features are measured on the peak channel waveform, or on the largest axonal non-peak-channel waveform.
+
+- *Depolarisation amplitude (µV)*: 
+- *Repolarisation amplitude (µV)*: 
+- *Waveform width (ms)*: 
+- *Peak-trough ratio*: Ratio between the depolarisation peak and the repolarisation trough amplitudes.
+- *Recovery slope (µV/ms)*: Rate of voltage change during the recovery phase following a spike.
+- *Spatial decay (%/24µm)*: 
+
+
+### 3.2 - Features explorer
+
+In the feature explorer, you can customize which features to display and decide whether to show them in their raw (un-normalized) values. This flexibility allows you to analyze the data based on your specific needs and preferences.
+
+:::{.callout-tip}
+For all plots, a dropdown menu allows you to select the dataset being visualized. This feature is useful for focusing on specific subsets of the database or comparing data across datasets.
+:::
+
+All plots are generated using Plotly for Python. Each box spans from quartile 1 (Q1) to quartile 3 (Q3). The second quartile (Q2, i.e., the median) is marked by a line inside the box. The fences growing outward from the boxes' edges span +/- 1.5 times the interquartile range (IQR: Q3-Q1).
+
+Hovering over single data points will show additional details about the selected cell, such as its specific feature values and dataset information. Clicking on a point will highlight that cell across features, allowing you to see how different values fit within the feature distributions.
+
+Additionally, clicking on a cell will reveal and fix further plots about it at the bottom of the page, under the main graph.
+
+:::{.column-margin .callout-note}
+Afer clicking on a cell to highlight it, wait a couple seconds for the graph to update before attempting any further interaction with the dashboard.
+:::
+
+On top of this plotly plots come with several built-in interactive features:
+
+- **Hover information**: Hover over data points to see detailed feature values and other related information.
+- **Zooming**: Click and drag to zoom into a specific area, or use the zoom buttons in the modebar
+- **Reset view**: Double-click any empty area in the plots to reset the view to default
+- **Interactive legend**: Click items in the legend to hide/show specific groups or datasets. Double click on an element in the legend to show only data for that element
+
+The modebar (top-right of each plot) provides additional tools for interacting with the plots, including:
+
+- **Download**: Save the plot as a PNG file using the camera icon
+- **Pan**:  Use this tool to drag the plot area and focus on specific sections without zooming in or out
+- **Box select**: Select multiple points by dragging a rectangle
+- **Lasso select**: Select points by drawing a custom shape
+- **Autoscale**: Automatically adjusts the plot to fit all data points within the view
+- **Reset axes**: Resets the axis ranges back to their original defaults for better visualization
