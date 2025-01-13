@@ -25,39 +25,13 @@ top_menu = dbc.Navbar(
             dbc.NavbarBrand(
                 html.H2("C4 Database", style={"fontWeight": "bold"}),
                 href="/apps/about",
-                style={"fontSize": "24px", "fontWeight": "bold", "white-space": "nowrap"},
+                style={"fontWeight": "bold", "white-space": "nowrap"},
+                class_name="navbar-heading",
             ),
             dbc.NavbarToggler(id="navbar-toggler"),
             dbc.Collapse(
                 dbc.Nav(
                     [
-                        dbc.NavItem(
-                            dbc.NavLink("Temporal Features", href="/apps/temporal_features"),
-                            style={
-                                "border-right": "1px solid #dee2e6",
-                                "padding-right": "10px",
-                                "padding-left": "10px",
-                                "white-space": "nowrap",
-                            },
-                        ),
-                        dbc.NavItem(
-                            dbc.NavLink("Waveform Features", href="/apps/waveform_features"),
-                            style={
-                                "border-right": "1px solid #dee2e6",
-                                "padding-right": "10px",
-                                "padding-left": "10px",
-                                "white-space": "nowrap",
-                            },
-                        ),
-                        dbc.NavItem(
-                            dbc.NavLink("Features Explorer", href="/apps/explore_features"),
-                            style={
-                                "border-right": "1px solid #dee2e6",
-                                "padding-right": "10px",
-                                "padding-left": "10px",
-                                "white-space": "nowrap",
-                            },
-                        ),
                         dbc.NavItem(
                             dbc.NavLink("Download datasets", href="/apps/download"),
                             style={
@@ -66,6 +40,7 @@ top_menu = dbc.Navbar(
                                 "padding-left": "10px",
                                 "white-space": "nowrap",
                             },
+                            class_name="navbar-item",
                         ),
                         dbc.NavItem(
                             dbc.NavLink("Classifier", href="/apps/classifier"),
@@ -75,8 +50,39 @@ top_menu = dbc.Navbar(
                                 "padding-left": "10px",
                                 "white-space": "nowrap",
                             },
+                            class_name="navbar-item",
                         ),
-                        dbc.NavItem(dbc.NavLink("About", href="/apps/about"), style={"padding-left": "10px"}),
+                        dbc.NavItem(
+                            dbc.NavLink("About", href="/apps/about"),
+                            style={
+                                "border-right": "1px solid #dee2e6",
+                                "padding-right": "10px",
+                                "padding-left": "10px",
+                                "white-space": "nowrap",
+                            },
+                            class_name="navbar-item",
+                        ),
+                        dbc.DropdownMenu(
+                            children=[
+                                dbc.DropdownMenuItem(
+                                    "Temporal Features", href="/apps/temporal_features", class_name="navbar-item"
+                                ),
+                                dbc.DropdownMenuItem(divider=True),
+                                dbc.DropdownMenuItem(
+                                    "Waveform Features", href="/apps/waveform_features", class_name="navbar-item"
+                                ),
+                                dbc.DropdownMenuItem(divider=True),
+                                dbc.DropdownMenuItem(
+                                    "Features Explorer", href="/apps/explore_features", class_name="navbar-item"
+                                ),
+                            ],
+                            nav=True,
+                            in_navbar=True,
+                            label="Explore Neuron Features",
+                            style={"white-space": "nowrap", "padding-right": "10px", "padding-left": "10px"},
+                            align_end=True,
+                            class_name="navbar-dropdown",
+                        ),
                     ],
                     className="ml-auto",
                     navbar=True,

@@ -951,3 +951,17 @@ ul {
       display: none;
   }
 }
+
+
+.navbar-heading {
+  font-size: 2rem; /* Relative size */
+  font-weight: bold;
+}
+.navbar-item {
+  font-size: 1.5rem; /* Match the heading size */
+  font-weight: bold;
+}
+.navbar-dropdown {
+  font-size: 1.5rem; /* For the dropdown label */
+  font-weight: bold;
+}
