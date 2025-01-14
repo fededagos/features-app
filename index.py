@@ -14,6 +14,7 @@ from apps import (
     landing,
     temporal_features,
     waveform_features,
+    exploration_home,
 )
 
 app.title = "C4 Database"
@@ -24,7 +25,7 @@ top_menu = dbc.Navbar(
         [
             dbc.NavbarBrand(
                 html.H2("C4 Database", style={"fontWeight": "bold"}),
-                href="/apps/about",
+                href="landing",
                 style={"fontWeight": "bold", "white-space": "nowrap"},
                 class_name="navbar-heading",
             ),
@@ -32,26 +33,6 @@ top_menu = dbc.Navbar(
             dbc.Collapse(
                 dbc.Nav(
                     [
-                        dbc.NavItem(
-                            dbc.NavLink("Download datasets", href="/apps/download"),
-                            style={
-                                "border-right": "1px solid #dee2e6",
-                                "padding-right": "10px",
-                                "padding-left": "10px",
-                                "white-space": "nowrap",
-                            },
-                            class_name="navbar-item",
-                        ),
-                        dbc.NavItem(
-                            dbc.NavLink("Classifier", href="/apps/classifier"),
-                            style={
-                                "border-right": "1px solid #dee2e6",
-                                "padding-right": "10px",
-                                "padding-left": "10px",
-                                "white-space": "nowrap",
-                            },
-                            class_name="navbar-item",
-                        ),
                         dbc.NavItem(
                             dbc.NavLink("About", href="/apps/about"),
                             style={
@@ -62,8 +43,32 @@ top_menu = dbc.Navbar(
                             },
                             class_name="navbar-item",
                         ),
+                        dbc.NavItem(
+                            dbc.NavLink("Classifier documentation", href="/apps/classifier"),
+                            style={
+                                "border-right": "1px solid #dee2e6",
+                                "padding-right": "10px",
+                                "padding-left": "10px",
+                                "white-space": "nowrap",
+                            },
+                            class_name="navbar-item",
+                        ),
+                        dbc.NavItem(
+                            dbc.NavLink("Datasets", href="/apps/download"),
+                            style={
+                                "border-right": "1px solid #dee2e6",
+                                "padding-right": "10px",
+                                "padding-left": "10px",
+                                "white-space": "nowrap",
+                            },
+                            class_name="navbar-item",
+                        ),
                         dbc.DropdownMenu(
                             children=[
+                                dbc.DropdownMenuItem(
+                                    "Documentation", href="/apps/exploration_home", class_name="navbar-item"
+                                ),
+                                dbc.DropdownMenuItem(divider=True),
                                 dbc.DropdownMenuItem(
                                     "Temporal Features", href="/apps/temporal_features", class_name="navbar-item"
                                 ),
@@ -78,7 +83,7 @@ top_menu = dbc.Navbar(
                             ],
                             nav=True,
                             in_navbar=True,
-                            label="Explore Neuron Features",
+                            label="Dataset exploration",
                             style={"white-space": "nowrap", "padding-right": "10px", "padding-left": "10px"},
                             align_end=True,
                             class_name="navbar-dropdown",
@@ -128,6 +133,8 @@ def display_page(pathname):
         return download.layout, top_menu
     elif pathname == "/apps/classifier":
         return classifier.layout, top_menu
+    elif  pathname == "/apps/exploration_home":
+        return exploration_home.layout, top_menu
     else:
         return landing.layout, html.Div()
 

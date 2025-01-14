@@ -12,7 +12,7 @@ lightbox: true
 jupyter: python3
 ---
 
-One of the key outcomes of the C4 initiative has been the development of a robust cerebellar cell types classifier. This classifier is designed to predict cerebellar neuron types based on spike-sorted data and is released as part of [`npyx`](){target="_blank"}.
+One of the key outcomes of the C4 initiative has been the development of a robust cerebellar cell types classifier. This classifier is designed to predict cerebellar neuron types based on spike-sorted data and is released as part of [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels).
 
 Our aim in releasing this tool is to provide the cerebellum research community with a resource that can be used "out of the box", to classify cerebellar cell types, supporting reproducibility and further innovation in the field.
 
