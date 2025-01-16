@@ -6,15 +6,18 @@ from app import app
 
 layout = html.Div(
     [
-        html.H2(html.Strong("Datasets Download"), style={"text-align": "center", "font-weight": "bold"}),
         html.Div(
             className="information-container",
             children=[
-                # html.H2("General information about the datasets"),
+                html.H2("Download datasets",
+                        style={
+                "margin-bottom": "0.5em", 
+                "textAlign": "center"
+                }),
                 dcc.Markdown(
-                    """All datasets are in the common `.h5` format. 
-                    If you are not familiar with `.h5` check out the [`h5py`](https://docs.h5py.org/en/stable/quick.html) quickstart guide and our
-                    helper functions in [`npyx`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/h5.py) for easier handling of the files. """
+                    """All C4 datasets are in binary `.h5` format. 
+                    If you are not familiar with `.h5`, have a look at the [`h5py`](https://docs.h5py.org/en/stable/quick.html) quickstart guide and our
+                    helper functions in [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/h5.py)."""
                 ),
             ],
         ),
