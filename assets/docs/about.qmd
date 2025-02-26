@@ -20,10 +20,10 @@ jupyter: python3
     - [ ] Fix general wording
     - [ ] Specify data preprocessing (hardware neuropixels 1.0, equivalent to butterworth digital filter... double check)
   - Datasets download (tab 2)
-    - [ ] Add static WVF/ACG plot without features at the top of Datasets tab (download)
+    - [x] Add static WVF/ACG plot without features at the top of Datasets tab (download)
     - [ ] Make it dynamic eventually (when hovering over wvf or acg of stack, pop up window with relevant neuron wvf, acg and h5 metadata appears like in the feature exploration plots).
   - Features explorer documentation (tab 3)
-    - [ ] Add missing waveform features in features glossary in Dataset exploration documentation
+    - [x] Add missing waveform features in features glossary in Dataset exploration documentation
     - [ ] Clarify what neurons these correspond to
     - [ ] Fix general wording
 

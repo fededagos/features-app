@@ -15,14 +15,14 @@ In the features explorer, you will find interactive plots to navigate the tempor
 
 The features are computed directly from the published `.h5` databases [(which can be downloaded here)](https://c4-database.com/apps/download){target="_parent"} using [NeuroPyxels](https://github.com/m-beau/NeuroPyxels){target="_blank"}.
 
-## 1 - Features glossary
+# 1 - Features glossary
 
 Here is a short summary of all the features included in the dashboard visualisations. 
 
 The exact code used to computed them is in [`npyx.feat`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/feat.py).
 
 
-##### > Temporal features
+### > Temporal features
 
 Temporal features are measured from the initial 20 minutes of spontaneous activity in the experiments.
 
@@ -38,19 +38,19 @@ Temporal features are measured from the initial 20 minutes of spontaneous activi
 - *ISI skewness*: Asymmetry in the distribution of inter-spike intervals, revealing bursting or regular firing.
 - *Burst ratio*: Ratio of the maximum value of the autocorrelogram in the first 4 ms (i.e. a burst) to the mean firing rate.
 
-##### > Waveform features
+### > Waveform features
 
 Waveform features are measured on the peak channel waveform, or on the largest axonal non-peak-channel waveform.
 
-- *Depolarisation amplitude (µV)*: 
-- *Repolarisation amplitude (µV)*: 
-- *Waveform width (ms)*: 
+- *Depolarisation amplitude (µV)*: Voltage difference between the baseline and the peak of the depolarization phase of the action potential.
+- *Repolarisation amplitude (µV)*: Voltage difference between the baseline and the peak of the repolarization phase of the action potential.
+- *Waveform width (ms)*: Duration between the peak depolarization and the peak repolarization, providing an estimate of spike duration.
 - *Peak-trough ratio*: Ratio between the depolarisation peak and the repolarisation trough amplitudes.
-- *Recovery slope (µV/ms)*: Rate of voltage change during the recovery phase following a spike.
-- *Spatial decay (%/24µm)*: 
+- *Recovery slope (µV/ms)*: Rate of voltage change during the recovery phase following a spike, describing the speed at which the neuron returns to baseline. 
+- *Spatial decay (%/24µm)*: Percentage reduction in spike depolarisation amplitude from the peak channel to the closest channels (within 24µm).
 
 
-## 2 - Features explorer
+# 2 - Features explorer
 
 In the feature explorer, you can customize which features to display and decide whether to show them in their raw (un-normalized) values. This flexibility allows you to analyze the data based on your specific needs and preferences.
 
