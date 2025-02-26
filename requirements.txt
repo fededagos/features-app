@@ -9,3 +9,4 @@ dash-loading-spinners
 dash-auth
 kaleido
 dash-bootstrap-components
+dash_auth
