@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
+from dash_auth import BasicAuth
 
 # Connect to main app.py file
 from app import app, server
@@ -10,14 +11,20 @@ from apps import (
     about,
     classifier,
     download,
+    exploration_home,
     explore_features,
     landing,
     temporal_features,
     waveform_features,
-    exploration_home,
 )
+from users import USERNAME_PASSWORD_PAIRS
 
 app.title = "C4 Database"
+
+BasicAuth(
+    app,
+    USERNAME_PASSWORD_PAIRS,
+)
 
 top_menu = dbc.Navbar(
     id="main-navbar",
@@ -133,7 +140,7 @@ def display_page(pathname):
         return download.layout, top_menu
     elif pathname == "/apps/classifier":
         return classifier.layout, top_menu
-    elif  pathname == "/apps/exploration_home":
+    elif pathname == "/apps/exploration_home":
         return exploration_home.layout, top_menu
     else:
         return landing.layout, html.Div()
