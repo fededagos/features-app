@@ -37,7 +37,8 @@ WAVEFORM_FEATURES = [
     "wvf_width",
     "peak_trough_ratio",
     "tau_recovery",
-    "multiplicative_a_recovery" "recovery_slope",
+    "multiplicative_a_recovery",
+    "recovery_slope",
     "repolarisation_slope",
     "depolarisation_slope",
     "spatial_decay_24um",
@@ -68,8 +69,8 @@ LAB_CORRESPONDENCE = {
 
 
 SELECTED_FEATURES = {
-    "mfr": "Mean FR (Hz)",
-    "mifr": "Mean inst. FR (Hz)",
+    "mfr": "Mean FR (spikes/s)",
+    "mifr": "Mean inst. FR (spikes/s)",
     "CV": "CV",
     "CV2_mean": "CV2",
     "LcV": "Log CV",

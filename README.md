@@ -1,5 +1,5 @@
-# Features explorer app
+# C4 Database dashboard
 
-Web app to explore the engineered features for neurons in the cell-types project.
+Web app to explore the engineered features, read the documentation and download the datasets related to the C4 project (Beau et al., 2025).
 
-Interact with the app [here](https://files.fededagos.me/features/)
+Interact with the dashboard [here](https://c4-database.com/).

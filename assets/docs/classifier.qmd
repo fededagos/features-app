@@ -12,18 +12,37 @@ lightbox: true
 jupyter: python3
 ---
 
-One of the key outcomes of the C4 initiative has been the development of a robust cerebellar cell types classifier. This classifier is designed to predict cerebellar neuron types based on spike-sorted data and is released as part of [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels).
+The key outcome of the C4 collaboration is the development of a robust classifier to predict cerebellar neuron types based on spike-sorted data. The classifier is released as part of [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels), a generalist Python package to analyze Neuropixels recordings ([Beau et al., 2021, Zenodo](https://zenodo.org/records/5509776)).
 
-Our aim in releasing this tool is to provide the cerebellum research community with a resource that can be used "out of the box", to classify cerebellar cell types, supporting reproducibility and further innovation in the field.
+
+Our aim is to provide the cerebellar neuroscience community with a resource that can be used "out of the box" to classify cerebellar cell types, supporting reproducibility and further innovation in the field.
 
 The classifier can be run on your own spike-sorted data directly from the command line and is simple to set up, even for users with minimal programming experience. Below, we provide a step-by-step tutorial to get started.
+
+---
+
+## Data requirements
+
+To be compatible with the classifier out of the box, **your data should have the following specifications**:
+
+- Filtered with a filter equivalent to the [Neuropixels 1.0 hardware filter](https://ieeexplore.ieee.org/document/7900417/) (causal first-order Butterworth high-pass filter, 300Hz cutoff). You can filter your data with NeuroPyxels, with cupy installed and a GPU: [`npyx.inout.preprocess_binary_file`](https://github.com/m-beau/NeuroPyxels/blob/9abd8fdb623a91ba34e45bce25d6f6529f81f475/npyx/inout.py#L918)
+- Spike-sorted with a spike-sorter compatible with [phy](https://github.com/cortex-lab/phy) (e.g. Kilosort)
+- Applied to units located in the cerebellar cortex exclusively
+
+::: {.column-margin .callout-caution} 
+The C4 classifier has been trained on waveforms derived from Neuropixels 1.0 recordings with the hardware filtered turn on. **The classifier will not output meaningful results if your data is not filtered appropriately.** We recommend filtering your raw data file directly with a causal first-order Butterworth high-pass filter (300Hz cutoff) before spike-sorting, for convenience (or simply turning the Neuropixels hardware filter on, if you are using Neuropixels 1.0 probes). You can filter your data with NeuroPyxels, with cupy installed and a GPU: [`npyx.inout.preprocess_binary_file`](https://github.com/m-beau/NeuroPyxels/blob/9abd8fdb623a91ba34e45bce25d6f6529f81f475/npyx/inout.py#L918)
+:::
+
+:::{.callout-note}
+Our classifier has been designed to work out of the box with Neuropixels recordings, but should be compatible with all types of extracellular electrodes. For instance, the macaque recordings in Beau et al., 2025 were obtained with custom Plexon s-Probes.
+:::
 
 ## Running the model from the command line 
 Here we describe how to run the model on your own spike-sorted data from the command line.  
 
 ### Prerequisites
 
-Before you begin, we recommend that you set up a way to manage Python packages or virtual environments. This can be any method of your choice, including Docker containers or other tools. However, for simplicity and ease of use, we recommend using conda environments, which allow you to manage dependencies effectively in an isolated environment.
+Before you begin, we recommend that you set up a way to manage Python packages or virtual environments. This can be any method of your choice, including Docker containers or other tools. However, for simplicity and ease of use, we recommend using **conda environments**, which allow you to manage dependencies effectively in an isolated environment.
 
 To use conda, you will need to have Anaconda or Miniconda installed on your system:
 
@@ -42,7 +61,7 @@ conda activate c4_classifier
 
 ### Installing NeuroPyxels (npyx)
 
-The classifier relies on the `npyx` package for processing and analysis. Install it in your environment of choice like this using pip:
+The classifier relies on the [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels) (shorthand `npyx`) package for processing and analysis. Install it in your environment of choice like this using pip:
 
 ```{bash}
 pip install npyx[c4]
@@ -54,12 +73,12 @@ This will install both the base version of `npyx` and the one including all clas
 
 Once the environment is set up and npyx installed, you can run the classifier on your spike-sorted data. 
 
-To run the classifier on the phy-compatible dataset in the current working directory, simply run
+To run the classifier on the [phy](https://github.com/cortex-lab/phy)-compatible dataset (e.g. spike-sorted with Kilosort) in the current working directory, simply run
 ```{bash}
 c4 -dp .
 ```
 
-To run it on a phy-compatible dataset present elsewhere, run 
+To run it on a [phy](https://github.com/cortex-lab/phy)-compatible dataset present elsewhere, run 
 ```{bash}
 c4 -dp path/to/my/dataset
 ```
@@ -87,7 +106,7 @@ To customize this behavior, the following options can be used:
 ::: {.column-margin .callout-caution} 
 When selecting `all` the classifier will be applied also to possible MUAs and noise units. 
 Ideally, confidence should be low on these units, however, that could not always be the case. 
-It is the ultimate user's responsibility to meaningfully interpret classifier's results.
+It is the ultimate user's responsibility to meaningfully interpret the classifier's results.
 :::
 
 - **Type**: str
@@ -113,7 +132,7 @@ It is the ultimate user's responsibility to meaningfully interpret classifier's 
 
   - **Type**: flag
   - **Default**: False
-  - **Description**: Divides molecular layer interneurons (MLI) into two clusters for classification. TODO more explaining.
+  - **Description**: Divides molecular layer interneurons (MLI) into 'large repolarisation' and 'small repolarisation' clusters for classification, as defined in Supplementary Figure 6 from Beau et al., 2025.
   - **Example**: `c4 -dp . --mli_clustering`
 <br/>
 ---
@@ -130,7 +149,7 @@ Always double check that you trust the layer informationbefore using this versio
 - **Description**: Enables the use of layer information to improve classification accuracy.
     - Layer information must be stored in `cluster_layer.tsv` file in the dataset folder
     - `cluster_layer.tsv` should have two columns: cluster_id and layer
-    - Can be manually created or generated by `phyllum` (more information to follow).
+    - Can be manually created (e.g. from inspection of histology) or generated by `phyllum` (phyllum documentation to follow).
 - **Example**: `c4 -dp . --layer`
 <br/>
 ---
