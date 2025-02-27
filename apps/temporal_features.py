@@ -16,7 +16,7 @@ PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 PLOT_PATH = PATH.joinpath("../assets/plots").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("Nov-14-combined_dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("27-02-2025_combined_dashboard.csv"))
 
 fig = make_joint_figure(df, which="temporal", lab="combined_mouse")
 

@@ -12,10 +12,10 @@ lightbox: true
 jupyter: python3
 ---
 
-The key outcome of the C4 collaboration is the development of a robust classifier to predict cerebellar neuron types based on spike-sorted data. The classifier is released as part of [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels), a generalist Python package to analyze Neuropixels recordings ([Beau et al., 2021, Zenodo](https://zenodo.org/records/5509776)).
+The key goal of the C4 collaboration is the development of a robust classifier to predict cerebellar neuron types based on spike-sorted data. The classifier is released as part of [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels), a generalist Python package to analyze Neuropixels recordings ([Beau et al., 2021, Zenodo](https://zenodo.org/records/5509776)).
 
 
-Our aim is to provide the cerebellar neuroscience community with a resource that can be used "out of the box" to classify cerebellar cell types, supporting reproducibility and further innovation in the field.
+Our aim is to provide the cerebellar neuroscience community with a resource that can be used "out of the box" to classify cerebellar cell types, supporting reproducibility and new discoveries in the field.
 
 The classifier can be run on your own spike-sorted data directly from the command line and is simple to set up, even for users with minimal programming experience. Below, we provide a step-by-step tutorial to get started.
 
