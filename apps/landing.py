@@ -63,8 +63,10 @@ layout = html.Div(
                     "Welcome to the C4 Database", style={"margin-bottom": "0.5em", "font-weight": "bold"}
                 ),  # Adjust the bottom margin as needed
                 html.Div([
-                    html.P(
-                        "Here you can:", 
+                    html.P([
+                        "This website complements the publication in Cell (",
+                        html.A("Beau et al., 2025", href="https://doi.org/10.1016/j.cell.2025.01.041"),
+                        ") describing a classifier for identifying cell types in extracellular recordings from cerebellar cortex. Here you can:"], 
                         style={
                             "textAlign": "left",
                             "marginBottom": "1em"
@@ -77,6 +79,8 @@ layout = html.Div(
                                 html.A([html.Strong("documentation to run the C4 classifier")], href="/apps/classifier"),
                                 " on your cerebellar cortex recordings. The classifier should work out of the box for Neuropixels recordings, provided that you filtered your data appropriately. The classifier relies on ",
                                 html.A("NeuroPyxels", href="https://github.com/m-beau/NeuroPyxels"),
+                                ", which is licensed under the ",
+                                html.A("GNU General Public License v3.0", href="https://www.gnu.org/licenses/#GPL"),
                                 "."
                             ]),
                             html.Li([
@@ -86,13 +90,37 @@ layout = html.Div(
                             ]),
                             html.Li([
                                 html.A([html.Strong("Explore classical spiking and waveform statistics")], href="/apps/exploration_home"),
-                                " from the neurons of the C4 database (some key statistics are summarized in the supplementary table 1 of Beau et al., 2025). The C4 classifier predicts cell type identity from neurons' raw waveforms and autocorrelgrams, not from 'classical features'. However, these features are commonly reported in papers thus allow to put the C4 database in perspective with the literature."
+                                " from the neurons of the C4 database (some key statistics are summarized in the Supplementary Table 1 of Beau et al., 2025). The C4 classifier predicts cell type identity from neurons' raw waveforms and autocorrelograms, not from 'classical features'. However, since these features are commonly reported in papers we present them here because they are useful for putting the C4 database into the context of the literature."
                             ])
                         ],
                         style={
                             "paddingLeft": "20px"  # Reduced padding for bullets to match heading
                         }
                     ),
+                html.H4("Using and Citing the C4 Database"),
+                html.P([
+                    "The data and visualizations on this website are intended to be freely available for use by the scientific community. The C4 dataset is licensed under the ",
+                    html.A("Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License", href="https://creativecommons.org/licenses/by-nc-sa/4.0/"),
+                    ", while our classifier is licensed under the ",
+                    html.A("GNU General Public License v3.0", href="https://www.gnu.org/licenses/#GPL"),
+                    " as part of ",
+                    html.A("NeuroPyxels", href="https://github.com/m-beau/NeuroPyxels"),
+                    ". ",
+                    html.Strong("If you download and use our data for a publication, and/or if you would like to refer to the database, please cite "),
+                    html.A("Beau et al., 2025, Cell", href="https://doi.org/10.1016/j.cell.2025.01.041"),
+                    html.Strong(" together with the "),
+                    html.A("NeuroPyxels repository", href="https://github.com/m-beau/NeuroPyxels"),
+                    html.Strong(" ("),
+                    html.A("Beau et al., 2021, Zenodo", href="https://zenodo.org/records/5509776"),
+                    html.Strong(")"),
+                    html.Strong(", and include the link to this database (https://www.c4-database.com) in your methods section."),
+                    " Thank you!"
+                ],
+        style={
+            "textAlign": "left",
+            "marginBottom": "1em"
+        }
+    )
                 ],
                 style={
                     "width": "100%",
