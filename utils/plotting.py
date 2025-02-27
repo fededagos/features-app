@@ -20,18 +20,18 @@ def update_on_click(
     # This is to remove previously added highlighted points!
     if lab == "hausser":
         # Why 6*2? Because there are 2 traces per cell type (1 for box, 1 for points; 6 cell types)
-        default_traces = 6 * 2
+        default_traces = 5 * 2
     elif lab == "hull":
         # 5*2 Because the hull lab has 5 cell types only
         default_traces = 5 * 2
     elif lab == "combined_mouse":
-        default_traces = 6 * 2
+        default_traces = 5 * 2
     elif lab == "lisberger":
         # The lisberger lab also has 5 cell types
         default_traces = 5 * 2
     else:
         # All combined
-        default_traces = 16 * 2
+        default_traces = 15 * 2
 
     if len(fig.data) > default_traces:
         fig.data = fig.data[:default_traces]
@@ -137,7 +137,7 @@ def make_joint_figure(
 
     fig = go.Figure()
 
-    for i, label in enumerate(["PkC_cs", "PkC_ss", "GoC", "GrC", "MLI", "MFB"]):
+    for i, label in enumerate(["PkC_cs", "PkC_ss", "GoC", "MLI", "MFB"]):
         for lab in np.unique(df["lab"].to_numpy()):
             plotting_df = df.loc[(df["lab"] == lab) & (df["label"] == label)]
             if len(plotting_df) == 0:
@@ -164,7 +164,7 @@ def make_joint_figure(
                     if normalised
                     else good_neurons[good_neurons["label"] == label]["raw_value"].to_numpy(),
                     x=good_neurons[good_neurons["label"] == label]["feature"].to_numpy(),
-                    name=f'{lab.capitalize()} {label} (n = {plotting_df["label"].value_counts()[label] // len(np.unique(plotting_df["feature"].to_numpy()))})',
+                    name=f"{lab.capitalize()} {label} (n = {plotting_df['label'].value_counts()[label] // len(np.unique(plotting_df['feature'].to_numpy()))})",
                     marker_color=neuron_color,
                     offsetgroup=str(label) + str(lab),
                     legendgroup=label,
@@ -188,7 +188,7 @@ def make_joint_figure(
                     if normalised
                     else good_neurons[good_neurons["label"] == label]["raw_value"].to_numpy(),
                     x=good_neurons[good_neurons["label"] == label]["feature"].to_numpy(),
-                    name=f'{lab.capitalize()} {label} (n = {plotting_df["label"].value_counts()[label] // len(np.unique(plotting_df["feature"].to_numpy()))})',
+                    name=f"{lab.capitalize()} {label} (n = {plotting_df['label'].value_counts()[label] // len(np.unique(plotting_df['feature'].to_numpy()))})",
                     marker_color=neuron_color,
                     boxpoints="all",
                     jitter=0.6,
