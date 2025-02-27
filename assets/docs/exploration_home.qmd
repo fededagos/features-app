@@ -11,7 +11,7 @@ lightbox: true
 jupyter: python3
 ---
 
-In the features explorer, you will find interactive plots to navigate the temporal and waveform features of the mouse optotagged (labelled) neurons of the C4 dataset. Each plot offers insights into the corresponding feature types, helping users explore the properties of neurons in detail.
+In the features explorer, you will find interactive plots to navigate the waveform features and discharge statistics of the mouse optotagged (labelled) neurons of the C4 dataset. Each plot offers insights into the corresponding feature types, helping users explore the properties of neuronal classes  in detail.
 
 The features are computed directly from the published `.h5` databases [(which can be downloaded here)](https://c4-database.com/apps/download){target="_parent"} using [NeuroPyxels](https://github.com/m-beau/NeuroPyxels){target="_blank"}.
 
@@ -21,38 +21,49 @@ Here is a short summary of all the features included in the dashboard visualisat
 
 The exact code used to computed them is in [`npyx.feat`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/feat.py).
 
+:::{.callout-note}
+The features listed below are not used as an input to the C4 cell-type classifier. The purpose of the feature explorer is to offer an easily interpretable window on the neurons included in the C4 ground-truth database.
+:::
 
-### > Temporal features
+### > Waveform features
 
-Temporal features are measured from the initial 20 minutes of spontaneous activity in the experiments.
+::: {.column-margin}
+![Schematic of single-channel waveform features](example_wvf.svg){.lightbox}
+:::
 
-- *Mean FR (Hz)*: Average firing rate of the neuron over the spontaneous period. It is the number of inter-spike intervals (ISIs) divided by time difference between the first and the last spike.
-- *Mean inst. FR (Hz)*: Average instantaneous firing rate, also computed from inter-spike intervals.
+Waveform features are measured on the peak channel waveform, or on the largest axonal non-peak-channel waveform. 
+They are computed from spikes occurring during portions of each recording without any optogenetic stimulation or synaptic blocker.
+The exact code to compute them is in [`npyx.feat.waveform_features`](https://github.com/m-beau/NeuroPyxels/blob/9abd8fdb623a91ba34e45bce25d6f6529f81f475/npyx/feat.py#L1197).
+
+- *Depolarisation amplitude (µV)*: Voltage difference between the baseline and the peak of the depolarization phase of the action potential.
+- *Repolarisation amplitude (µV)*: Voltage difference between the baseline and the peak of the repolarization phase of the action potential.
+- *Waveform duration (ms)*: Duration between the peak depolarization and the peak repolarization, providing an estimate of spike duration.
+- *Peak-trough ratio*: Ratio between the depolarisation and repolarization amplitudes.
+- *Recovery slope (µV/ms)*: Rate of voltage change from the repolarisation peak back to the baseline.
+- *Spatial decay (%/24µm)*: Percentage reduction in spike depolarisation amplitude from the peak channel to the closest channels (within 24 µm, which is the distance between diagonally adjacent Neuropixels 1.0 channels).
+
+
+### > Discharge statistics
+
+Temporal features are computed using portions of each recording without any optogenetic stimulation or synaptic blocker. 
+The exact code used to compute them is in [`npyx.feat.compute_isi_features`](https://github.com/m-beau/NeuroPyxels/blob/9abd8fdb623a91ba34e45bce25d6f6529f81f475/npyx/feat.py#L219).
+
+- *Mean FR (spikes/s)*: Average firing rate of the neuron. It is the inverse of the mean of the inter-spike intervals (ISIs).
+- *Mean inst. FR (spikes/s)*: Average instantaneous firing rate. It is the mean of the inverse of the ISIs.
 - *Entropy (bits/s)*: Measure of the variability in the firing rate, expressed in bits per second.
 - *CV2*: A measure of the irregularity of inter-spike intervals, considering only adjacent intervals. It is the average coefficient of variation for a sequence of 2 ISIs.
-- *CV*: Coefficient of variation, quantifying the overall variability in inter-spike intervals. It is the standard deviation of the ISI’s divided by the average ISI.
+- *CV*: Coefficient of variation, quantifying the overall variability in inter-spike intervals. It is the ISI standard deviation divided by the ISI mean.
 - *Instantaneous irregularity*: Degree of fluctuation in firing rate over short timescales. It is computed as the average of the absolute difference between the natural logarithms of 2 consecutive ISIs.
-- *Local variation*: A refined measure of irregularity that focuses on small changes in inter-spike intervals.
-- *Revised local variation*: Updated version of local variation with enhanced sensitivity to changes in spiking patterns. See [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000433).
+- *Local variation*: LvR is a metric used to quantify the irregularity of neuronal firing patterns that's highly invariant to firing rate fluctuations. It measures local variations in interspike intervals to characterize neural activity as regular, random, or bursty across different functional areas of the cerebral cortex. See [here](https://www.doi.org/10.1371/journal.pcbi.1000433).
+- *Revised local variation*: Updated version of local variation with enhanced sensitivity to changes in spiking patterns. See [here](https://www.doi.org/10.1371/journal.pcbi.1000433).
 - *Log CV*: Logarithmic transformation of the coefficient of variation (taking the logarithm of ISIs).
 - *ISI skewness*: Asymmetry in the distribution of inter-spike intervals, revealing bursting or regular firing.
 - *Burst ratio*: Ratio of the maximum value of the autocorrelogram in the first 4 ms (i.e. a burst) to the mean firing rate.
 
-### > Waveform features
-
-Waveform features are measured on the peak channel waveform, or on the largest axonal non-peak-channel waveform.
-
-- *Depolarisation amplitude (µV)*: Voltage difference between the baseline and the peak of the depolarization phase of the action potential.
-- *Repolarisation amplitude (µV)*: Voltage difference between the baseline and the peak of the repolarization phase of the action potential.
-- *Waveform width (ms)*: Duration between the peak depolarization and the peak repolarization, providing an estimate of spike duration.
-- *Peak-trough ratio*: Ratio between the depolarisation peak and the repolarisation trough amplitudes.
-- *Recovery slope (µV/ms)*: Rate of voltage change during the recovery phase following a spike, describing the speed at which the neuron returns to baseline. 
-- *Spatial decay (%/24µm)*: Percentage reduction in spike depolarisation amplitude from the peak channel to the closest channels (within 24µm).
-
 
 # 2 - Features explorer
 
-In the feature explorer, you can customize which features to display and decide whether to show them in their raw (un-normalized) values. This flexibility allows you to analyze the data based on your specific needs and preferences.
+In the feature explorer, you can customize which features to display and decide whether to show them in their raw or normalized values. This flexibility allows you to analyze the data based on your specific needs and preferences.
 
 :::{.callout-tip}
 For all plots, a dropdown menu allows you to select the dataset being visualized. This feature is useful for focusing on specific subsets of the database or comparing data across datasets.

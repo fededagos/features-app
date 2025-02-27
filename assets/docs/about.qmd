@@ -12,34 +12,18 @@ lightbox: true
 jupyter: python3
 ---
 
-* TODO:
-  - About
-    - [ ] Add paper link when available
-    - [ ] Add npyx logo somewhere
-  - Classifier documentation (tab 1)
-    - [ ] Fix general wording
-    - [ ] Specify data preprocessing (hardware neuropixels 1.0, equivalent to butterworth digital filter... double check)
-  - Datasets download (tab 2)
-    - [x] Add static WVF/ACG plot without features at the top of Datasets tab (download)
-    - [ ] Make it dynamic eventually (when hovering over wvf or acg of stack, pop up window with relevant neuron wvf, acg and h5 metadata appears like in the feature exploration plots).
-  - Features explorer documentation (tab 3)
-    - [x] Add missing waveform features in features glossary in Dataset exploration documentation
-    - [ ] Clarify what neurons these correspond to
-    - [ ] Fix general wording
-
-___
-
 ## The C4 database and classifier
 
-This is a TLDR. All details about the generation of the C4 database and its utilization to build a cerebellar cell-type classifier are in press at [Beau et al., 2025]() <span style="color:red">**ADD LINK**</span>.
+This website accompanies our paper describing  the generation of the C4 database and its utilization to build a cerebellar cell-type classifier: [Beau et al., 2025](https://doi.org/10.1016/j.cell.2025.01.041).
 
-The C4 database contains ground-truth recordings of cerebellar neurons obtained using Neuropixels probes in awake mice. The ground-truth identifications were established by combining optogenetic activation of specific cell types (using various Cre lines) with pharmacological synaptic blockade to confirm direct responses. Layer information was determined using Phyllum, a custom analysis tool that accurately identifies cerebellar layers from electrophysiological recordings. The database includes carefully curated recordings of 202 neurons: 69 Purkinje cell simple spikes, 58 Purkinje cell complex spikes, 27 molecular layer interneurons, 18 Golgi cells, and 30 mossy fibers.
+The C4 database consists of ground-truth recordings of cerebellar neurons obtained using Neuropixels probes in awake mice. The ground-truth identification was established by combining optogenetic activation of specific cell types (using various Cre lines) with pharmacological synaptic blockade to confirm direct responses. Layer information was determined using [Phyllum](https://github.com/blinklab/Phyllum_public), a custom analysis tool that accurately identifies cerebellar layers from electrophysiological recordings. The database includes carefully curated recordings of 202 neurons: 69 Purkinje cells simple spike units, 58 Purkinje cells complex spike units, 27 molecular layer interneurons, 18 Golgi cells, and 30 mossy fibers.
 
-The classifier uses a semi-supervised deep learning approach that combines unsupervised pre-training with supervised classification. It first uses variational autoencoders trained on a large unlabeled dataset (3,090 neurons) to reduce the dimensionality of both spike waveforms and three-dimensional autocorrelograms (3D-ACGs). These compressed representations, along with layer information, serve as inputs to a supervised classifier trained on the ground-truth dataset. The classifier generates confidence-calibrated predictions by averaging outputs across multiple model initializations. When requiring a confidence ratio above 2 (ratio of highest to second-highest predicted probability), the classifier achieves >95% accuracy on the ground-truth dataset and generalizes well to expert-classified recordings from both mice and monkeys, demonstrating its ability to generalize across species and experimental setups.
+The classifier uses a semi-supervised deep learning approach that combines unsupervised pre-training with supervised classification. It first uses variational autoencoders trained on a large unlabeled dataset (3,090 neurons) to reduce the dimensionality of both spike waveforms and three-dimensional autocorrelograms (3D-ACGs). These compressed representations, along with layer information, serve as inputs to a supervised classifier trained on the ground-truth dataset. The classifier generates confidence-calibrated predictions by averaging outputs across model initializations. When requiring a confidence ratio above 2 (ratio of highest to second-highest predicted probability), the classifier achieves >95% accuracy on the ground-truth dataset. It also generalizes well to expert-classified recordings from both mice and monkeys, demonstrating its ability to be used across species and experimental setups.
 
 ## The cerebellum cell-types classification collaboration (C4)
 
-The **Cerebellum Cell-types Classification Collaboration** is a multi-institutional effort to collect a database of cerebellar cell-types and use it to build a cell-type classifier. The name also jokingly refers to the involvement of teams across four universities (Häusser and Clark lab at UCL, Cohen at Bar-Ilan university, the Lisberger and Hull labs at Duke, and the Medina lab at Baylor College of Medicine).
+The **Cerebellum Cell-types Classification Collaboration (C4)** is a multi-institutional effort to create a database of cerebellar cell-types and use it to build a cell-type classifier for general use in the cerebellar neuroscience community. 
+The name also refers to the involvement of teams across four universities (Häusser and Clark lab at University College London, Cohen at Bar-Ilan University, the Lisberger and Hull labs at Duke University, and the Medina lab at Baylor College of Medicine).
 
 ![](../C4-people.png)
 

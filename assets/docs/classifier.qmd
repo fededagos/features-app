@@ -12,11 +12,14 @@ lightbox: true
 jupyter: python3
 ---
 
-One of the key outcomes of the C4 initiative has been the development of a robust cerebellar cell types classifier. This classifier is designed to predict cerebellar neuron types based on spike-sorted data and is released as part of [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels).
+The key outcome of the C4 collaboration is the development of a robust classifier to predict cerebellar neuron types based on spike-sorted data. The classifier is released as part of [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels), a generalist Python package to analyze Neuropixels recordings.
 
-Our aim in releasing this tool is to provide the cerebellum research community with a resource that can be used "out of the box", to classify cerebellar cell types, supporting reproducibility and further innovation in the field.
+
+Our aim is to provide the cerebellar neuroscience community with a resource that can be used "out of the box" to classify cerebellar cell types, supporting reproducibility and further innovation in the field.
 
 The classifier can be run on your own spike-sorted data directly from the command line and is simple to set up, even for users with minimal programming experience. Below, we provide a step-by-step tutorial to get started.
+
+---
 
 ## Running the model from the command line 
 Here we describe how to run the model on your own spike-sorted data from the command line.  
