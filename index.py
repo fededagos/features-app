@@ -1,7 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
-from dash_auth import BasicAuth
 
 # Connect to main app.py file
 from app import app, server
@@ -17,14 +16,8 @@ from apps import (
     temporal_features,
     waveform_features,
 )
-from users import USERNAME_PASSWORD_PAIRS
 
 app.title = "C4 Database"
-
-BasicAuth(
-    app,
-    USERNAME_PASSWORD_PAIRS,
-)
 
 top_menu = dbc.Navbar(
     id="main-navbar",
