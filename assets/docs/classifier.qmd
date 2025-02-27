@@ -34,7 +34,7 @@ The C4 classifier has been trained on waveforms derived from Neuropixels 1.0 rec
 :::
 
 :::{.callout-note}
-Our classifier has been designed to work out of the box with Neuropixels recordings, but should be compatible with all types of extracellular electrodes. For instance, the macaque recording in Beau et al., 2025 were recorded with custom Plexon s-Probes.
+Our classifier has been designed to work out of the box with Neuropixels recordings, but should be compatible with all types of extracellular electrodes. For instance, the macaque recordings in Beau et al., 2025 were obtained with custom Plexon s-Probes.
 :::
 
 ## Running the model from the command line 
