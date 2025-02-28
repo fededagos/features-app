@@ -27,7 +27,7 @@ As describer in the paper, when requiring a confidence ratio above 2 (ratio of h
 The **Cerebellum Cell-types Classification Collaboration (C4)** is a multi-institutional effort to create a database of cerebellar cell-types and use it to build a cell-type classifier for general use in the cerebellar neuroscience community. 
 The name also refers to the involvement of teams across four universities (Häusser and Clark lab at University College London, Cohen at Bar-Ilan University, the Lisberger and Hull labs at Duke University, and the Medina lab at Baylor College of Medicine).
 
-![](../C4-people.png)
+![](../C4_people.png)
 
 :::{.callout-note title="Contact"}
 For any questions or feedback, please [contact us](mailto:maximebeaujeanroch047@gmail.com).
