@@ -23,8 +23,10 @@ layout = html.Div(
                     datasets for download below.
                     
                     ---
-                    All C4 datasets are in binary `.h5` format. 
-                    If you are not familiar with `.h5`, have a look at the [`h5py`](https://docs.h5py.org/en/stable/quick.html) quickstart guide and our
+                    All C4 datasets are in binary hdf5 format. The specifications of the fields, data types and data formats 
+                    stored in the hdf5 files can be found at [https://www.tinyurl.com/c4database](https://www.tinyurl.com/c4database). 
+                    Hdf5 files can be easily opened with Python, MATLAB and many other programming languages.
+                    If you are not familiar with this formal, have a look at the [`h5py`](https://docs.h5py.org/en/stable/quick.html) quickstart guide and our
                     helper functions in [`NeuroPyxels`](https://github.com/m-beau/NeuroPyxels/blob/master/npyx/h5.py).
                     """
                 ),
