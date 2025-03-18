@@ -23,7 +23,7 @@ pio.kaleido.scope.mathjax = None
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("27-02-2025_combined_dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("18-03-2025_combined_dashboard.csv"))
 
 with open(DATA_PATH.joinpath("iframe_src.txt"), encoding="utf-8") as f:
     data = f.read()
@@ -312,6 +312,8 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         features = list(value)
         actual_figure = go.Figure(figure)
 
+        footer = make_footer(amplitude_img_url, opto_plots_url) if cell_type != "GrC" else [html.Hr()]
+
         return (
             [
                 html.Div(
@@ -343,7 +345,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
                             ],
                         ),
                         html.Br(),
-                        *make_footer(amplitude_img_url, opto_plots_url),
+                        *footer,
                     ],
                     style={"padding": "20px"},
                 )
@@ -387,6 +389,8 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
         features = list(value)
         actual_figure = make_joint_figure(df, which=features, normalised=use_normalised, lab=lab_id)
 
+        footer = make_footer(amplitude_img_url, opto_plots_url) if cell_type != "GrC" else [html.Hr()]
+
         return (
             [
                 html.Div(
@@ -423,7 +427,7 @@ def update_figure(click_input, value, normalised, figure, lab, clicks, store):
                             ],
                         ),
                         html.Br(),
-                        *make_footer(amplitude_img_url, opto_plots_url),
+                        *footer,
                     ]
                 )
             ],

@@ -15,7 +15,7 @@ from utils.plotting import make_joint_figure, update_on_click
 PATH = pathlib.Path(__file__).parent
 DATA_PATH = PATH.joinpath("../datasets").resolve()
 
-df = pd.read_csv(DATA_PATH.joinpath("27-02-2025_combined_dashboard.csv"))
+df = pd.read_csv(DATA_PATH.joinpath("18-03-2025_combined_dashboard.csv"))
 
 fig = make_joint_figure(df, which="waveform", lab="combined_mouse")
 
@@ -268,6 +268,8 @@ def update_figure(input_value, figure, lab, store_data):
     else:
         opto_plots_url = get_asset_url(PLOTS_FOLDER_URL + "opto_plots_unavailable.png")
 
+    footer = make_footer(amplitude_img_url, opto_plots_url) if cell_type != "GrC" else [html.Hr()]
+
     actual_figure = go.Figure(figure)
 
     return (
@@ -310,7 +312,7 @@ def update_figure(input_value, figure, lab, store_data):
                         ],
                     ),
                     html.Br(),
-                    *make_footer(amplitude_img_url, opto_plots_url),
+                    *footer,
                 ],
                 style={"padding": "20px"},
             )
